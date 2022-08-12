@@ -309,6 +309,38 @@ font-size: 1.2em;
   for font icons color property will work */
   filter: invert(26%) sepia(69%) saturate(2341%) hue-rotate(200deg) brightness(98%) contrast(96%);
 }
+.mb-10{
+  margin-bottom: 10px;
+}
+.projects{
+  display: flex;
+  justify-content: center;
+  padding: 75px 170px 0px 170px;
+  
+}
+.projects .project{
+max-width: 600px;
+margin-bottom: 50px;
+}
+.tag{
+  display: inline-block;
+  margin: 3px 3px 3px 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 3px;
+  color: #0967d2;
+  border: 1px solid #0967d2;
+  background: 0 0;
+}
+.projects p {
+font-size: 14.4px;
+font-weight: var(--font-300);
+/* line-height: 21px; */
+}
+.projects h4{
+  text-align: center;
+}
 
 .footer{
   justify-content: space-between;
