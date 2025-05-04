@@ -8,9 +8,9 @@
     --dark: #0f172a;
     --border: #e2e8f0;
     --spacing-xs: 0.5rem;
-    --spacing-sm: 1rem;
-    --spacing-md: 1.5rem;
-    --spacing-lg: 2rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
   }
 
   .container {
@@ -138,7 +138,8 @@
     font-size: 0.95rem;
   }
 
-  .contact-item {
+  .contact-item > * {
+    color: #94a3b8;
     display: flex;
     align-items: center;
     gap: var(--spacing-xs);
@@ -225,7 +226,7 @@
   .timeline::before {
     content: "";
     position: absolute;
-    top: 0;
+    top: 10px;
     bottom: 0;
     left: 0;
     width: 2px;
@@ -453,9 +454,14 @@
         </div>
       </div>
       <div class="header-right">
-        <button id="download-resume" class="btn btn-primary"
-          >Download Resume</button
-        >
+        <button id="download-resume" class="btn btn-primary">
+          <a
+            href="https://docs.google.com/document/d/1_p6a2dElPgM7w2Lk0VInGyPcyOC-1MALOJYGLX1nT58"
+            download="true"
+          >
+            Download Resume
+          </a>
+        </button>
         <button id="send-email" class="btn btn-outline">Contact Me</button>
       </div>
     </div>
