@@ -1,0 +1,743 @@
+<style>
+  :root {
+    --primary: #1e293b;
+    --secondary: #475569;
+    --accent: #0ea5e9;
+    --accent-light: #7dd3fc;
+    --light: #f8fafc;
+    --dark: #0f172a;
+    --border: #e2e8f0;
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+  }
+
+  .container {
+    max-width: 850px;
+    margin: 0 auto;
+    background-color: white;
+    box-shadow:
+      0 10px 25px rgba(0, 0, 0, 0.05),
+      0 5px 10px rgba(0, 0, 0, 0.02);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .header {
+    padding: var(--spacing-lg) var(--spacing-lg) calc(var(--spacing-lg) * 1.2);
+    background: var(--dark);
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: radial-gradient(
+      circle at top right,
+      rgba(14, 165, 233, 0.15),
+      transparent 50%
+    );
+    z-index: 0;
+  }
+
+  .header::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-light));
+  }
+
+  .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    position: relative;
+    z-index: 1;
+  }
+
+  .header-left {
+    flex: 1;
+  }
+
+  .header-right {
+    display: flex;
+    gap: var(--spacing-sm);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    border: none;
+  }
+
+  .btn-primary {
+    background-color: var(--accent);
+    color: white;
+  }
+
+  .btn-outline {
+    background-color: transparent;
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .btn-primary:hover {
+    background-color: #0284c7;
+  }
+
+  .btn-outline:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+
+  .name {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: var(--spacing-xs);
+    letter-spacing: -0.025em;
+    background: linear-gradient(135deg, #fff, #cbd5e1);
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+
+  .title {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: #94a3b8;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .contact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm) var(--spacing-md);
+    font-size: 0.95rem;
+  }
+
+  .contact-item > * {
+    color: #94a3b8;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+  }
+
+  .contact-item a {
+    color: #94a3b8;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .contact-item a:hover {
+    color: var(--accent-light);
+    text-decoration: none;
+  }
+
+  .main {
+    padding: var(--spacing-lg);
+  }
+
+  .section {
+    margin-bottom: var(--spacing-lg);
+    animation: fadeIn 0.6s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .section:last-child {
+    margin-bottom: 0;
+  }
+
+  .section-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-xs);
+    border-bottom: 2px solid var(--border);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+  }
+
+  .section-title::before {
+    content: "";
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin-right: 10px;
+    background-color: var(--accent);
+    border-radius: 50%;
+  }
+
+  .skills-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-sm);
+    padding-left: var(--spacing-md);
+  }
+
+  .skill-category {
+    font-weight: 600;
+    color: var(--dark);
+    margin-right: var(--spacing-xs);
+  }
+
+  /* Timeline styles */
+  .timeline {
+    position: relative;
+    margin-left: 30px;
+  }
+
+  .timeline::before {
+    content: "";
+    position: absolute;
+    top: 10px;
+    bottom: 0;
+    left: 0;
+    width: 2px;
+    background: var(--border);
+  }
+
+  /* Common timeline item styles */
+  .timeline-item {
+    position: relative;
+    margin-bottom: var(--spacing-md);
+    padding-left: var(--spacing-md);
+    transition: all 0.3s ease;
+  }
+
+  .timeline-item::before {
+    content: "";
+    position: absolute;
+    left: -8px;
+    top: 6px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: white;
+    border: 2px solid var(--accent);
+    z-index: 1;
+    transition: all 0.3s ease;
+  }
+
+  .timeline-item:hover::before {
+    background-color: var(--accent);
+  }
+
+  .timeline-item:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Common header styles */
+  .item-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-xs);
+    align-items: center;
+  }
+
+  .item-title {
+    font-weight: 600;
+    color: var(--primary);
+    font-size: 1.05rem;
+  }
+
+  .item-date {
+    color: var(--accent);
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  /* Common description styles */
+  .item-description {
+    font-size: 0.95rem;
+    color: var(--secondary);
+    line-height: 1.6;
+  }
+
+  /* Common achievement styles */
+  .achievement-text {
+    padding: 0;
+    margin-top: var(--spacing-xs);
+    color: var(--secondary);
+    font-size: 0.95rem;
+  }
+
+  .achievement-paragraph {
+    margin-bottom: 0.75rem;
+    transition: transform 0.2s ease;
+  }
+
+  .achievement-paragraph:hover {
+    transform: translateX(2px);
+  }
+
+  .achievement-paragraph:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Common link styles */
+  .item-link {
+    text-decoration: none;
+    padding: 0.25rem 0.75rem;
+    background-color: rgba(14, 165, 233, 0.1);
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    color: var(--accent);
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  .item-link:hover {
+    background-color: rgba(14, 165, 233, 0.2);
+    text-decoration: none;
+  }
+
+  /* Common summary styles */
+  .item-summary {
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+    color: var(--primary);
+    position: relative;
+    display: inline-block;
+  }
+
+  .item-summary::after {
+    content: "";
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 2rem;
+    height: 2px;
+    background-color: var(--accent);
+    transition: width 0.3s ease;
+  }
+
+  .timeline-item:hover .item-summary::after {
+    width: 100%;
+  }
+
+  .experience-company,
+  .education-school {
+    font-weight: 500;
+    color: var(--secondary);
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .education-degree,
+  .certification-name {
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .education-date,
+  .certification-date {
+    color: var(--secondary);
+    font-size: 0.95rem;
+  }
+
+  @media print {
+    body {
+      padding: 0;
+      background-color: white;
+    }
+
+    .container {
+      box-shadow: none;
+      max-width: 100%;
+    }
+
+    .header-right {
+      display: none;
+    }
+  }
+
+  @media (max-width: 768px) {
+    body {
+      padding: var(--spacing-sm);
+    }
+
+    .header {
+      padding: var(--spacing-md);
+    }
+
+    .header-content {
+      flex-direction: column;
+    }
+
+    .header-right {
+      margin-top: var(--spacing-md);
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    .main {
+      padding: var(--spacing-md);
+    }
+
+    .contact {
+      flex-direction: column;
+      gap: var(--spacing-xs);
+    }
+
+    .name {
+      font-size: 2rem;
+    }
+  }
+</style>
+
+<div class="container">
+  <header class="header">
+    <div class="header-content">
+      <div class="header-left">
+        <h1 class="name">Vikas Lodh</h1>
+        <h2 class="title">Software Engineer | Full Stack Developer</h2>
+        <div class="contact">
+          <div class="contact-item">
+            <span>Mumbai, India</span>
+          </div>
+          <div class="contact-item">
+            <span>+91 9820681798</span>
+          </div>
+          <div class="contact-item">
+            <span>vikaslodh2@gmail.com</span>
+          </div>
+          <div class="contact-item">
+            <a href="https://www.linkedin.com/in/vikas-lodh/" target="_blank"
+              >linkedin.com/in/vikas-lodh</a
+            >
+          </div>
+          <div class="contact-item">
+            <a href="https://github.com/wigzen/" target="_blank"
+              >github.com/wigzen</a
+            >
+          </div>
+          <div class="contact-item">
+            <a href="https://wigzen.dev" target="_blank">wigzen.dev</a>
+          </div>
+        </div>
+      </div>
+      <div class="header-right">
+        <button id="download-resume" class="btn btn-primary">
+          <a
+            href="https://docs.google.com/document/d/1_p6a2dElPgM7w2Lk0VInGyPcyOC-1MALOJYGLX1nT58"
+            download="true"
+          >
+            Download Resume
+          </a>
+        </button>
+        <button id="send-email" class="btn btn-outline">Contact Me</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    <section class="section">
+      <h3 class="section-title">Technical Skills</h3>
+      <div class="skills-list">
+        <span class="skill-category">Languages:</span>
+        <span>HTML, CSS, JavaScript, Python, Rust</span>
+      </div>
+      <div class="skills-list">
+        <span class="skill-category">Technologies:</span>
+        <span>React, Three.js, Node.js, PostgreSQL, Sockets, Redis</span>
+      </div>
+      <div class="skills-list">
+        <span class="skill-category">Other:</span>
+        <span>Git, Firebase, TailwindCSS, Astro, Bootstrap, Linux</span>
+      </div>
+    </section>
+
+    <section class="section">
+      <h3 class="section-title">Professional Experience</h3>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="item-header">
+            <span class="item-title">AI FullStack Developer</span>
+            <span class="item-date">Nov 2024 - Present</span>
+          </div>
+          <div class="experience-company">Cybic Tech</div>
+          <div class="item-description">
+            <div class="achievement-text">
+              <p class="achievement-paragraph">
+                Architected and implemented secure RAG systems using Presidio
+                and NeMo Guardrails, establishing robust PII/PHI protection
+                protocols.
+              </p>
+              <p class="achievement-paragraph">
+                Developed tokenization system with PostgreSQL and Redis for
+                enhanced data security compliance (GDPR, HIPAA).
+              </p>
+              <p class="achievement-paragraph">
+                Built scalable AI applications using FastAPI backend and Next.js
+                frontend with vector databases for advanced search capabilities.
+              </p>
+              <p class="achievement-paragraph">
+                Implemented comprehensive security measures to prevent LLM
+                attacks and ensure data integrity across all applications.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="item-header">
+            <span class="item-title">Frontend Developer</span>
+            <span class="item-date">June 2023 - Nov 2024</span>
+          </div>
+          <div class="experience-company">Blackcurrant Labs</div>
+          <div class="item-description">
+            <div class="achievement-text">
+              <p class="achievement-paragraph">
+                Led end-to-end development of React and Three.js applications
+                across e-commerce, service, and medical domains.
+              </p>
+              <p class="achievement-paragraph">
+                Reduced project turnaround time by 40% through implementation of
+                optimized component architecture and efficient state management.
+              </p>
+              <p class="achievement-paragraph">
+                Increased client satisfaction by 25% by delivering intuitive
+                user interfaces and seamless user experiences.
+              </p>
+              <p class="achievement-paragraph">
+                Collaborated with cross-functional teams to align technical
+                implementation with business requirements and design
+                specifications.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="item-header">
+            <span class="item-title">Frontend Intern</span>
+            <span class="item-date">July 2022 - Dec 2022</span>
+          </div>
+          <div class="experience-company">Zotech</div>
+          <div class="item-description">
+            <div class="achievement-text">
+              <p class="achievement-paragraph">
+                Engineered an AI-powered sentence phraser utilizing Google's NLP
+                technology, enhancing language understanding by 40%.
+              </p>
+              <p class="achievement-paragraph">
+                Improved communication efficiency across platforms, reducing
+                manual editing time by 50 hours monthly.
+              </p>
+              <p class="achievement-paragraph">
+                Implemented responsive designs that ensured consistent user
+                experience across all device types.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="item-header">
+            <span class="item-title">Frontend Intern</span>
+            <span class="item-date">Oct 2021 - Dec 2021</span>
+          </div>
+          <div class="experience-company">Sahu Technologies</div>
+          <div class="item-description">
+            <div class="achievement-text">
+              <p class="achievement-paragraph">
+                Directed the creation and launch of a comprehensive platform for
+                a leading housing firm.
+              </p>
+              <p class="achievement-paragraph">
+                Achieved 40% improvement in site speed through code optimization
+                and modern web practices.
+              </p>
+              <p class="achievement-paragraph">
+                Enhanced user retention by 25% through implementation of
+                intuitive navigation and search functionality.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h3 class="section-title">Projects</h3>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="item-header">
+            <span class="item-title">Hoopr.ai</span>
+            <a href="https://hoopr.ai" target="_blank" class="item-link"
+              >View Project</a
+            >
+          </div>
+          <div class="item-description">
+            <p class="item-summary">
+              Music licensing platform with advanced search and discovery
+              features.
+            </p>
+            <div class="achievement-text">
+              <p class="achievement-paragraph">
+                Improved user engagement by 35% through implementation of
+                refined UI/UX and intuitive search mechanisms.
+              </p>
+              <p class="achievement-paragraph">
+                Reduced page load times by 25% through frontend performance
+                optimization and efficient rendering techniques.
+              </p>
+              <p class="achievement-paragraph">
+                Developed RESTful APIs for real-time music discovery and content
+                delivery with robust error handling.
+              </p>
+              <p class="achievement-paragraph">
+                Increased platform scalability by 30% with streamlined data
+                processing approach, resulting in 20% boost in user retention.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="item-header">
+            <span class="item-title">Hedged</span>
+            <a href="http://www.hedged.in" target="_blank" class="item-link"
+              >View Project</a
+            >
+          </div>
+          <div class="item-description">
+            <p class="item-summary">
+              Financial analytics and investment tracking platform.
+            </p>
+            <div class="achievement-text">
+              <p class="achievement-paragraph">
+                Led end-to-end development using React and Three.js for dynamic
+                financial data visualization.
+              </p>
+              <p class="achievement-paragraph">
+                Achieved 40% reduction in project turnaround time through
+                implementation of reusable component architecture.
+              </p>
+              <p class="achievement-paragraph">
+                Increased client satisfaction by 25% with intuitive dashboards
+                and real-time data updates.
+              </p>
+              <p class="achievement-paragraph">
+                Implemented responsive design ensuring consistent performance
+                across desktop and mobile devices.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="item-header">
+            <span class="item-title">Syntropy</span>
+          </div>
+          <div class="item-description">
+            <p class="item-summary">
+              Network optimization platform with advanced data visualization
+              tools.
+            </p>
+            <div class="achievement-text">
+              <p class="achievement-paragraph">
+                Increased user engagement by 40% through development of
+                intuitive UI/UX and interactive dashboards.
+              </p>
+              <p class="achievement-paragraph">
+                Reduced load times by 30% through implementation of lazy loading
+                and code-splitting techniques.
+              </p>
+              <p class="achievement-paragraph">
+                Integrated cutting-edge data visualization tools to optimize
+                real-time network analytics and performance monitoring.
+              </p>
+              <p class="achievement-paragraph">
+                Improved platform scalability by 35% through collaboration with
+                backend teams, resulting in 25% increase in user retention.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h3 class="section-title">Education</h3>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="item-header">
+            <span class="item-title"
+              >B.E. Electronics and Telecommunication</span
+            >
+            <span class="item-date">2019-2023</span>
+          </div>
+          <div class="experience-company">
+            Thakur College of Engineering (Mumbai)
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="item-header">
+            <span class="item-title">Higher Secondary Certificate</span>
+            <span class="item-date">2017-2019</span>
+          </div>
+          <div class="experience-company">Maharshi Dayanand College</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h3 class="section-title">Certifications</h3>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="item-header">
+            <span class="item-title">Python for Everyone, Google</span>
+            <span class="item-date">May 2021 - June 2021</span>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="item-header">
+            <span class="item-title">Cyber Security Fundamentals, Coursera</span
+            >
+            <span class="item-date">Dec 2021 - Jan 2022</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
