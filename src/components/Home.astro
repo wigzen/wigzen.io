@@ -1,472 +1,398 @@
-<header class="header">
-  <div class="header__container">
-    <h1 class="header__intro">नमस्कार! <span class="emoj">🙏🏼</span></h1>
-    <h2 class="header__desc">
-      I'm <span class="header__desc-name">Vikas Lodh</span>, a web developer
-      based in Mumbai, India. I love building beautiful interfaces, web apps,
-      and everything in between!
-    </h2>
-    <h3 class="header__contact">
-      <span>Get in touch 👉🏼</span>
-      <span>
-        <a href="mailto:vikaslodh2@gamil.com" class="highlight">
-          vikaslodh2@gmail.com
-        </a>
-      </span>
-    </h3>
-  </div>
-</header>
-<section class="background">
-  <div class="section__title">BACKGROUND</div>
-  <div class="section__content">
-    <p>
-      I recently graduated from <span class="link"
-        >Thakur College of Engineering and Technology</span
-      > after completing Bachelor of Engineering in Electronics & Telecommunication
-      Engineering.
-    </p>
-    <p>
-      As a web developer, I like bridging the engineering-design divide by
-      combining my technical expertise with my good eye for design to produce a
-      beautiful product. My objective is to constantly design scalable and
-      efficient programmes that provide compelling, pixel-perfect user
-      experiences.
-    </p>
-    <p>
-      <span class="link">When I'm not in front of a computer screen</span>, I'm
-      probably reading books, travelling or playing video games.
-    </p>
-    <!-- https://docs.google.com/document/d/1_p6a2dElPgM7w2Lk0VInGyPcyOC-1MALOJYGLX1nT58/edit?usp=sharing -->
-    <a href="/resume" class="arrow-link">View my Resume</a>
-  </div>
-</section>
-<section class="skills">
-  <div class="section__title">SKILLS</div>
-  <div class="section__content skils-grid">
-    <i class="fa-brands fa-html5 icon-hover"></i>
-    <i class="fa-brands fa-css3 icon-hover"></i>
-    <i class="fa-brands fa-js-square icon-hover"></i>
-    <i class="fa-brands fa-react icon-hover"></i>
-    <span class="iconify icon-hover" data-icon="simple-icons:redux"></span>
-    <i class="fa-brands fa-node icon-hover"></i>
-    <span class="iconify icon-hover" data-icon="cib:mongodb"></span>
-    <span class="iconify icon-hover" data-icon="bxl:firebase"></span>
-    <span class="iconify icon-hover" data-icon="bxl:tailwind-css"></span>
-    <i class="fa-brands fa-npm icon-hover"></i>
-    <i class="fa-brands fa-git-alt icon-hover"></i>
-    <i class="fa-brands fa-github icon-hover"></i>
-  </div>
-</section>
-<section class="projects">
-  <div class="section__title">PROJECTS</div>
-  <div class="section__content">
-    <div class="project">
-      <a href="https://github.com/wigzen/web3medium" class="arrow-link mb-10"
-        >Web3Medium</a
-      >
-      <p>
-        The Web3 Medium is a Decentralized Blogging website which allows users
-        to be Permissionless in that anyone both users and suppliers can
-        participate without authorisation from a governing body
-      </p>
-      <div class="tags">
-        <span class="tag">JavaScript</span>
-        <span class="tag">React</span>
-        <span class="tag">Web3.js</span>
-        <span class="tag">Solidity</span>
-        <span class="tag">Semantic UI</span>
-        <span class="tag">Moralis</span>
-      </div>
-    </div>
-    <div class="project">
-      <a href="https://github.com/wigzen/Yoga-with-ai" class="arrow-link mb-10"
-        >Yoga with ai</a
-      >
-      <p>
-        With this project, I aim to solve the problem of people stuck in their
-        houses in lockdown with their unhealthy lifestyle and mental health
-        issues. This Project is a solution, with this people can do yoga at
-        their homes with guidance
-      </p>
-      <div class="tags">
-        <span class="tag">HTML</span>
-        <span class="tag">CSS</span>
-        <span class="tag">JavaScript</span>
-        <span class="tag">ML5.js</span>
-        <span class="tag">PoseNet</span>
-      </div>
-    </div>
-    <div class="project">
-      <a href="https://covid-sars.herokuapp.com/" class="arrow-link mb-10"
-        >Covid Tracker</a
-      >
-      <p>
-        With this project, I was aiming to provide all covid-19 related articles
-        guidelines and helpful service to the general public
-      </p>
-      <div class="tags">
-        <span class="tag">JavaScript</span>
-        <span class="tag">React</span>
-        <span class="tag">REST API</span>
-      </div>
-    </div>
-    <h4>Check my other projects on github.</h4>
-  </div>
-</section>
-<footer class="footer">
-  <div class="copy">
-    <p>
-      <span>Created by</span>
+---
+import Navbar from "./ui/Navbar.astro";
+import Project from "./ui/Project.astro";
+import ContactForm from "./ui/ContactForm.astro";
+
+const projects = [
+  {
+    title: "E-commerce Redesign",
+    description:
+      "Complete UI/UX redesign of an e-commerce platform focusing on improved conversion rates and user experience.",
+    tags: ["React", "Next.js", "Tailwind CSS"],
+    image: "/images/projects/ecommerce.jpg",
+    link: "#",
+  },
+  {
+    title: "Finance Dashboard",
+    description:
+      "Interactive financial analytics dashboard with real-time data visualization and responsive design.",
+    tags: ["Vue.js", "D3.js", "GSAP"],
+    image: "/images/projects/finance.jpg",
+    link: "#",
+  },
+  {
+    title: "Travel App",
+    description:
+      "Mobile-first travel planning application with location-based recommendations and interactive maps.",
+    tags: ["React Native", "Firebase", "Google Maps API"],
+    image: "/images/projects/travel.jpg",
+    link: "#",
+  },
+];
+
+const skills = [
+  {
+    category: "Frontend",
+    items: [
+      "HTML/CSS",
+      "JavaScript",
+      "TypeScript",
+      "React",
+      "Vue.js",
+      "Astro",
+      "Next.js",
+    ],
+  },
+  {
+    category: "UI/UX",
+    items: ["Figma", "Adobe XD", "User Research", "Wireframing", "Prototyping"],
+  },
+  {
+    category: "Other",
+    items: [
+      "Git",
+      "REST APIs",
+      "Node.js",
+      "GSAP Animations",
+      "Responsive Design",
+    ],
+  },
+];
+---
+
+<main class="main">
+  <!-- Hero Section -->
+  <section id="hero" class="hero">
+    <h1 class="name">
+      <span>Vikas</span>
       <br />
-      <span>Vikas Lodh 🤟🏼 2022</span>
+      <span>Lodh</span>
+    </h1>
+    <h4 class="title">
+      <span>Frontend Developer</span>
+      <br />
+      <span>UI/UX Designer</span>
+    </h4>
+    <p class="intro">
+      I create engaging digital experiences that combine beautiful design with
+      solid technical implementation.
     </p>
-  </div>
-  <div class="contact">
-    <ul class="list">
-      <li>
-        <a
-          href="mailto:vikaslodh2@gmail.com"
-          class="link list-item"
-          target="_blank"
-          rel="noopener noreferrer">Email</a
-        >
-      </li>
-      <li>
-        <a
-          href="https://github.com/wigzen"
-          class="link list-item"
-          target="_blank">Github</a
-        >
-      </li>
-      <li>
-        <a
-          href="https://www.linkedin.com/in/vikas-lodh"
-          class="link list-item"
-          target="_blank">LinkedIn</a
-        >
-      </li>
-      <li>
-        <a
-          href="https://twitter.com/VikasLodh"
-          class="link list-item"
-          target="_blank">Twitter</a
-        >
-      </li>
-    </ul>
-  </div>
-</footer>
-<script is:inline src="https://code.iconify.design/2/2.2.1/iconify.min.js"
-></script>
+    <div class="cta">
+      <a href="#work" class="btn-primary">View My Work</a>
+      <a href="#contact" class="btn-secondary">Get In Touch</a>
+    </div>
+    <div class="block">
+      <div class="ui-background-lines"></div>
+    </div>
+  </section>
+
+  <!-- Work Section -->
+  <section id="work" class="work">
+    <h2 class="section-title">Selected Work</h2>
+    <div class="projects-grid">
+      {
+        projects.map((project) => (
+          <Project
+            title={project.title}
+            description={project.description}
+            tags={project.tags}
+            image={project.image}
+            link={project.link}
+          />
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="about">
+    <h2 class="section-title">About Me</h2>
+    <div class="about-content">
+      <div class="about-image">
+        <img src="/images/profile.jpg" alt="Vikas Lodh" />
+      </div>
+      <div class="about-text">
+        <p>
+          With over 5 years of experience in frontend development and UI/UX
+          design, I specialize in creating intuitive and visually appealing
+          digital experiences. My approach combines creative design thinking
+          with technical expertise to build products that users love.
+        </p>
+        <p>
+          I'm passionate about clean code, accessibility, and performance
+          optimization. When I'm not coding, you can find me exploring design
+          trends, contributing to open source, or hiking in the mountains.
+        </p>
+
+        <h3>Skills</h3>
+        <div class="skills-container">
+          {
+            skills.map((skillGroup) => (
+              <div class="skill-group">
+                <h4>{skillGroup.category}</h4>
+                <ul class="skill-list">
+                  {skillGroup.items.map((skill) => (
+                    <li>{skill}</li>
+                  ))}
+                </ul>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="contact">
+    <h2 class="section-title">Get In Touch</h2>
+    <div class="contact-container">
+      <div class="contact-info">
+        <p>
+          I'm currently available for freelance work and collaborations. If you
+          have a project in mind, or just want to say hello, feel free to reach
+          out!
+        </p>
+        <div class="contact-details">
+          <p><strong>Email:</strong> hello@vikaslodh.com</p>
+          <p><strong>Location:</strong> Mumbai, India</p>
+        </div>
+        <div class="social-links">
+          <a href="https://github.com/" target="_blank" rel="noopener">GitHub</a
+          >
+          <a href="https://linkedin.com/" target="_blank" rel="noopener"
+            >LinkedIn</a
+          >
+          <a href="https://twitter.com/" target="_blank" rel="noopener"
+            >Twitter</a
+          >
+        </div>
+      </div>
+      <ContactForm />
+    </div>
+  </section>
+
+  <Navbar />
+</main>
 
 <style>
-  /* Header */
-  .header {
+  :root {
+    --nav-bg-color: #ededed;
+    --nav-active-color: #000;
+    --nav-text-color: #000;
+    --nav-active-text-color: #fff;
+  }
+
+  /* Main section styles */
+  .main {
+    background-color: var(--clr-blackground);
+    width: 100%;
+    min-height: 100dvh;
+    position: relative;
+    padding-inline: var(--gutter);
+  }
+
+  .main::after,
+  .main::before {
+    content: "";
+    position: absolute;
+    height: 100%;
+    width: 1px;
+    background-color: var(--clr-gray);
+    top: 0;
+  }
+
+  .main::before {
+    right: var(--gutter);
+  }
+
+  .main::after {
+    left: var(--gutter);
+  }
+
+  /* Hero section */
+  .hero {
     height: 100vh;
     display: flex;
+    flex-direction: column;
     justify-content: center;
-    align-items: center;
+    padding-bottom: 5rem;
   }
-  .header__container {
-    height: 100%;
-    padding: 120px 100px;
-    margin: 0 auto;
-    max-width: 75vw;
+
+  .name {
+    letter-spacing: 1rem;
+    padding-top: 0.5em;
+    text-transform: uppercase;
+    color: var(--clr-black);
+    font-size: clamp(64px, 10vw, 128px);
+    line-height: 1;
+    margin-bottom: 1rem;
+  }
+
+  .name span {
+    font-size: inherit;
+    line-height: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
+  }
+
+  .title {
+    font-size: clamp(18px, 4vw, 24px);
+    margin-bottom: 2rem;
+    font-weight: 400;
+  }
+
+  .intro {
+    max-width: 600px;
+    margin-bottom: 2rem;
+    font-size: 1.2rem;
+    line-height: 1.6;
+  }
+
+  .cta {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    padding: 0.8rem 1.5rem;
+    border-radius: 2rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+
+  .btn-primary {
+    background-color: var(--clr-black);
+    color: white;
+  }
+
+  .btn-secondary {
+    border: 1px solid var(--clr-black);
+    color: var(--clr-black);
+  }
+
+  .block {
+    border-block: 1px solid var(--clr-gray);
+    width: 100%;
+    height: 40px;
+    position: relative;
+  }
+
+  /* Section styling */
+  section {
+    padding: 6rem 0;
+  }
+
+  .section-title {
+    font-size: clamp(28px, 5vw, 42px);
+    margin-bottom: 3rem;
+    position: relative;
+  }
+
+  .section-title::after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 60px;
+    height: 4px;
+    background-color: var(--clr-black);
+  }
+
+  /* Projects grid */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+  }
+
+  /* About section */
+  .about-content {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 3rem;
+  }
+
+  .about-image img {
+    width: 100%;
+    border-radius: 4px;
+  }
+
+  .about-text p {
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+  }
+
+  .skills-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin-top: 1.5rem;
+  }
+
+  .skill-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+    padding: 0;
+  }
+
+  .skill-list li {
+    background-color: var(--nav-bg-color);
+    padding: 0.4rem 0.8rem;
+    border-radius: 1rem;
+    font-size: 0.9rem;
+  }
+
+  /* Contact section */
+  .contact-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+  }
+
+  .contact-info {
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
-  }
-  .header__intro,
-  .header__desc,
-  .header__desc-name,
-  .emoj {
-    font-weight: var(--font-300);
-    font-size: 2.5rem;
-  }
-  .header__intro {
-    font-weight: var(--font-500);
-  }
-  .header__desc-name {
-    font-weight: var(--font-700);
-    color: var(--clr-blue);
-  }
-  .header__desc {
-    max-width: 700px;
-  }
-  .header__contact span {
-    font-size: 1.25em;
-    font-weight: var(--font-300);
+    gap: 1.5rem;
   }
 
-  /* Highlight */
-  .highlight {
-    font-size: 1.25rem;
-    transition: all 0.2s ease-in-out;
-    font-weight: 400;
-    text-decoration: none;
-    display: inline-block;
-    padding: 2px 3px;
-    text-decoration: none;
-    box-shadow: inset 0 -3px 0 #0967d2;
-  }
-  .highlight:hover {
-    color: #fff;
-    box-shadow: inset 0 -33px 0 #0967d2;
-  }
-
-  /* Background */
-  .background {
+  .social-links {
     display: flex;
-    justify-content: center;
-    padding: 75px 170px;
+    gap: 1rem;
   }
-  .section__title {
-    color: var(--clr-blue);
-    font-weight: var(--font-900);
-    margin-right: 70px;
-    letter-spacing: 2px;
-    font-size: 1.2em;
-  }
-  .section__content {
-    max-width: 650px;
-    font-weight: var(--font-300);
-  }
-  .section__content p {
-    margin-bottom: 25px;
-  }
-  /*  */
-  .link {
-    font-weight: var(--font-700);
-    position: relative;
-    display: inline-block;
+
+  .social-links a {
     text-decoration: none;
+    color: var(--clr-black);
+    position: relative;
+    padding-bottom: 2px;
   }
-  .link::after {
-    content: " ";
-    top: 100%;
-    left: 0;
+
+  .social-links a::after {
+    content: "";
     position: absolute;
-    width: 100%;
+    bottom: 0;
+    left: 0;
+    width: 0;
     height: 1px;
-    background: #36363c;
-    content: "";
-    opacity: 0;
-    transition:
-      height 0.3s,
-      opacity 0.3s,
-      transform 0.3s;
-    transform: translateY(-5px);
+    background-color: var(--clr-black);
+    transition: width 0.3s ease;
   }
-  .link:focus::after,
-  .link:hover::after {
-    height: 2px;
-    border-radius: 3px;
-    opacity: 1;
-    transform: translateY(-2px);
-  }
-  /*  */
-  .arrow-link {
-    text-decoration: none;
-    font-weight: var(--font-700);
-    -webkit-transition: all 0.2s ease-in-out;
-    transition: all 0.2s ease-in-out;
-    font-weight: 700;
-    display: inline-block;
-    background-color: transparent;
-    white-space: nowrap;
-  }
-  .arrow-link:after {
-    -webkit-transition: all 0.2s ease-in-out;
-    transition: all 0.2s ease-in-out;
-    position: relative;
-    bottom: 2px;
-    margin-left: 15px;
-    content: "";
-    background: url("/img/arrow.png") no-repeat center;
-    background-size: 100%;
-    width: 20px;
-    height: 20px;
-    display: inline-block;
-    vertical-align: middle;
-  }
-  .arrow-link:hover:after {
-    -webkit-transform: translateX(7px);
-    transform: translateX(7px);
-  }
-  .skills {
-    display: flex;
-    justify-content: center;
-    padding: 75px 170px;
-  }
-  .skills__grid {
-    font-weight: 300;
-    font-size: 1rem;
+
+  .social-links a:hover::after {
     width: 100%;
-    display: grid;
-    grid-template-columns: repeat(4, minmax(100px, 1fr));
-    grid-column-gap: 25px;
-    grid-row-gap: 50px;
-    cursor: pointer;
-    padding-top: 10px;
   }
 
-  .skils-grid {
-    justify-items: center;
-    font-weight: 300;
-    font-size: 1rem;
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(4, minmax(100px, 1fr));
-    grid-column-gap: 25px;
-    grid-row-gap: 50px;
-    cursor: pointer;
-    padding-top: 10px;
-  }
-  .section-content.skils-grid {
-    padding: 0;
-    padding-top: 1.25rem;
-  }
-  .skils-grid > * {
-    font-size: 3rem;
-    width: 50px;
-    margin: 0 25px;
-  }
-  .icon-hover {
-    transition:
-      transform 250ms,
-      opacity 400ms;
-  }
-
-  .icon-hover:hover {
-    transform: scale(1.25);
-    opacity: 1;
-    /* color: var(--clr-blue); 
-  fill: var(--clr-blue); 
-  i used filter bcoz some of element are svg and some are font 
-  fill properties doesnt seem to work here 
-  for font icons color property will work */
-    filter: invert(26%) sepia(69%) saturate(2341%) hue-rotate(200deg)
-      brightness(98%) contrast(96%);
-  }
-  .mb-10 {
-    margin-bottom: 10px;
-  }
-  .projects {
-    display: flex;
-    justify-content: center;
-    padding: 75px 170px 0px 170px;
-  }
-  .projects .project {
-    max-width: 600px;
-    margin-bottom: 50px;
-  }
-  .tag {
-    display: inline-block;
-    margin: 3px 3px 3px 0;
-    font-size: 0.75rem;
-    font-weight: 700;
-    padding: 2px 7px;
-    border-radius: 3px;
-    color: #0967d2;
-    background: 0 0;
-  }
-  .projects p {
-    font-size: 14.4px;
-    font-weight: var(--font-300);
-    /* line-height: 21px; */
-  }
-  .projects h4 {
-    text-align: center;
-  }
-
-  .footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 50px 80px;
-  }
-  .list {
-    display: flex;
-    justify-content: space-between;
-  }
-  .list-item {
-    margin: 10px;
-  }
-  .copy {
-    font-weight: var(--font-700);
-  }
-
-  @media only screen and (max-width: 768px) {
-    .header__container {
-      margin: 0;
-      padding: 120px 0px;
-    }
-
-    .header__intro,
-    .header__desc,
-    .header__desc-name,
-    .emoj {
-      font-weight: var(--font-300);
-      font-size: 2rem;
-    }
-    .header__desc-name {
-      font-weight: var(--font-700);
-      color: var(--clr-blue);
-    }
-
-    .header__desc {
-      width: 100%;
-    }
-
-    .background,
-    .skills,
-    .projects {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .skils-grid {
-      grid-template-columns: repeat(2, minmax(100px, 1fr));
-      grid-column-gap: 25px;
-      grid-row-gap: 50px;
-    }
-  }
-
-  @media screen and (max-width: 550px) {
-    .header__container {
-      max-width: 100%;
-      padding: 120px 25px;
-    }
-
-    .header__intro,
-    .header__desc,
-    .header__desc-name,
-    .emoj {
-      font-weight: var(--font-300);
-      font-size: 1.75rem;
-    }
-
-    .background {
-      padding: 75px 25px;
-    }
-
-    .skills {
-      padding: 75px 25px;
-    }
-    .skils-grid > * {
-      font-size: 2.5rem;
-    }
-
-    .projects {
-      display: flex;
-      justify-content: center;
-      padding: 75px 25px 0px 25px;
-    }
-    .copy {
-      text-align: center;
-    }
-    .footer {
-      flex-wrap: wrap;
-      justify-content: center;
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .about-content,
+    .contact-container {
+      grid-template-columns: 1fr;
     }
   }
 </style>

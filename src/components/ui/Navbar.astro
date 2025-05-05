@@ -1,0 +1,140 @@
+---
+const navItems = [
+  { id: "home", label: "Home", href: "#" },
+  { id: "work", label: "Work", href: "#work" },
+  { id: "about", label: "About", href: "#about" },
+];
+---
+
+<nav class="nav">
+  <ul class="nav__menu">
+    {
+      navItems.map((item) => (
+        <li class="nav__item">
+          <a
+            href={item.href}
+            class={`nav__link ${item.id === "home" ? "active" : ""}`}
+            data-id={item.id}
+          >
+            {item.label}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+  <span class="nav__menu-indicator"></span>
+</nav>
+<style>
+  :root {
+    --nav-bg-color: #ededed;
+    --nav-active-color: #000;
+    --nav-text-color: #000;
+    --nav-active-text-color: #fff;
+  }
+  .nav {
+    position: fixed;
+    bottom: 2.4rem;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: fit-content;
+  }
+
+  .nav__menu {
+    display: flex;
+    background-color: var(--nav-bg-color);
+    border-radius: 1.4rem;
+    padding-block: 0.3rem;
+    position: relative;
+  }
+
+  .nav__item {
+    position: relative;
+    z-index: 2;
+  }
+
+  .nav__link {
+    display: block;
+    padding: 0.5rem 1rem;
+    color: var(--nav-text-color);
+    text-decoration: none;
+    border-radius: 1.4rem;
+    transition: color 0.3s var(--smooth);
+  }
+
+  .nav__link.active {
+    color: var(--nav-active-text-color);
+  }
+
+  .nav__menu-indicator {
+    position: absolute;
+    display: block;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 5rem;
+    background-color: var(--clr-black);
+    z-index: 1;
+    border-radius: 1.4rem;
+  }
+</style>
+
+<script>
+  import gsap from "gsap";
+
+  // DOM elements
+  const nav = document.querySelector(".nav");
+  const navLinks = nav?.querySelectorAll(".nav__link");
+  const menuIndicator = nav?.querySelector(".nav__menu-indicator");
+  const navMenu = nav?.querySelector(".nav__menu");
+
+  /**
+   * Calculate element's position relative to nav menu
+   */
+  function getPositionOfElement(element: HTMLElement) {
+    if (!element || !navMenu) return 0;
+    const navRect = navMenu.getBoundingClientRect();
+    const elementRect = element.getBoundingClientRect();
+    return elementRect.left - navRect.left;
+  }
+
+  /**
+   * Set initial position of menu indicator
+   */
+  function initializeIndicator() {
+    if (!menuIndicator || !navLinks) return;
+
+    const activeLink = document.querySelector(".nav__link.active");
+    if (activeLink) {
+      const { width } = activeLink.getBoundingClientRect();
+      const position = getPositionOfElement(activeLink as HTMLElement);
+
+      gsap.set(menuIndicator, {
+        width,
+        x: position,
+      });
+    }
+  }
+
+  navLinks?.forEach((link) => {
+    if (!menuIndicator) return;
+
+    link.addEventListener("click", (e) => {
+      navLinks.forEach((l) => l.classList.remove("active"));
+      link.classList.add("active");
+
+      const { width } = link.getBoundingClientRect();
+      const position = getPositionOfElement(link as HTMLElement);
+
+      gsap.to(menuIndicator, {
+        x: position,
+        width,
+        duration: 0.6,
+        ease: "back.out",
+      });
+    });
+  });
+
+  // Initialize on DOM content loaded
+  document.addEventListener("DOMContentLoaded", initializeIndicator);
+</script>
