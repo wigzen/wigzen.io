@@ -1,0 +1,155 @@
+---
+const navItems = [
+  { id: "home", label: "Home", href: "#" },
+  { id: "work", label: "Work", href: "#work" },
+  { id: "about", label: "About", href: "#about" },
+];
+---
+
+<nav class="nav">
+  <ul class="nav__menu">
+    {
+      navItems.map((item) => (
+        <li class="nav__item">
+          <a
+            href={item.href}
+            class={`nav__link ${item.id === "home" ? "active" : ""}`}
+            data-id={item.id}
+          >
+            {item.label}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+  <span class="nav__menu-indicator"></span>
+</nav>
+
+<style>
+  /* Navigation Variables */
+  :root {
+    --custom: cubic-bezier(0.76, 0, 0.24, 1);
+    --smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Navigation Container */
+  .nav {
+    position: fixed;
+    bottom: 2.4rem;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: fit-content;
+  }
+
+  /* Menu Styling */
+  .nav__menu {
+    display: flex;
+    background-color: var(--nav-bg-color);
+    border-radius: 1.4rem;
+    padding-block: 0.2rem;
+    position: relative;
+  }
+
+  .nav__item {
+    position: relative;
+    z-index: 2;
+  }
+
+  .nav__link {
+    display: block;
+    padding: 0.5rem 1rem;
+    color: var(--nav-text-color);
+    text-decoration: none;
+    border-radius: 1.4rem;
+    transition: color 0.3s var(--smooth);
+  }
+
+  .nav__link.active {
+    color: var(--nav-active-text-color);
+  }
+
+  /* Animated Indicator */
+  .nav__menu-indicator {
+    position: absolute;
+    display: block;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 5rem;
+    background-color: var(--clr-black);
+    z-index: 1;
+    border-radius: 1.4rem;
+  }
+</style>
+
+<script>
+  import gsap from "gsap";
+
+  // DOM elements
+  const nav = document.querySelector(".nav");
+  const navLinks = nav?.querySelectorAll(
+    ".nav__link"
+  ) as NodeListOf<HTMLAnchorElement> | null;
+  const menuIndicator = nav?.querySelector(
+    ".nav__menu-indicator"
+  ) as HTMLElement | null;
+  const navMenu = nav?.querySelector(".nav__menu") as HTMLElement | null;
+
+  /**
+   * Calculate element's position relative to nav menu
+   */
+  function getPositionOfElement(element: HTMLElement): number {
+    if (!element || !navMenu) return 0;
+    const navRect = navMenu.getBoundingClientRect();
+    const elementRect = element.getBoundingClientRect();
+    return elementRect.left - navRect.left;
+  }
+
+  /**
+   * Set initial position of menu indicator
+   */
+  function initializeIndicator(): void {
+    if (!menuIndicator || !navLinks) return;
+
+    const activeLink = document.querySelector(
+      ".nav__link.active"
+    ) as HTMLElement | null;
+    if (activeLink) {
+      const { width } = activeLink.getBoundingClientRect();
+      const position = getPositionOfElement(activeLink);
+
+      gsap.set(menuIndicator, {
+        width,
+        x: position,
+      });
+    }
+  }
+
+  // Add click event listeners to navigation links
+  navLinks?.forEach((link) => {
+    if (!menuIndicator) return;
+
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      // Update active class
+      navLinks.forEach((l) => l.classList.remove("active"));
+      link.classList.add("active");
+
+      // Animate indicator
+      const { width } = link.getBoundingClientRect();
+      const position = getPositionOfElement(link);
+
+      gsap.to(menuIndicator, {
+        x: position,
+        width,
+        duration: 0.6,
+        ease: "back.out",
+      });
+    });
+  });
+
+  // Initialize on DOM content loaded
+  document.addEventListener("DOMContentLoaded", initializeIndicator);
+</script>
