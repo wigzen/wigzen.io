@@ -1,5 +1,6 @@
 ---
 import Navbar from "./ui/Navbar.astro";
+import Counter from "./ui/solid/Counter";
 ---
 
 <main class="main">
@@ -11,9 +12,15 @@ import Navbar from "./ui/Navbar.astro";
   <div class="block">
     <div class="ui-background-lines"></div>
   </div>
-
+  <Counter client:only="solid" />
   <Navbar />
 </main>
+
+<script>
+  setTimeout(() => {
+    document.querySelector(".counter-container")?.remove();
+  }, 2500);
+</script>
 
 <style>
   :root {
