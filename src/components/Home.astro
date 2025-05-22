@@ -1,9 +1,12 @@
 ---
 import Navbar from "./ui/Navbar.astro";
-import Counter from "./ui/solid/Counter";
+import Counter from "./solid/Counter";
+import ContentTransition from "./ui/ContentTransition.astro";
+import SplitText from "./ui/SplitText.astro";
 ---
 
 <main class="main">
+  <Navbar />
   <h1 class="name">
     <span>Vikas</span>
     <br />
@@ -11,9 +14,10 @@ import Counter from "./ui/solid/Counter";
   </h1>
   <div class="block">
     <div class="ui-background-lines"></div>
+    <p class="subtitle">About Me</p>
   </div>
-  <Counter client:only="solid" />
-  <Navbar />
+  <SplitText />
+  <!-- <Counter client:only="solid" /> -->
 </main>
 
 <script>
@@ -30,6 +34,13 @@ import Counter from "./ui/solid/Counter";
     --nav-active-text-color: #fff;
   }
 
+  .subtitle {
+    color: #3f3f3f;
+    font-weight: 600;
+    margin-top: 0.4em;
+    font-size: 20px;
+    line-height: 1;
+  }
   /* Main section styles */
   .main {
     background-color: var(--clr-blackground);
