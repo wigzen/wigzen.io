@@ -10,7 +10,7 @@
 
 ## 🚀 About Me
 
-- 🌱 **Portfolio:** [wigzen.github.io/wigzen.io](https://wigzen.github.io/wigzen.io/)
+- 🌱 **Portfolio:** [wigzen.dev](https://wigzen.dev/)
 - 👯 I'm looking to collaborate on **Yoga With AI** and other innovative projects
 - 💬 Ask me about **React, Vue.js, Python, Real-time Applications, and Full-Stack Development**
 - 📫 How to reach me: **vikaslodh2@gmail.com**
