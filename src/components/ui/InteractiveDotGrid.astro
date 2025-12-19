@@ -1,0 +1,465 @@
+<!--------- Interactive Dot Grid Component [Reusable] ---------><!-- 
+  Interactive Dot Grid Component
+  
+  A customizable interactive dot grid that responds to mouse movements and clicks.
+  Features:
+  - Dots glow and change color based on mouse proximity
+  - Dots get pushed away when mouse moves quickly or on click
+  - Configurable colors, spacing, and interaction parameters
+  - Optional center hole for logo/content placement
+  
+  Props:
+  - baseColor: Base color of dots (default: "#245E51")
+  - activeColor: Color when dots are activated (default: "#A8FF51")
+  - threshold: Distance for mouse interaction (default: 150)
+  - speedThreshold: Speed required for push effect (default: 100)
+  - shockRadius: Radius for click shock wave (default: 250)
+  - shockPower: Power of shock wave effect (default: 5)
+  - centerHole: Whether to create center hole (default: true)
+  - dotSize: Size of dots in em (default: 1)
+  - dotGap: Gap between dots in em (default: 2)
+-->
+<section class="section-resource">
+  <div class="dots-wrap">
+    <div data-dots-container-init="" class="dots-container">
+      <div class="dot"></div>
+    </div>
+  </div>
+
+  <!-- Optional slot for center content (logo, text, etc.) -->
+  <div class="center-content">
+    <a href="#" class="osmo-icon__link w-inline-block">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="100%"
+        viewBox="0 0 160 160"
+        fill="none"
+        class="osmo-icon-svg"
+        ><path
+          d="M94.8284 53.8578C92.3086 56.3776 88 54.593 88 51.0294V0H72V59.9999C72 66.6273 66.6274 71.9999 60 71.9999H0V87.9999H51.0294C54.5931 87.9999 56.3777 92.3085 53.8579 94.8283L18.3431 130.343L29.6569 141.657L65.1717 106.142C67.684 103.63 71.9745 105.396 72 108.939V160L88.0001 160L88 99.9999C88 93.3725 93.3726 87.9999 100 87.9999H160V71.9999H108.939C105.407 71.9745 103.64 67.7091 106.12 65.1938L106.142 65.1716L141.657 29.6568L130.343 18.3432L94.8284 53.8578Z"
+          fill="currentColor"></path></svg
+      >
+    </a>
+  </div>
+</section>
+
+<style is:global>
+  /* Base styles for the interactive dot grid */
+  body {
+    /* background-color: #08342a; */
+    color: var(--color-light);
+    font-size: 1vw;
+    margin: 0;
+    padding: 0;
+    overscroll-behavior: none;
+    min-height: 100%;
+    cursor:
+      url("https://cdn.prod.website-files.com/6708f85ff3d3cba6aff436fb/671251b239d7aeb290a31ac5_cursor-default%402x.svg")
+        2 0,
+      auto;
+  }
+
+  /* Custom cursor for interactive elements */
+  a,
+  button {
+    cursor:
+      url("https://cdn.prod.website-files.com/6708f85ff3d3cba6aff436fb/671251b212e6b71494aa67ff_cursor-pointer%402x.svg")
+        12 0,
+      pointer;
+  }
+
+  /* Main container for the dot grid */
+  .section-resource {
+    padding: 4em;
+    justify-content: center;
+    align-items: center;
+    height: 100svh;
+    display: flex;
+    position: relative;
+  }
+
+  /* Center content positioning */
+  .center-content {
+    position: absolute;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .osmo-icon__link {
+    color: currentColor;
+    text-decoration: none;
+  }
+
+  .osmo-icon-svg {
+    width: 10em;
+  }
+
+  /* Dots container wrapper */
+  .dots-wrap {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+
+  /* Grid container for dots */
+  .dots-container {
+    grid-column-gap: 2em;
+    grid-row-gap: 2em;
+    pointer-events: none;
+    flex-flow: wrap;
+    grid-template-rows: auto;
+    grid-template-columns: 1fr;
+    grid-auto-columns: 1fr;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    position: absolute;
+    inset: 0em;
+  }
+
+  /* Individual dot styling */
+  .dot {
+    will-change: transform, background-color;
+    transform-origin: center;
+    background-color: #245e51;
+    border-radius: 50%;
+    width: 1em;
+    height: 1em;
+    position: relative;
+    transform: translate(0);
+  }
+</style>
+
+<script>
+  import { gsap } from "gsap";
+  import { InertiaPlugin } from "gsap/InertiaPlugin";
+
+  // Register GSAP plugins
+  gsap.registerPlugin(InertiaPlugin);
+
+  /**
+   * Configuration interface for the interactive dot grid
+   */
+  interface DotGridConfig {
+    baseColor: string;
+    activeColor: string;
+    threshold: number;
+    speedThreshold: number;
+    shockRadius: number;
+    shockPower: number;
+    maxSpeed: number;
+    centerHole: boolean;
+    dotSize: number;
+    dotGap: number;
+  }
+
+  /**
+   * Interface for dot center data
+   */
+  interface DotCenter {
+    el: ExtendedHTMLDivElement;
+    x: number;
+    y: number;
+  }
+
+  /**
+   * Extended HTMLDivElement interface to include custom properties
+   */
+  interface ExtendedHTMLDivElement extends HTMLDivElement {
+    _isHole?: boolean;
+    _inertiaApplied?: boolean;
+  }
+
+  /**
+   * Mouse tracking data interface
+   */
+  interface MouseData {
+    lastTime: number;
+    lastX: number;
+    lastY: number;
+  }
+
+  /**
+   * Initialize the interactive dot grid with customizable configuration
+   * @param config - Configuration object for the dot grid
+   */
+  function initInteractiveDotGrid(config?: Partial<DotGridConfig>) {
+    // Default configuration
+    const defaultConfig: DotGridConfig = {
+      baseColor: "#245E51",
+      activeColor: "#A8FF51",
+      threshold: 150,
+      speedThreshold: 100,
+      shockRadius: 250,
+      shockPower: 5,
+      maxSpeed: 5000,
+      centerHole: true,
+      dotSize: 1,
+      dotGap: 2,
+    };
+
+    // Merge user config with defaults
+    const finalConfig = { ...defaultConfig, ...config };
+
+    // Find all dot containers to initialize
+    document
+      .querySelectorAll("[data-dots-container-init]")
+      .forEach((container) => {
+        initSingleDotGrid(container as HTMLElement, finalConfig);
+      });
+  }
+
+  /**
+   * Initialize a single dot grid container
+   * @param container - The container element for the dot grid
+   * @param config - Configuration for this grid instance
+   */
+  function initSingleDotGrid(container: HTMLElement, config: DotGridConfig) {
+    // Grid state variables
+    let dots: ExtendedHTMLDivElement[] = [];
+    let dotCenters: DotCenter[] = [];
+
+    // Mouse tracking data
+    const mouseData: MouseData = {
+      lastTime: 0,
+      lastX: 0,
+      lastY: 0,
+    };
+
+    /**
+     * Build the dot grid based on container dimensions
+     */
+    function buildGrid(): void {
+      // Clear existing dots
+      container.innerHTML = "";
+      dots = [];
+      dotCenters = [];
+
+      // Calculate grid dimensions
+      const style = getComputedStyle(container);
+      const dotPx = parseFloat(style.fontSize) * config.dotSize;
+      const gapPx = parseFloat(style.fontSize) * config.dotGap;
+      const contW = container.clientWidth;
+      const contH = container.clientHeight;
+
+      // Calculate number of columns and rows
+      const cols = Math.floor((contW + gapPx) / (dotPx + gapPx));
+      const rows = Math.floor((contH + gapPx) / (dotPx + gapPx));
+      const total = cols * rows;
+
+      // Calculate center hole dimensions if enabled
+      const holeCols = config.centerHole ? (cols % 2 === 0 ? 4 : 5) : 0;
+      const holeRows = config.centerHole ? (rows % 2 === 0 ? 4 : 5) : 0;
+      const startCol = (cols - holeCols) / 2;
+      const startRow = (rows - holeRows) / 2;
+
+      // Create dots
+      for (let i = 0; i < total; i++) {
+        const row = Math.floor(i / cols);
+        const col = i % cols;
+
+        // Check if this position should be a hole
+        const isHole =
+          config.centerHole &&
+          row >= startRow &&
+          row < startRow + holeRows &&
+          col >= startCol &&
+          col < startCol + holeCols;
+
+        // Create dot element
+        const dot = document.createElement("div") as ExtendedHTMLDivElement;
+        dot.classList.add("dot");
+
+        if (isHole) {
+          // Hide dots in the center hole
+          dot.style.visibility = "hidden";
+          dot._isHole = true;
+        } else {
+          // Initialize visible dots
+          gsap.set(dot, {
+            x: 0,
+            y: 0,
+            backgroundColor: config.baseColor,
+            width: `${config.dotSize}em`,
+            height: `${config.dotSize}em`,
+          });
+          dot._inertiaApplied = false;
+        }
+
+        container.appendChild(dot);
+        dots.push(dot);
+      }
+
+      // Calculate dot centers after DOM update
+      requestAnimationFrame(() => {
+        dotCenters = dots
+          .filter((d) => !d._isHole)
+          .map((d) => {
+            const rect = d.getBoundingClientRect();
+            return {
+              el: d,
+              x: rect.left + window.scrollX + rect.width / 2,
+              y: rect.top + window.scrollY + rect.height / 2,
+            };
+          });
+      });
+    }
+
+    /**
+     * Handle mouse movement interactions
+     * @param e - Mouse event
+     */
+    function handleMouseMove(e: MouseEvent): void {
+      const now = performance.now();
+      const dt = now - mouseData.lastTime || 16;
+
+      // Calculate mouse velocity
+      let dx = e.pageX - mouseData.lastX;
+      let dy = e.pageY - mouseData.lastY;
+      let vx = (dx / dt) * 1000;
+      let vy = (dy / dt) * 1000;
+      let speed = Math.hypot(vx, vy);
+
+      // Limit maximum speed to prevent extreme effects
+      if (speed > config.maxSpeed) {
+        const scale = config.maxSpeed / speed;
+        vx *= scale;
+        vy *= scale;
+        speed = config.maxSpeed;
+      }
+
+      // Update mouse tracking data
+      mouseData.lastTime = now;
+      mouseData.lastX = e.pageX;
+      mouseData.lastY = e.pageY;
+
+      // Update dots based on mouse position and speed
+      requestAnimationFrame(() => {
+        dotCenters.forEach(({ el, x, y }) => {
+          const dist = Math.hypot(x - e.pageX, y - e.pageY);
+
+          // Calculate color interpolation based on distance
+          const t = Math.max(0.1, 1 - dist / config.threshold);
+          const color = gsap.utils.interpolate(
+            config.baseColor,
+            config.activeColor,
+            t
+          );
+          gsap.set(el, { backgroundColor: color });
+          gsap.set(el, {
+            scale: t,
+          });
+
+          // Apply push effect if mouse is moving fast enough
+          if (
+            speed > config.speedThreshold &&
+            dist < config.threshold &&
+            !el._inertiaApplied
+          ) {
+            applyPushEffect(el, e.pageX, e.pageY, x, y, vx, vy);
+          }
+        });
+      });
+    }
+
+    /**
+     * Handle click interactions (shock wave effect)
+     * @param e - Mouse event
+     */
+    function handleClick(e: MouseEvent): void {
+      dotCenters.forEach(({ el, x, y }) => {
+        const dist = Math.hypot(x - e.pageX, y - e.pageY);
+
+        if (dist < config.shockRadius && !el._inertiaApplied) {
+          const falloff = Math.max(0, 1 - dist / config.shockRadius);
+          const pushX = (x - e.pageX) * config.shockPower * falloff;
+          const pushY = (y - e.pageY) * config.shockPower * falloff;
+
+          applyPushEffect(el, e.pageX, e.pageY, x, y, pushX * 100, pushY * 100);
+        }
+      });
+    }
+
+    /**
+     * Apply push effect to a dot
+     * @param el - The dot element
+     * @param mouseX - Mouse X position
+     * @param mouseY - Mouse Y position
+     * @param dotX - Dot X position
+     * @param dotY - Dot Y position
+     * @param vx - Velocity X
+     * @param vy - Velocity Y
+     */
+    function applyPushEffect(
+      el: ExtendedHTMLDivElement,
+      mouseX: number,
+      mouseY: number,
+      dotX: number,
+      dotY: number,
+      vx: number,
+      vy: number
+    ): void {
+      el._inertiaApplied = true;
+
+      const pushX = dotX - mouseX + vx * 0.005;
+      const pushY = dotY - mouseY + vy * 0.005;
+
+      // Apply inertia animation
+      gsap.to(el, {
+        inertia: { x: pushX, y: pushY, resistance: 750 },
+        onComplete() {
+          // Return to original position with elastic animation
+          gsap.to(el, {
+            x: 0,
+            y: 0,
+            duration: 1.5,
+            ease: "elastic.out(1,0.75)",
+          });
+          el._inertiaApplied = false;
+        },
+      });
+    }
+
+    /**
+     * Clean up event listeners
+     */
+    function cleanup(): void {
+      window.removeEventListener("resize", buildGrid);
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("click", handleClick);
+    }
+
+    // Initialize the grid
+    buildGrid();
+
+    // Set up event listeners
+    window.addEventListener("resize", buildGrid);
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("click", handleClick);
+
+    // Return cleanup function for potential future use
+    return cleanup;
+  }
+
+  /**
+   * Initialize all dot grids when DOM is ready
+   */
+  document.addEventListener("DOMContentLoaded", function () {
+    // Initialize with default configuration
+    initInteractiveDotGrid();
+    // Example of custom configuration:
+    // initInteractiveDotGrid({
+    //   baseColor: "#FF0000",
+    //   activeColor: "#00FF00",
+    //   threshold: 200,
+    //   centerHole: false,
+    // });
+  });
+
+  // Export for potential external use
+  if (typeof window !== "undefined") {
+    (window as any).initInteractiveDotGrid = initInteractiveDotGrid;
+  }
+</script>
