@@ -1,0 +1,164 @@
+---
+---
+
+<section id="contact" class="contact">
+  <div class="contact__inner">
+    <div class="contact__header">
+      <span class="contact__index">(04)</span>
+    </div>
+
+    <h2 class="contact__heading" data-contact-heading>
+      Get in touch.
+    </h2>
+
+    <a
+      href="mailto:vikaslodh2@gmail.com"
+      class="contact__email"
+      data-magnetic
+    >
+      vikaslodh2@gmail.com
+    </a>
+
+    <div class="contact__links">
+      <a
+        href="https://github.com/wigzen"
+        target="_blank"
+        rel="noopener"
+        class="contact__link"
+        aria-label="GitHub"
+      >
+        <i class="fab fa-github"></i>
+        GitHub
+      </a>
+      <a
+        href="https://linkedin.com/in/vikaslodh"
+        target="_blank"
+        rel="noopener"
+        class="contact__link"
+        aria-label="LinkedIn"
+      >
+        <i class="fab fa-linkedin"></i>
+        LinkedIn
+      </a>
+    </div>
+
+    <p class="contact__footer">Mumbai, India &nbsp;·&nbsp; 2026</p>
+  </div>
+</section>
+
+<style>
+  .contact {
+    padding-block: var(--section-pad);
+    padding-inline: var(--gutter);
+    background: var(--clr-bg);
+    border-top: 1px solid var(--clr-border);
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+  }
+
+  .contact__inner {
+    width: 100%;
+  }
+
+  .contact__header {
+    margin-bottom: 2rem;
+  }
+
+  .contact__index {
+    font-size: 0.8rem;
+    color: var(--clr-text-muted);
+    letter-spacing: 0.1em;
+  }
+
+  .contact__heading {
+    font-size: var(--text-hero);
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    line-height: 0.9;
+    color: var(--clr-text);
+    margin-bottom: 3rem;
+    overflow: hidden;
+  }
+
+  .contact__email {
+    display: inline-block;
+    font-size: clamp(1.5rem, 4vw, 3.5rem);
+    font-weight: 700;
+    color: var(--clr-accent);
+    letter-spacing: -0.01em;
+    border-bottom: 2px solid var(--clr-accent);
+    padding-bottom: 0.25rem;
+    margin-bottom: 4rem;
+    transition: opacity 0.2s;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
+  .contact__email:hover {
+    opacity: 0.75;
+  }
+
+  .contact__links {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 5rem;
+    flex-wrap: wrap;
+  }
+
+  .contact__link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--clr-text-muted);
+    border-bottom: 1px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+  }
+
+  .contact__link:hover {
+    color: var(--clr-text);
+    border-color: var(--clr-border);
+  }
+
+  .contact__link i {
+    font-size: 1.1rem;
+  }
+
+  .contact__footer {
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--clr-text-muted);
+  }
+</style>
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+  import { SplitText } from "gsap/SplitText";
+
+  gsap.registerPlugin(ScrollTrigger, SplitText);
+
+  const heading = document.querySelector("[data-contact-heading]");
+  if (heading) {
+    const split = SplitText.create(heading, {
+      type: "chars",
+      mask: "chars",
+    });
+
+    gsap.from(split.chars, {
+      yPercent: 110,
+      stagger: 0.05,
+      duration: 0.8,
+      ease: "expo.out",
+      scrollTrigger: {
+        trigger: heading,
+        start: "top 80%",
+        toggleActions: "play none none none",
+      },
+    });
+  }
+</script>

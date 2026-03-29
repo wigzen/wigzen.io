@@ -1,12 +1,13 @@
 ---
 const navItems = [
-  { id: "home", label: "Home", href: "#" },
+  { id: "home", label: "Home", href: "#home" },
   { id: "work", label: "Work", href: "#work" },
   { id: "about", label: "About", href: "#about" },
+  { id: "contact", label: "Contact", href: "#contact" },
 ];
 ---
 
-<nav class="nav">
+<nav class="nav" id="mainNav" style="opacity:0">
   <ul class="nav__menu">
     {
       navItems.map((item) => (
@@ -21,8 +22,8 @@ const navItems = [
         </li>
       ))
     }
+    <span class="nav__menu-indicator"></span>
   </ul>
-  <span class="nav__menu-indicator"></span>
 </nav>
 
 <style>
@@ -40,6 +41,7 @@ const navItems = [
     right: 0;
     margin: auto;
     width: fit-content;
+    z-index: 1000;
   }
 
   /* Menu Styling */
@@ -49,6 +51,8 @@ const navItems = [
     border-radius: 1.4rem;
     padding-block: 0.2rem;
     position: relative;
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--clr-border);
   }
 
   .nav__item {
@@ -63,31 +67,49 @@ const navItems = [
     text-decoration: none;
     border-radius: 1.4rem;
     transition: color 0.3s var(--smooth);
+    font-size: 0.875rem;
+    position: relative;
+    z-index: 3;
   }
 
   .nav__link.active {
     color: var(--nav-active-text-color);
+    font-weight: 500;
   }
 
   /* Animated Indicator */
   .nav__menu-indicator {
     position: absolute;
     display: block;
-    top: 0;
+    top: 0.2rem;
     left: 0;
-    height: 100%;
+    height: calc(100% - 0.4rem);
     width: 5rem;
-    background-color: var(--clr-black);
+    background-color: var(--nav-active-color, #a8ff51);
     z-index: 1;
-    border-radius: 1.4rem;
+    border-radius: 1.2rem;
+    will-change: transform, width;
+  }
+
+  @media (max-width: 480px) {
+    .nav__link {
+      padding: 0.4rem 0.75rem;
+      font-size: 0.8rem;
+    }
+
+    .nav__menu-indicator {
+      border-radius: 1rem;
+    }
   }
 </style>
 
 <script>
   import gsap from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-  // DOM elements
-  const nav = document.querySelector(".nav");
+  gsap.registerPlugin(ScrollTrigger);
+
+  const nav = document.querySelector(".nav") as HTMLElement | null;
   const navLinks = nav?.querySelectorAll(
     ".nav__link"
   ) as NodeListOf<HTMLAnchorElement> | null;
@@ -96,9 +118,6 @@ const navItems = [
   ) as HTMLElement | null;
   const navMenu = nav?.querySelector(".nav__menu") as HTMLElement | null;
 
-  /**
-   * Calculate element's position relative to nav menu
-   */
   function getPositionOfElement(element: HTMLElement): number {
     if (!element || !navMenu) return 0;
     const navRect = navMenu.getBoundingClientRect();
@@ -106,50 +125,77 @@ const navItems = [
     return elementRect.left - navRect.left;
   }
 
-  /**
-   * Set initial position of menu indicator
-   */
+  function setActive(id: string) {
+    if (!navLinks || !menuIndicator) return;
+    // Guard: only act if there's a matching nav item
+    const activeLink = nav?.querySelector(
+      `[data-id="${id}"]`
+    ) as HTMLElement | null;
+    if (!activeLink) return;
+    navLinks.forEach((l) => l.classList.remove("active"));
+    activeLink.classList.add("active");
+    const { width } = activeLink.getBoundingClientRect();
+    const position = getPositionOfElement(activeLink);
+    gsap.to(menuIndicator, {
+      x: position,
+      width,
+      duration: 0.4,
+      ease: "power3.out",
+    });
+  }
+
   function initializeIndicator(): void {
     if (!menuIndicator || !navLinks) return;
-
-    const activeLink = document.querySelector(
+    const activeLink = nav?.querySelector(
       ".nav__link.active"
     ) as HTMLElement | null;
     if (activeLink) {
       const { width } = activeLink.getBoundingClientRect();
       const position = getPositionOfElement(activeLink);
-
-      gsap.set(menuIndicator, {
-        width,
-        x: position,
-      });
+      gsap.set(menuIndicator, { width, x: position });
     }
   }
 
-  // Add click event listeners to navigation links
+  // Click handlers
   navLinks?.forEach((link) => {
-    if (!menuIndicator) return;
-
     link.addEventListener("click", (e) => {
       e.preventDefault();
-
-      // Update active class
-      navLinks.forEach((l) => l.classList.remove("active"));
-      link.classList.add("active");
-
-      // Animate indicator
-      const { width } = link.getBoundingClientRect();
-      const position = getPositionOfElement(link);
-
-      gsap.to(menuIndicator, {
-        x: position,
-        width,
-        duration: 0.6,
-        ease: "back.out",
-      });
+      const id = link.dataset.id || "";
+      setActive(id);
+      // Smooth scroll to section
+      const target = document.getElementById(id === "home" ? "home" : id);
+      target?.scrollIntoView({ behavior: "smooth" });
     });
   });
 
-  // Initialize on DOM content loaded
+  // Reveal navbar after loader completes
+  function revealNav() {
+    if (!nav) return;
+    initializeIndicator();
+    gsap.to(nav, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" });
+  }
+
+  gsap.set(nav, { y: 20 });
+
+  if ((window as any).__introComplete) {
+    revealNav();
+  } else {
+    document.addEventListener("intro:complete", revealNav, { once: true });
+  }
+
+  // ScrollTrigger-based active state — only sections that have nav items
+  const sectionIds = ["home", "about", "work", "contact"];
+  sectionIds.forEach((id) => {
+    const section = document.getElementById(id);
+    if (!section) return;
+    ScrollTrigger.create({
+      trigger: section,
+      start: "top 50%",
+      end: "bottom 50%",
+      onEnter: () => setActive(id),
+      onEnterBack: () => setActive(id),
+    });
+  });
+
   document.addEventListener("DOMContentLoaded", initializeIndicator);
 </script>

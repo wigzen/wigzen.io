@@ -1,0 +1,189 @@
+---
+import InteractiveDotGrid from "../ui/InteractiveDotGrid.astro";
+---
+
+<section id="home" class="hero">
+  <div class="hero__bg">
+    <InteractiveDotGrid
+      baseColor="#1a1a1a"
+      activeColor="#a8ff51"
+      centerHole={true}
+    />
+  </div>
+
+  <div class="hero__content">
+    <p class="hero__eyebrow" data-intro>Mumbai, India &nbsp;·&nbsp; Available</p>
+    <h1 class="hero__name">
+      <span class="hero__line" data-name-line>VIKAS</span>
+      <span class="hero__line hero__line--right" data-name-line>LODH</span>
+    </h1>
+    <div class="hero__meta">
+      <span class="hero__role" data-intro>Software Engineer</span>
+      <a href="#work" class="hero__cta" data-magnetic data-intro>See Work ↓</a>
+    </div>
+  </div>
+
+  <p class="hero__scroll" data-intro>Scroll</p>
+</section>
+
+<style>
+  .hero {
+    height: 100dvh;
+    position: relative;
+    overflow: hidden;
+    padding-inline: var(--gutter);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .hero__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: auto;
+  }
+
+  .hero__content {
+    position: relative;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .hero__eyebrow {
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--clr-text-muted);
+    margin-bottom: 1.5rem;
+  }
+
+  .hero__name {
+    font-size: var(--text-hero);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    line-height: 0.9;
+    color: var(--clr-text);
+    overflow: hidden;
+  }
+
+  .hero__line {
+    display: block;
+    overflow: hidden;
+  }
+
+  .hero__line--right {
+    text-align: right;
+  }
+
+  .hero__meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 2rem;
+    pointer-events: auto;
+  }
+
+  .hero__role {
+    font-size: 1rem;
+    color: var(--clr-text-muted);
+  }
+
+  .hero__cta {
+    display: inline-block;
+    padding: 0.75rem 1.75rem;
+    border: 1px solid var(--clr-border);
+    border-radius: 2rem;
+    font-size: 0.9rem;
+    color: var(--clr-text);
+    transition: background 0.3s, color 0.3s, border-color 0.3s;
+  }
+
+  .hero__cta:hover {
+    background: var(--clr-accent);
+    color: var(--clr-bg);
+    border-color: var(--clr-accent);
+  }
+
+  .hero__scroll {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    translate: -50% 0;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--clr-text-muted);
+    z-index: 2;
+  }
+
+  @media (max-width: 768px) {
+    .hero {
+      padding-inline: var(--gutter);
+      justify-content: flex-end;
+      padding-bottom: 6rem;
+    }
+
+    .hero__eyebrow {
+      font-size: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .hero__name {
+      font-size: clamp(48px, 16vw, 100px);
+    }
+
+    .hero__meta {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .hero__scroll {
+      bottom: 1.5rem;
+    }
+  }
+</style>
+
+<script>
+  import { gsap } from "gsap";
+  import { SplitText } from "gsap/SplitText";
+
+  gsap.registerPlugin(SplitText);
+
+  function animateHero() {
+    const nameLines = document.querySelectorAll("[data-name-line]");
+    if (!nameLines.length) return;
+
+    const split = SplitText.create("[data-name-line]", {
+      type: "chars",
+      mask: "chars",
+    });
+
+    const tl = gsap.timeline();
+    tl.from(split.chars, {
+      yPercent: 110,
+      stagger: { amount: 0.5 },
+      duration: 1.0,
+      ease: "expo.out",
+    }).from(
+      "[data-intro]",
+      {
+        opacity: 0,
+        y: 16,
+        stagger: 0.1,
+        duration: 0.5,
+        ease: "power2.out",
+      },
+      "-=0.3"
+    );
+  }
+
+  if ((window as any).__introComplete) {
+    animateHero();
+  } else {
+    document.addEventListener("intro:complete", animateHero, { once: true });
+  }
+</script>

@@ -1,0 +1,243 @@
+---
+const projects = [
+  {
+    id: "hoopr",
+    index: "01",
+    title: "Hoopr.ai",
+    tags: ["Kubernetes", "PyTorch", "Redis", "Terraform"],
+    description:
+      "Built the serving infrastructure behind an AI-powered music platform — auto-scaling pipelines, GPU-backed recommendation engine, CDN-optimised audio delivery, and full observability stack serving 40,000+ creators at sub-200ms p95.",
+    href: "https://hoopr.ai",
+    accentColor: "#1a1a2e",
+  },
+  {
+    id: "hedged",
+    index: "02",
+    title: "Hedged",
+    tags: ["Go", "gRPC", "Kafka", "AWS"],
+    description:
+      "Engineered the low-latency data pipeline ingesting live market feeds over WebSockets. Event-driven microservice architecture with sub-100ms order processing and real-time P&L aggregation across derivatives positions.",
+    href: "#",
+    accentColor: "#0d1b0f",
+  },
+];
+---
+
+<section id="work" class="work">
+  <div class="work__header">
+    <span class="work__index">(02)</span>
+    <h2 class="work__heading">Selected<br />Work</h2>
+  </div>
+
+  <div class="work__list">
+    {
+      projects.map((p) => (
+        <article class="work__card" data-work-card>
+          <div
+            class="work__card-preview"
+            style={`background:${p.accentColor}`}
+          />
+          <div class="work__card-body">
+            <span class="work__card-index">{p.index}</span>
+            <h3 class="work__card-title">{p.title}</h3>
+            <p class="work__card-desc">{p.description}</p>
+            <div class="work__card-footer">
+              <ul class="work__card-tags">
+                {p.tags.map((t) => (
+                  <li class="work__card-tag">{t}</li>
+                ))}
+              </ul>
+              <a href={p.href} target="_blank" rel="noopener" class="work__card-link" data-magnetic>
+                View Project ↗
+              </a>
+            </div>
+          </div>
+        </article>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .work {
+    padding-block: var(--section-pad);
+    padding-inline: var(--gutter);
+    background: var(--clr-bg);
+  }
+
+  .work__header {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 4rem;
+  }
+
+  .work__index {
+    font-size: 0.8rem;
+    color: var(--clr-text-muted);
+    letter-spacing: 0.1em;
+  }
+
+  .work__heading {
+    font-size: var(--text-h2);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    line-height: 0.95;
+    color: var(--clr-text);
+  }
+
+  .work__list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .work__card {
+    position: relative;
+    border-top: 1px solid var(--clr-border);
+    min-height: 40vh;
+    display: grid;
+    grid-template-columns: 1fr;
+    overflow: hidden;
+    clip-path: inset(0 100% 0 0);
+  }
+
+  .work__card:last-child {
+    border-bottom: 1px solid var(--clr-border);
+  }
+
+  .work__card-preview {
+    position: absolute;
+    inset: 0;
+    opacity: 0.06;
+    transform-origin: top;
+    transform: scaleY(0);
+    transition: none;
+    z-index: 0;
+  }
+
+  .work__card:hover .work__card-preview {
+    opacity: 0.12;
+  }
+
+  .work__card-body {
+    position: relative;
+    z-index: 1;
+    padding-block: 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .work__card-index {
+    font-size: 0.75rem;
+    color: var(--clr-text-muted);
+    letter-spacing: 0.1em;
+  }
+
+  .work__card-title {
+    font-size: var(--text-h2);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    line-height: 0.95;
+    color: var(--clr-text);
+  }
+
+  .work__card-desc {
+    font-size: 1rem;
+    color: var(--clr-text-muted);
+    max-width: 55ch;
+    line-height: 1.6;
+    overflow-wrap: break-word;
+  }
+
+  .work__card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .work__card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .work__card-tag {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0.3rem 0.75rem;
+    border: 1px solid var(--clr-border);
+    border-radius: 2rem;
+    color: var(--clr-text-muted);
+  }
+
+  .work__card-link {
+    font-size: 0.85rem;
+    color: var(--clr-accent);
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+  }
+
+  .work__card-link:hover {
+    border-color: var(--clr-accent);
+  }
+
+  @media (max-width: 640px) {
+    .work__card-title {
+      font-size: clamp(2rem, 8vw, 3rem);
+    }
+  }
+</style>
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Clip-path reveal on scroll
+  document.querySelectorAll("[data-work-card]").forEach((card) => {
+    gsap.to(card, {
+      clipPath: "inset(0 0% 0 0)",
+      duration: 1.2,
+      ease: "expo.inOut",
+      scrollTrigger: {
+        trigger: card,
+        start: "top 80%",
+        toggleActions: "play none none none",
+      },
+    });
+
+    // Hover preview panel scaleY
+    const preview = (card as HTMLElement).querySelector(
+      ".work__card-preview"
+    ) as HTMLElement;
+    if (preview) {
+      card.addEventListener("mouseenter", () => {
+        gsap.to(preview, {
+          scaleY: 1,
+          opacity: 0.12,
+          duration: 0.5,
+          ease: "expo.out",
+          transformOrigin: "top",
+        });
+      });
+      card.addEventListener("mouseleave", () => {
+        gsap.to(preview, {
+          scaleY: 0,
+          opacity: 0.06,
+          duration: 0.4,
+          ease: "expo.in",
+          transformOrigin: "top",
+        });
+      });
+    }
+  });
+</script>

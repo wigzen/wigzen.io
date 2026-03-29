@@ -1,0 +1,28 @@
+---
+import Counter from "../solid/Counter";
+---
+
+<div id="loader-wrapper" style="position:fixed;inset:0;z-index:9999;background:var(--clr-bg)">
+  <Counter
+    client:only="solid"
+    onComplete="window.__onLoaderComplete && window.__onLoaderComplete()"
+  />
+</div>
+
+<script>
+import { gsap } from "gsap";
+
+  (window as any).__onLoaderComplete = () => {
+    gsap.to("#loader-wrapper", {
+      yPercent: -100,
+      duration: 1,
+      ease: "power4.inOut",
+      onComplete: () => {
+        document.getElementById("loader-wrapper")?.remove();
+        document.getElementById("loader-placeholder")?.remove();
+        (window as any).__introComplete = true;
+        document.dispatchEvent(new CustomEvent("intro:complete"));
+      },
+    });
+  };
+</script>

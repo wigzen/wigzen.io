@@ -19,9 +19,47 @@
   - dotSize: Size of dots in em (default: 1)
   - dotGap: Gap between dots in em (default: 2)
 -->
+---
+interface Props {
+  baseColor?: string;
+  activeColor?: string;
+  threshold?: number;
+  speedThreshold?: number;
+  shockRadius?: number;
+  shockPower?: number;
+  centerHole?: boolean;
+  dotSize?: number;
+  dotGap?: number;
+}
+
+const {
+  baseColor = "#245E51",
+  activeColor = "#A8FF51",
+  threshold = 150,
+  speedThreshold = 100,
+  shockRadius = 250,
+  shockPower = 5,
+  centerHole = true,
+  dotSize = 1,
+  dotGap = 2,
+} = Astro.props;
+---
+
 <section class="section-resource">
   <div class="dots-wrap">
-    <div data-dots-container-init="" class="dots-container">
+    <div 
+      data-dots-container-init="" 
+      class="dots-container"
+      data-base-color={baseColor}
+      data-active-color={activeColor}
+      data-threshold={threshold}
+      data-speed-threshold={speedThreshold}
+      data-shock-radius={shockRadius}
+      data-shock-power={shockPower}
+      data-center-hole={centerHole}
+      data-dot-size={dotSize}
+      data-dot-gap={dotGap}
+    >
       <div class="dot"></div>
     </div>
   </div>
@@ -44,30 +82,6 @@
 </section>
 
 <style is:global>
-  /* Base styles for the interactive dot grid */
-  body {
-    /* background-color: #08342a; */
-    color: var(--color-light);
-    font-size: 1vw;
-    margin: 0;
-    padding: 0;
-    overscroll-behavior: none;
-    min-height: 100%;
-    cursor:
-      url("https://cdn.prod.website-files.com/6708f85ff3d3cba6aff436fb/671251b239d7aeb290a31ac5_cursor-default%402x.svg")
-        2 0,
-      auto;
-  }
-
-  /* Custom cursor for interactive elements */
-  a,
-  button {
-    cursor:
-      url("https://cdn.prod.website-files.com/6708f85ff3d3cba6aff436fb/671251b212e6b71494aa67ff_cursor-pointer%402x.svg")
-        12 0,
-      pointer;
-  }
-
   /* Main container for the dot grid */
   .section-resource {
     padding: 4em;
@@ -76,6 +90,16 @@
     height: 100svh;
     display: flex;
     position: relative;
+  }
+
+  @media (max-width: 768px) {
+    .section-resource {
+      padding: 1em;
+    }
+
+    .center-content {
+      display: none;
+    }
   }
 
   /* Center content positioning */
@@ -94,6 +118,7 @@
 
   .osmo-icon-svg {
     width: 10em;
+    max-width: 30vw;
   }
 
   /* Dots container wrapper */
@@ -123,7 +148,7 @@
   .dot {
     will-change: transform, background-color;
     transform-origin: center;
-    background-color: #245e51;
+    background-color: var(--clr-text-muted);
     border-radius: 50%;
     width: 1em;
     height: 1em;
@@ -217,6 +242,22 @@
    * @param config - Configuration for this grid instance
    */
   function initSingleDotGrid(container: HTMLElement, config: DotGridConfig) {
+    // Read data attributes from container and merge with config
+    const dataConfig: Partial<DotGridConfig> = {
+      baseColor: container.dataset.baseColor,
+      activeColor: container.dataset.activeColor,
+      threshold: container.dataset.threshold ? parseFloat(container.dataset.threshold) : undefined,
+      speedThreshold: container.dataset.speedThreshold ? parseFloat(container.dataset.speedThreshold) : undefined,
+      shockRadius: container.dataset.shockRadius ? parseFloat(container.dataset.shockRadius) : undefined,
+      shockPower: container.dataset.shockPower ? parseFloat(container.dataset.shockPower) : undefined,
+      centerHole: container.dataset.centerHole ? container.dataset.centerHole === 'true' : undefined,
+      dotSize: container.dataset.dotSize ? parseFloat(container.dataset.dotSize) : undefined,
+      dotGap: container.dataset.dotGap ? parseFloat(container.dataset.dotGap) : undefined,
+    };
+    
+    // Merge data attributes with passed config
+    const finalConfig = { ...config, ...dataConfig };
+    
     // Grid state variables
     let dots: ExtendedHTMLDivElement[] = [];
     let dotCenters: DotCenter[] = [];
@@ -239,8 +280,8 @@
 
       // Calculate grid dimensions
       const style = getComputedStyle(container);
-      const dotPx = parseFloat(style.fontSize) * config.dotSize;
-      const gapPx = parseFloat(style.fontSize) * config.dotGap;
+      const dotPx = parseFloat(style.fontSize) * finalConfig.dotSize;
+      const gapPx = parseFloat(style.fontSize) * finalConfig.dotGap;
       const contW = container.clientWidth;
       const contH = container.clientHeight;
 
@@ -250,8 +291,8 @@
       const total = cols * rows;
 
       // Calculate center hole dimensions if enabled
-      const holeCols = config.centerHole ? (cols % 2 === 0 ? 4 : 5) : 0;
-      const holeRows = config.centerHole ? (rows % 2 === 0 ? 4 : 5) : 0;
+      const holeCols = finalConfig.centerHole ? (cols % 2 === 0 ? 4 : 5) : 0;
+      const holeRows = finalConfig.centerHole ? (rows % 2 === 0 ? 4 : 5) : 0;
       const startCol = (cols - holeCols) / 2;
       const startRow = (rows - holeRows) / 2;
 
@@ -262,7 +303,7 @@
 
         // Check if this position should be a hole
         const isHole =
-          config.centerHole &&
+          finalConfig.centerHole &&
           row >= startRow &&
           row < startRow + holeRows &&
           col >= startCol &&
@@ -281,9 +322,9 @@
           gsap.set(dot, {
             x: 0,
             y: 0,
-            backgroundColor: config.baseColor,
-            width: `${config.dotSize}em`,
-            height: `${config.dotSize}em`,
+            backgroundColor: finalConfig.baseColor,
+            width: `${finalConfig.dotSize}em`,
+            height: `${finalConfig.dotSize}em`,
           });
           dot._inertiaApplied = false;
         }
@@ -323,11 +364,11 @@
       let speed = Math.hypot(vx, vy);
 
       // Limit maximum speed to prevent extreme effects
-      if (speed > config.maxSpeed) {
-        const scale = config.maxSpeed / speed;
+      if (speed > finalConfig.maxSpeed) {
+        const scale = finalConfig.maxSpeed / speed;
         vx *= scale;
         vy *= scale;
-        speed = config.maxSpeed;
+        speed = finalConfig.maxSpeed;
       }
 
       // Update mouse tracking data
@@ -341,10 +382,10 @@
           const dist = Math.hypot(x - e.pageX, y - e.pageY);
 
           // Calculate color interpolation based on distance
-          const t = Math.max(0.1, 1 - dist / config.threshold);
+          const t = Math.max(0.1, 1 - dist / finalConfig.threshold);
           const color = gsap.utils.interpolate(
-            config.baseColor,
-            config.activeColor,
+            finalConfig.baseColor,
+            finalConfig.activeColor,
             t
           );
           gsap.set(el, { backgroundColor: color });
@@ -354,8 +395,8 @@
 
           // Apply push effect if mouse is moving fast enough
           if (
-            speed > config.speedThreshold &&
-            dist < config.threshold &&
+            speed > finalConfig.speedThreshold &&
+            dist < finalConfig.threshold &&
             !el._inertiaApplied
           ) {
             applyPushEffect(el, e.pageX, e.pageY, x, y, vx, vy);
@@ -372,10 +413,10 @@
       dotCenters.forEach(({ el, x, y }) => {
         const dist = Math.hypot(x - e.pageX, y - e.pageY);
 
-        if (dist < config.shockRadius && !el._inertiaApplied) {
-          const falloff = Math.max(0, 1 - dist / config.shockRadius);
-          const pushX = (x - e.pageX) * config.shockPower * falloff;
-          const pushY = (y - e.pageY) * config.shockPower * falloff;
+        if (dist < finalConfig.shockRadius && !el._inertiaApplied) {
+          const falloff = Math.max(0, 1 - dist / finalConfig.shockRadius);
+          const pushX = (x - e.pageX) * finalConfig.shockPower * falloff;
+          const pushY = (y - e.pageY) * finalConfig.shockPower * falloff;
 
           applyPushEffect(el, e.pageX, e.pageY, x, y, pushX * 100, pushY * 100);
         }
@@ -429,6 +470,17 @@
       window.removeEventListener("resize", buildGrid);
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("click", handleClick);
+      document.removeEventListener("theme:change", handleThemeChange);
+    }
+
+    /**
+     * Handle theme changes
+     */
+    function handleThemeChange(): void {
+      // Re-apply base color to all visible dots
+      dots.filter(d => !d._isHole).forEach(dot => {
+        gsap.set(dot, { backgroundColor: finalConfig.baseColor });
+      });
     }
 
     // Initialize the grid
@@ -438,6 +490,7 @@
     window.addEventListener("resize", buildGrid);
     window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("click", handleClick);
+    document.addEventListener("theme:change", handleThemeChange);
 
     // Return cleanup function for potential future use
     return cleanup;
