@@ -1,8 +1,19 @@
 ---
+import { ViewTransitions } from "astro:transitions";
 import "/src/global.css";
 import Cursor from "../components/ui/Cursor.astro";
 import ThemeToggle from "../components/ui/ThemeToggle.astro";
-const { title } = Astro.props;
+import SEO from "../components/SEO.astro";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Vikas Lodh | Full Stack Engineer & Systems Architect",
+  description,
+} = Astro.props;
 ---
 
 <!doctype html>
@@ -10,40 +21,37 @@ const { title } = Astro.props;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
-      integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
     <link rel="shortcut icon" href="/img/icon.png" type="image/x-icon" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wdth,wght@0,75..100,300..800;1,75..100,300..800&display=swap"
-      rel="stylesheet"
-    />
     <meta name="generator" content={Astro.generator} />
+    <SEO title={title} description={description} />
+    <ViewTransitions />
     <title>{title}</title>
     <!-- Restore theme preference before paint -->
     <script is:inline>
       (function(){
         var theme = localStorage.getItem('theme');
-        if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-          document.documentElement.style.setProperty('--initial-bg', '#0a0a0a');
-        } else {
-          document.documentElement.style.setProperty('--initial-bg', '#f5f5f0');
+        var isDark = theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.style.setProperty('--initial-bg', isDark ? '#0a0a0a' : '#f5f5f0');
+        // Apply theme class early so cursor visibility and CSS variables work immediately
+        if (isDark) {
+          document.documentElement.classList.add('theme-dark');
         }
+        // Also apply to body as soon as it exists (for body.theme-dark CSS rules)
+        document.addEventListener('DOMContentLoaded', function() {
+          if (isDark) document.body.classList.add('theme-dark');
+        }, { once: true });
       })();
     </script>
   </head>
   <body>
+    <a href="#main-content" class="skip-nav">Skip to content</a>
     <!-- Static placeholder covers page until Solid Counter hydrates -->
     <div id="loader-placeholder" style="position:fixed;inset:0;background:var(--initial-bg, #0a0a0a);z-index:9999;pointer-events:none"></div>
     <Cursor />
     <ThemeToggle />
-    <slot />
+    <div id="main-content">
+      <slot />
+    </div>
   </body>
 </html>
 

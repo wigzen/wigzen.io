@@ -26,7 +26,7 @@ export default function Counter(props: Readonly<Props>) {
       requestAnimationFrame(updateCounter);
     } else {
       setCount(100);
-      if (props.onComplete) {
+      if (props.onComplete != undefined) {
         setTimeout(() => {
           try {
             new Function(props.onComplete)();
@@ -43,9 +43,9 @@ export default function Counter(props: Readonly<Props>) {
   });
 
   return (
-    <div class="counter-container">
-      <p class="counter">{count()}</p>
-      <div class="progress-bar" style={{ width: `${count()}%` }}></div>
+    <div className="counter-container">
+      <p className="counter">{count()}</p>
+      <div className="progress-bar" style={{ width: `${count()}%` }}></div>
     </div>
   );
 }

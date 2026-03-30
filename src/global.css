@@ -1,151 +1,72 @@
-:root {
-  /* ─── Light Theme (default) ─── */
-  --clr-bg:         #f5f5f0;
-  --clr-surface:    #ffffff;
-  --clr-text:       #1a1a1a;
-  --clr-text-muted: #6b6b6b;
-  --clr-accent:     #a8ff51;
-  --clr-accent-text:#2d7a00;
-  --clr-accent-muted: #2d7a00;
-  --clr-border:     rgba(0,0,0,0.08);
-  --text-hero:      clamp(100px, 14vw, 200px);
-  --text-h2:        clamp(48px, 6vw, 96px);
-  --section-pad:    clamp(80px, 10vw, 160px);
-  --gutter:         4rem;
+@import "./styles/tokens.css";
 
-  /* Legacy compat */
-  --clr-blue: #0967d2;
-  --clr-black: #1a1a1a;
-  --clr-white: #fff;
-  --clr-gray: #d5d5d5;
-  --clr-blackground: #f8f8f8;
-
-  /* Font Weight */
-  --font-900: 900;
-  --font-700: 700;
-  --font-500: 500;
-  --font-300: 300;
-
-  /* Navigation */
-  --nav-bg-color:          rgba(0,0,0,0.06);
-  --nav-active-color:      #a8ff51;
-  --nav-text-color:        rgba(0,0,0,0.5);
-  --nav-active-text-color: #0a0a0a;
-}
-
-/* ─── Dark Theme ─── */
-body.theme-dark {
-  --clr-bg:         #0a0a0a;
-  --clr-surface:    #111111;
-  --clr-text:       #e8e8e2;
-  --clr-text-muted: #6b6b6b;
-  --clr-accent:     #a8ff51;
-  --clr-accent-text:#a8ff51;
-  --clr-accent-muted: #a8ff51;
-  --clr-border:     rgba(255,255,255,0.08);
-  --clr-black:      #e8e8e2;
-
-  /* Nav overrides */
-  --nav-bg-color:          rgba(255,255,255,0.06);
-  --nav-text-color:        rgba(255,255,255,0.5);
-  --nav-active-text-color: #0a0a0a;
-}
-
+/* ─── Font Faces ─── */
 @font-face {
   font-family: Apercu;
-  src: url("/fonts/apercu/Apercu-Light.eot");
-  src: url("/fonts/apercu/Apercu-Light.eot?#iefix") format("embedded-opentype"),
-    url("/fonts/apercu/Apercu-Light.woff2") format("woff2"),
-    url("/fonts/apercu/Apercu-Light.woff") format("woff"),
-    url("/fonts/apercu/Apercu-Light.ttf") format("truetype"),
-    url("/fonts/apercu/Apercu-Light.svg#Apercu-Light") format("svg");
+  src: url("/fonts/apercu/Apercu-Light.woff2") format("woff2"),
+    url("/fonts/apercu/Apercu-Light.woff") format("woff");
   font-weight: 300;
   font-style: normal;
+  font-display: swap;
 }
 @font-face {
   font-family: Apercu;
-  src: url("/fonts/apercu/Apercu-LightItalic.eot");
-  src: url("/fonts/apercu/Apercu-LightItalic.eot?#iefix")
-      format("embedded-opentype"),
-    url("/fonts/apercu/Apercu-LightItalic.woff2") format("woff2"),
-    url("/fonts/apercu/Apercu-LightItalic.woff") format("woff"),
-    url("/fonts/apercu/Apercu-LightItalic.ttf") format("truetype"),
-    url("/fonts/apercu/Apercu-LightItalic.svg#Apercu-LightItalic") format("svg");
+  src: url("/fonts/apercu/Apercu-LightItalic.woff2") format("woff2"),
+    url("/fonts/apercu/Apercu-LightItalic.woff") format("woff");
   font-weight: 300;
   font-style: italic;
+  font-display: swap;
 }
 @font-face {
   font-family: Apercu;
-  src: url("/fonts/apercu/Apercu-Regular.eot");
-  src: url("/fonts/apercu/Apercu-Regular.eot?#iefix")
-      format("embedded-opentype"),
-    url("/fonts/apercu/Apercu-Regular.woff2") format("woff2"),
-    url("/fonts/apercu/Apercu-Regular.woff") format("woff"),
-    url("/fonts/apercu/Apercu-Regular.ttf") format("truetype"),
-    url("/fonts/apercu/Apercu-Regular.svg#Apercu-Regular") format("svg");
+  src: url("/fonts/apercu/Apercu-Regular.woff2") format("woff2"),
+    url("/fonts/apercu/Apercu-Regular.woff") format("woff");
   font-weight: 400;
   font-style: normal;
+  font-display: swap;
 }
 @font-face {
   font-family: Apercu;
-  src: url("/fonts/apercu/Apercu-Italic.eot");
-  src: url("/fonts/apercu/Apercu-Italic.eot?#iefix") format("embedded-opentype"),
-    url("/fonts/apercu/Apercu-Italic.woff2") format("woff2"),
-    url("/fonts/apercu/Apercu-Italic.woff") format("woff"),
-    url("/fonts/apercu/Apercu-Italic.ttf") format("truetype"),
-    url("/fonts/apercu/Apercu-Italic.svg#Apercu-Italic") format("svg");
+  src: url("/fonts/apercu/Apercu-Italic.woff2") format("woff2"),
+    url("/fonts/apercu/Apercu-Italic.woff") format("woff");
   font-weight: 400;
   font-style: italic;
+  font-display: swap;
 }
 @font-face {
   font-family: Apercu;
-  src: url("/fonts/apercu/Apercu-Medium.eot");
-  src: url("/fonts/apercu/Apercu-Medium.eot?#iefix") format("embedded-opentype"),
-    url("/fonts/apercu/Apercu-Medium.woff2") format("woff2"),
-    url("/fonts/apercu/Apercu-Medium.woff") format("woff"),
-    url("/fonts/apercu/Apercu-Medium.ttf") format("truetype"),
-    url("/fonts/apercu/Apercu-Medium.svg#Apercu-Medium") format("svg");
+  src: url("/fonts/apercu/Apercu-Medium.woff2") format("woff2"),
+    url("/fonts/apercu/Apercu-Medium.woff") format("woff");
   font-weight: 500;
   font-style: normal;
+  font-display: swap;
 }
 @font-face {
   font-family: Apercu;
-  src: url("/fonts/apercu/Apercu-MediumItalic.eot");
-  src: url("/fonts/apercu/Apercu-MediumItalic.eot?#iefix")
-      format("embedded-opentype"),
-    url("/fonts/apercu/Apercu-MediumItalic.woff2") format("woff2"),
-    url("/fonts/apercu/Apercu-MediumItalic.woff") format("woff"),
-    url("/fonts/apercu/Apercu-MediumItalic.ttf") format("truetype"),
-    url("/fonts/apercu/Apercu-MediumItalic.svg#Apercu-MediumItalic")
-      format("svg");
+  src: url("/fonts/apercu/Apercu-MediumItalic.woff2") format("woff2"),
+    url("/fonts/apercu/Apercu-MediumItalic.woff") format("woff");
   font-weight: 500;
   font-style: italic;
+  font-display: swap;
 }
 @font-face {
   font-family: Apercu;
-  src: url("/fonts/apercu/Apercu-Bold.eot");
-  src: url("/fonts/apercu/Apercu-Bold.eot?#iefix") format("embedded-opentype"),
-    url("/fonts/apercu/Apercu-Bold.woff2") format("woff2"),
-    url("/fonts/apercu/Apercu-Bold.woff") format("woff"),
-    url("/fonts/apercu/Apercu-Bold.ttf") format("truetype"),
-    url("/fonts/apercu/Apercu-Bold.svg#Apercu-Bold") format("svg");
+  src: url("/fonts/apercu/Apercu-Bold.woff2") format("woff2"),
+    url("/fonts/apercu/Apercu-Bold.woff") format("woff");
   font-weight: 700;
   font-style: normal;
+  font-display: swap;
 }
 @font-face {
   font-family: Apercu;
-  src: url("/fonts/apercu/Apercu-BoldItalic.eot");
-  src: url("/fonts/apercu/Apercu-BoldItalic.eot?#iefix")
-      format("embedded-opentype"),
-    url("/fonts/apercu/Apercu-BoldItalic.woff2") format("woff2"),
-    url("/fonts/apercu/Apercu-BoldItalic.woff") format("woff"),
-    url("/fonts/apercu/Apercu-BoldItalic.ttf") format("truetype"),
-    url("/fonts/apercu/Apercu-BoldItalic.svg#Apercu-BoldItalic") format("svg");
+  src: url("/fonts/apercu/Apercu-BoldItalic.woff2") format("woff2"),
+    url("/fonts/apercu/Apercu-BoldItalic.woff") format("woff");
   font-weight: 700;
   font-style: italic;
+  font-display: swap;
 }
 
-/* RESET */
+/* ─── Reset ─── */
 * {
   margin: 0px;
   padding: 0px;
@@ -174,7 +95,7 @@ a {
   color: inherit;
 }
 
-/* Scrollbar */
+/* ─── Scrollbar ─── */
 ::-webkit-scrollbar {
   width: 0.4rem;
 }
@@ -185,24 +106,68 @@ a {
   background: var(--clr-bg);
 }
 
-/* Custom cursor: dark mode only */
-body.theme-dark,
-body.theme-dark a,
-body.theme-dark button,
-body.theme-dark [data-magnetic] { cursor: none; }
-
-/* Selection */
-::selection { 
-  background: var(--clr-accent); 
-  color: var(--clr-bg); 
-}
-body.theme-dark ::selection { 
-  background: var(--clr-accent); 
-  color: #0a0a0a; 
+/* ─── Custom cursor: dark mode + desktop only ─── */
+@media (hover: hover) and (min-width: 1025px) {
+  body.theme-dark,
+  body.theme-dark a,
+  body.theme-dark button,
+  body.theme-dark [data-magnetic],
+  html.theme-dark body,
+  html.theme-dark a,
+  html.theme-dark button,
+  html.theme-dark [data-magnetic] { cursor: none; }
 }
 
+/* ─── Selection ─── */
+::selection {
+  background: var(--clr-accent);
+  color: var(--clr-bg);
+}
+body.theme-dark ::selection {
+  background: var(--clr-accent);
+  color: #0a0a0a;
+}
+
+/* ─── Lenis ─── */
 .lenis.lenis-smooth { scroll-behavior: auto; }
 
+/* ─── Skip navigation ─── */
+.skip-nav {
+  position: absolute;
+  top: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.75rem 1.5rem;
+  background: var(--clr-accent);
+  color: var(--clr-bg);
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  z-index: var(--z-modal);
+  transition: top 0.2s;
+}
+
+.skip-nav:focus {
+  top: 1rem;
+}
+
+/* ─── Focus indicators ─── */
+:focus-visible {
+  outline: 2px solid var(--clr-accent);
+  outline-offset: 2px;
+}
+
+/* ─── Reduced motion ─── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ─── Scanline overlay ─── */
 .ui-background-lines {
   position: absolute;
   top: 1px;
@@ -214,19 +179,4 @@ body.theme-dark ::selection {
   z-index: 0;
   opacity: 0.08;
   box-sizing: border-box;
-}
-
-/* Responsive breakpoints */
-@media (max-width: 768px) {
-  :root {
-    --gutter: 2rem;
-    --text-hero: clamp(72px, 14vw, 200px);
-    --text-h2: clamp(36px, 6vw, 96px);
-  }
-}
-
-@media (max-width: 480px) {
-  :root {
-    --gutter: 1.25rem;
-  }
 }

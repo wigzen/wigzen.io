@@ -1,13 +1,16 @@
 ---
 const navItems = [
   { id: "home", label: "Home", href: "#home" },
-  { id: "work", label: "Work", href: "#work" },
   { id: "about", label: "About", href: "#about" },
+  { id: "work", label: "Work", href: "#work" },
+  { id: "systems", label: "Systems", href: "#systems" },
+  { id: "skills", label: "Skills", href: "#skills" },
+  { id: "lab", label: "Lab", href: "#lab" },
   { id: "contact", label: "Contact", href: "#contact" },
 ];
 ---
 
-<nav class="nav" id="mainNav" style="opacity:0">
+<nav class="nav" id="mainNav" style="opacity:0" aria-label="Main navigation">
   <ul class="nav__menu">
     {
       navItems.map((item) => (
@@ -184,7 +187,7 @@ const navItems = [
   }
 
   // ScrollTrigger-based active state — only sections that have nav items
-  const sectionIds = ["home", "about", "work", "contact"];
+  const sectionIds = ["home", "about", "work", "systems", "skills", "lab", "contact"];
   sectionIds.forEach((id) => {
     const section = document.getElementById(id);
     if (!section) return;

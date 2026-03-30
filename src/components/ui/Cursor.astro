@@ -38,18 +38,35 @@
     translate: -50% -50%;
     pointer-events: none;
   }
+
+  /* Hide on touch devices / tablets / mobile */
+  @media (max-width: 1024px), (hover: none) {
+    #cursor {
+      display: none !important;
+    }
+  }
 </style>
 
 <script>
   import { gsap } from "gsap";
 
-  const cursor = document.getElementById("cursor");
-  const dot = document.querySelector(".cursor__dot") as HTMLElement;
-  const ring = document.querySelector(".cursor__ring") as HTMLElement;
+  function initCursor() {
+    // No custom cursor on touch devices or small screens
+    const hasHover = window.matchMedia("(hover: hover)").matches;
+    const isDesktop = window.innerWidth > 1024;
+    if (!hasHover || !isDesktop) return;
 
-  if (dot && ring && cursor) {
+    const cursor = document.getElementById("cursor");
+    const dot = document.querySelector(".cursor__dot") as HTMLElement;
+    const ring = document.querySelector(".cursor__ring") as HTMLElement;
+
+    if (!dot || !ring || !cursor) return;
+
     function isDarkMode(): boolean {
-      return document.body.classList.contains("theme-dark");
+      return (
+        document.body.classList.contains("theme-dark") ||
+        document.documentElement.classList.contains("theme-dark")
+      );
     }
 
     function updateCursorVisibility(): void {
@@ -60,9 +77,18 @@
       });
     }
 
+    // Set initial visibility
     gsap.set(cursor, { opacity: isDarkMode() ? 1 : 0 });
 
+    // Listen for theme changes
     document.addEventListener("theme:change", updateCursorVisibility);
+
+    // Also watch for class changes on body (catches theme applied after script runs)
+    const observer = new MutationObserver(() => updateCursorVisibility());
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
 
     window.addEventListener("mousemove", (e: MouseEvent) => {
       gsap.to(dot, {
@@ -94,4 +120,9 @@
       }
     });
   }
+
+  initCursor();
+
+  // Re-init after ViewTransitions navigation
+  document.addEventListener("astro:after-swap", initCursor);
 </script>

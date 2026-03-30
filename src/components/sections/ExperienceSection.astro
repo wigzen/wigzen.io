@@ -1,34 +1,16 @@
 ---
-const roles = [
-  {
-    date: "2023 — Present",
-    title: "Senior Software Engineer",
-    company: "Bryt Schools",
-    description:
-      "Architected multi-tenant platform on Kubernetes, scaling to 100+ institutions with zero-downtime deployments and automated infrastructure provisioning.",
-  },
-  {
-    date: "2022 — 2023",
-    title: "Software Engineer",
-    company: "Cybic AI",
-    description:
-      "Built model serving pipeline for legal NLP — reduced inference latency 60% through ONNX optimisation, batched prediction, and GPU scheduling.",
-  },
-  {
-    date: "2021 — 2022",
-    title: "Platform Engineer",
-    company: "Blackcurrant Labs",
-    description:
-      "Owned the infrastructure for a real-time collaboration engine — WebSocket cluster, CRDT sync layer, and automated failover across regions.",
-  },
-  {
-    date: "2020 — 2021",
-    title: "Software Developer",
-    company: "Zotech",
-    description:
-      "Established CI/CD pipelines, container orchestration, and monitoring for internal tooling and APIs.",
-  },
-];
+import { getCollection } from "astro:content";
+
+const experiences = (await getCollection("experience")).sort(
+  (a, b) => a.data.index - b.data.index
+);
+
+const roles = experiences.map((exp) => ({
+  date: `${exp.data.startDate} — ${exp.data.endDate}`,
+  title: exp.data.title,
+  company: exp.data.company,
+  description: exp.data.description,
+}));
 ---
 
 <section id="experience" class="exp">

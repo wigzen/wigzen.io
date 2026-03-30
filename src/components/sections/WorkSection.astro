@@ -1,26 +1,20 @@
 ---
-const projects = [
-  {
-    id: "hoopr",
-    index: "01",
-    title: "Hoopr.ai",
-    tags: ["Kubernetes", "PyTorch", "Redis", "Terraform"],
-    description:
-      "Built the serving infrastructure behind an AI-powered music platform — auto-scaling pipelines, GPU-backed recommendation engine, CDN-optimised audio delivery, and full observability stack serving 40,000+ creators at sub-200ms p95.",
-    href: "https://hoopr.ai",
-    accentColor: "#1a1a2e",
-  },
-  {
-    id: "hedged",
-    index: "02",
-    title: "Hedged",
-    tags: ["Go", "gRPC", "Kafka", "AWS"],
-    description:
-      "Engineered the low-latency data pipeline ingesting live market feeds over WebSockets. Event-driven microservice architecture with sub-100ms order processing and real-time P&L aggregation across derivatives positions.",
-    href: "#",
-    accentColor: "#0d1b0f",
-  },
-];
+import { getCollection } from "astro:content";
+
+const allProjects = (await getCollection("projects"))
+  .filter((p) => p.data.featured)
+  .sort((a, b) => a.data.index - b.data.index);
+
+const projects = allProjects.map((p) => ({
+  id: p.id,
+  index: String(p.data.index).padStart(2, "0"),
+  title: p.data.title,
+  tags: p.data.tags,
+  description: p.data.description,
+  href: p.data.href ?? `#`,
+  accentColor: p.data.accentColor,
+  slug: p.id.replace(/\.(mdx?|md)$/, ""),
+}));
 ---
 
 <section id="work" class="work">
@@ -47,9 +41,14 @@ const projects = [
                   <li class="work__card-tag">{t}</li>
                 ))}
               </ul>
-              <a href={p.href} target="_blank" rel="noopener" class="work__card-link" data-magnetic>
-                View Project ↗
-              </a>
+              <div class="work__card-links">
+                <a href={`/work/${p.slug}`} class="work__card-link" data-magnetic>
+                  Case Study →
+                </a>
+                <a href={p.href} target="_blank" rel="noopener" class="work__card-link" data-magnetic>
+                  View Project ↗
+                </a>
+              </div>
             </div>
           </div>
         </article>
@@ -175,6 +174,12 @@ const projects = [
     border: 1px solid var(--clr-border);
     border-radius: 2rem;
     color: var(--clr-text-muted);
+  }
+
+  .work__card-links {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
   }
 
   .work__card-link {

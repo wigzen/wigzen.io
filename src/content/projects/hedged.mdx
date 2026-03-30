@@ -1,0 +1,68 @@
+---
+title: "Hedged"
+index: 2
+description: "AI-driven investment platform with real-time analytics, personalised recommendations, and scalable data integration."
+tags:
+  - "React"
+  - "Next.js"
+  - "Node.js"
+  - "PostgreSQL"
+  - "Redis"
+href: "https://hedged.in"
+accentColor: "#0d1b0f"
+featured: true
+problem: "Hedged needed an AI-driven investment platform that could deliver real-time analytics and personalised recommendations while handling complex financial data integrations — all with low latency and high reliability."
+constraints:
+  - "Real-time financial data requiring low-latency processing"
+  - "Complex data integrations across multiple financial data sources"
+  - "Personalised recommendation engine with ML-driven insights"
+  - "Strict reliability requirements — financial data must be accurate and timely"
+architectureDecisions:
+  - "Built responsive UI with real-time data binding for live analytics dashboards"
+  - "Implemented data integration layer for seamless multi-source financial data aggregation"
+  - "Personalised recommendation pipeline using ML models with real-time scoring"
+  - "Scalable feature deployment pipeline for cross-functional team velocity"
+tradeoffs:
+  - "Prioritised data freshness over complex caching, accepting higher compute costs"
+  - "Chose real-time analytics over batch processing for user-facing dashboards"
+  - "Invested in scalable deployment pipeline early, trading initial velocity for long-term team throughput"
+outcome:
+  metrics:
+    - { label: "User Engagement", value: "+30%" }
+    - { label: "Load Time", value: "-20%" }
+    - { label: "Platform Scalability", value: "+25%" }
+    - { label: "User Retention", value: "+40%" }
+  summary: "Delivered an AI-driven investment platform with real-time analytics, achieving significant improvements in engagement, performance, and retention."
+stack:
+  - "React"
+  - "Next.js"
+  - "Node.js"
+  - "PostgreSQL"
+  - "Redis"
+role: "Full Stack Developer"
+duration: "2023 — 2024"
+---
+
+## The Challenge
+
+Hedged is an AI-driven investment platform that helps users make informed financial decisions through real-time analytics and personalised recommendations. The challenge was building a system that could ingest, process, and surface complex financial data with the responsiveness users expect from modern trading tools.
+
+Financial data is unforgiving — stale data, slow dashboards, or incorrect recommendations erode trust instantly. The system needed to be both fast and reliable.
+
+## Architecture
+
+**Frontend Layer** — Responsive React application with real-time data binding. Dashboards update live as financial data streams in. UI/UX designed for clarity under information density — surfacing signals without overwhelming users.
+
+**Data Integration Layer** — Multi-source financial data aggregation pipeline. Real-time ingestion from market data providers with normalisation and validation before reaching the application layer.
+
+**Recommendation Engine** — ML-driven personalised recommendations scored in real-time. The pipeline balances recommendation freshness with compute efficiency through intelligent caching of model outputs.
+
+**Infrastructure** — Scalable deployment pipeline enabling cross-functional teams to ship features independently. Feature flags and progressive rollouts for safe financial product releases.
+
+## Systems Lens
+
+Financial platforms demand systems thinking at every layer. The frontend must handle real-time data without overwhelming the user. The backend must guarantee data accuracy while maintaining speed. The infrastructure must support rapid iteration without risking financial data integrity. Every trade-off was evaluated through this lens.
+
+## Outcome
+
+The platform achieved a 30% boost in user engagement, 20% reduction in load times, 25% improvement in scalability, and 40% increase in user retention — proving that thoughtful system design translates directly to user outcomes.

@@ -1,0 +1,137 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import InteractiveDotGrid from "../../components/ui/InteractiveDotGrid.astro";
+---
+
+<Layout title="Lab — Vikas Lodh">
+  <main class="lab-page">
+    <nav class="lab-page__nav" aria-label="Lab navigation">
+      <a href="/" class="lab-page__back" data-magnetic>← Back Home</a>
+    </nav>
+
+    <header class="lab-page__hero">
+      <h1 class="lab-page__title">Lab</h1>
+      <p class="lab-page__desc">
+        Experiments, prototypes, and creative coding explorations.
+        Things I build to learn and push boundaries.
+      </p>
+    </header>
+
+    <section class="lab-page__experiment" aria-label="Interactive Dot Grid experiment">
+      <div class="lab-page__experiment-header">
+        <h2 class="lab-page__experiment-title">Interactive Dot Grid</h2>
+        <p class="lab-page__experiment-desc">
+          Mouse-reactive grid with inertia physics, proximity detection, and shock wave effects.
+          Built with GSAP InertiaPlugin and vanilla DOM manipulation.
+        </p>
+        <div class="lab-page__experiment-tags">
+          <span class="lab-page__tag">Canvas</span>
+          <span class="lab-page__tag">GSAP</span>
+          <span class="lab-page__tag">InertiaPlugin</span>
+          <span class="lab-page__tag">Physics</span>
+        </div>
+      </div>
+      <div class="lab-page__experiment-canvas">
+        <InteractiveDotGrid
+          baseColor="#1a1a1a"
+          activeColor="#a8ff51"
+          centerHole={false}
+        />
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .lab-page {
+    padding-inline: var(--gutter);
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .lab-page__nav {
+    padding-block: 2rem;
+    border-bottom: 1px solid var(--clr-border);
+  }
+
+  .lab-page__back {
+    font-size: 0.85rem;
+    color: var(--clr-text-muted);
+    transition: color 0.2s;
+  }
+
+  .lab-page__back:hover {
+    color: var(--clr-accent);
+  }
+
+  .lab-page__hero {
+    padding-block: 4rem 3rem;
+  }
+
+  .lab-page__title {
+    font-size: var(--text-h2);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: var(--clr-text);
+    margin-bottom: 1.5rem;
+  }
+
+  .lab-page__desc {
+    font-size: 1.1rem;
+    color: var(--clr-text-muted);
+    line-height: 1.6;
+    max-width: 55ch;
+  }
+
+  .lab-page__experiment {
+    margin-bottom: 4rem;
+    border: 1px solid var(--clr-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+
+  .lab-page__experiment-header {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .lab-page__experiment-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--clr-text);
+  }
+
+  .lab-page__experiment-desc {
+    font-size: 0.9rem;
+    color: var(--clr-text-muted);
+    line-height: 1.6;
+    max-width: 55ch;
+  }
+
+  .lab-page__experiment-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .lab-page__tag {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0.2rem 0.6rem;
+    border: 1px solid var(--clr-border);
+    border-radius: var(--radius-full);
+    color: var(--clr-text-muted);
+  }
+
+  .lab-page__experiment-canvas {
+    position: relative;
+    height: 60vh;
+    min-height: 400px;
+    background: var(--clr-surface);
+  }
+</style>

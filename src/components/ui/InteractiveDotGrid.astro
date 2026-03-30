@@ -500,6 +500,8 @@ const {
    * Initialize all dot grids when DOM is ready
    */
   document.addEventListener("DOMContentLoaded", function () {
+    // Skip on mobile — the grid is hidden and expensive to create
+    if (window.innerWidth <= 768) return;
     // Initialize with default configuration
     initInteractiveDotGrid();
     // Example of custom configuration:

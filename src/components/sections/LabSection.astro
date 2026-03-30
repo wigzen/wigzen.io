@@ -1,0 +1,236 @@
+---
+const experiments = [
+  {
+    title: "Interactive Dot Grid",
+    description: "Mouse-reactive grid with inertia physics and shock wave effects.",
+    tags: ["Canvas", "GSAP", "InertiaPlugin"],
+    href: "/demo",
+  },
+  {
+    title: "Systems Visualisation",
+    description: "3D layer architecture rendered with Three.js and progressive enhancement.",
+    tags: ["Three.js", "React", "WebGL"],
+    href: "#systems",
+    soon: false,
+  },
+  {
+    title: "RAG Pipeline Diagram",
+    description: "Interactive flow visualisation of the Presidio → Tokenisation → LLM → Guardrails pipeline.",
+    tags: ["SVG", "GSAP", "MDX"],
+    soon: true,
+  },
+];
+---
+
+<section id="lab" class="lab">
+  <div class="lab__header">
+    <span class="lab__index">(06)</span>
+    <h2 class="lab__heading">Lab</h2>
+  </div>
+
+  <p class="lab__intro" data-lab-intro>
+    Experiments, prototypes, and creative coding explorations. Things I build to learn.
+  </p>
+
+  <div class="lab__grid">
+    {experiments.map((exp) => (
+      <article class="lab__card" data-lab-card>
+        {exp.soon && <span class="lab__card-badge">Coming Soon</span>}
+        <h3 class="lab__card-title">{exp.title}</h3>
+        <p class="lab__card-desc">{exp.description}</p>
+        <div class="lab__card-footer">
+          <div class="lab__card-tags">
+            {exp.tags.map((tag) => (
+              <span class="lab__card-tag">{tag}</span>
+            ))}
+          </div>
+          {exp.href && !exp.soon && (
+            <a href={exp.href} class="lab__card-link" data-magnetic>
+              Explore →
+            </a>
+          )}
+        </div>
+      </article>
+    ))}
+  </div>
+
+  <div class="lab__cta">
+    <a href="/lab" class="lab__cta-link" data-magnetic>
+      View All Experiments →
+    </a>
+  </div>
+</section>
+
+<style>
+  .lab {
+    padding-block: var(--section-pad);
+    padding-inline: var(--gutter);
+    background: var(--clr-bg);
+  }
+
+  .lab__header {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+
+  .lab__index {
+    font-size: 0.8rem;
+    color: var(--clr-text-muted);
+    letter-spacing: 0.1em;
+  }
+
+  .lab__heading {
+    font-size: var(--text-h2);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: var(--clr-text);
+  }
+
+  .lab__intro {
+    font-size: clamp(1.1rem, 2vw, 1.4rem);
+    color: var(--clr-text-muted);
+    margin-bottom: 4rem;
+    max-width: 50ch;
+  }
+
+  .lab__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .lab__card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 2rem;
+    border: 1px solid var(--clr-border);
+    border-radius: var(--radius-md);
+    background: var(--clr-surface);
+    transition: border-color 0.3s ease, transform 0.3s ease;
+  }
+
+  .lab__card:hover {
+    border-color: var(--clr-accent);
+    transform: translateY(-4px);
+  }
+
+  .lab__card-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0.2rem 0.6rem;
+    border: 1px solid var(--clr-accent);
+    border-radius: var(--radius-full);
+    color: var(--clr-accent);
+    opacity: 0.7;
+  }
+
+  .lab__card-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--clr-text);
+  }
+
+  .lab__card-desc {
+    font-size: 0.9rem;
+    color: var(--clr-text-muted);
+    line-height: 1.6;
+    flex: 1;
+  }
+
+  .lab__card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--clr-border);
+  }
+
+  .lab__card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+  }
+
+  .lab__card-tag {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0.15rem 0.5rem;
+    border: 1px solid var(--clr-border);
+    border-radius: var(--radius-full);
+    color: var(--clr-text-muted);
+  }
+
+  .lab__card-link {
+    font-size: 0.8rem;
+    color: var(--clr-accent);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+  }
+
+  .lab__card-link:hover {
+    border-color: var(--clr-accent);
+  }
+
+  .lab__cta {
+    text-align: center;
+    padding-top: 2rem;
+  }
+
+  .lab__cta-link {
+    display: inline-block;
+    padding: 0.75rem 2rem;
+    border: 1px solid var(--clr-border);
+    border-radius: var(--radius-full);
+    font-size: 0.9rem;
+    color: var(--clr-text);
+    transition: background 0.3s, color 0.3s, border-color 0.3s;
+  }
+
+  .lab__cta-link:hover {
+    background: var(--clr-accent);
+    color: var(--clr-bg);
+    border-color: var(--clr-accent);
+  }
+
+  @media (max-width: 640px) {
+    .lab__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  document.querySelectorAll("[data-lab-card]").forEach((card, i) => {
+    gsap.from(card, {
+      opacity: 0,
+      y: 30,
+      duration: 0.6,
+      delay: i * 0.1,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: card,
+        start: "top 85%",
+        toggleActions: "play none none none",
+      },
+    });
+  });
+</script>
