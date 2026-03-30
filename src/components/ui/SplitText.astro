@@ -1,0 +1,119 @@
+<div class="text-wrap">
+  <h1 data-split="heading" class="text-h">
+    We’re using GSAP’s SplitText to break this content into lines, words, and
+    individual characters. Experiment with staggered tweens, custom ease
+    functions, and dynamic transforms to bring your headlines to life.
+  </h1>
+  <div class="text-buttons">
+    <button data-split="button" data-split-type="lines" class="text-button"
+      ><span>Lines</span></button
+    >
+    <button data-split="button" data-split-type="words" class="text-button"
+      ><span>Words</span></button
+    >
+    <button data-split="button" data-split-type="chars" class="text-button"
+      ><span>Letters</span></button
+    >
+  </div>
+</div>
+
+<style>
+  .text-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4.5em;
+    max-width: 70em;
+    margin: 0 auto;
+    padding: 0 1.25em;
+  }
+
+  .text-h {
+    font-size: 3.25vw;
+    font-weight: 500;
+    line-height: 1.15;
+    text-align: center;
+    margin: 0;
+  }
+
+  .text-buttons {
+    display: flex;
+    gap: 1.25em;
+  }
+
+  .text-button {
+    padding: 0.625em 1.25em;
+    font-size: 1.625em;
+    border-radius: 100em;
+    background: #fff;
+    transition:
+      background 0.15s,
+      color 0.15s;
+  }
+  .text-button:hover {
+    background: #340824;
+    color: #fff;
+  }
+</style>
+
+<script>
+  import gsap from "gsap";
+  import SplitText from "gsap/SplitText";
+  import CustomEase from "gsap/CustomEase";
+
+  gsap.registerPlugin(SplitText, CustomEase);
+  CustomEase.create("osmo-ease", "0.625, 0.05, 0, 1");
+
+  const text = document.querySelector(".text-h");
+  SplitText.create(text, {
+    type: "lines,words,chars",
+    mask: "lines",
+    linesClass: "line",
+    wordsClass: "word",
+    charsClass: "letter",
+  });
+
+  type AnimationType = "lines" | "words" | "chars";
+  type ConfigObject = {
+    duration: number;
+    stagger: number;
+  };
+
+  const config: Record<AnimationType, ConfigObject> = {
+    lines: { duration: 0.8, stagger: 0.08 },
+    words: { duration: 0.6, stagger: 0.06 },
+    chars: { duration: 0.4, stagger: 0.008 },
+  };
+  const classMap: Record<AnimationType, string> = {
+    lines: ".line",
+    words: ".word",
+    chars: ".letter",
+  };
+
+  let currentTween: gsap.core.Tween | null = null;
+  let currentTargets: NodeListOf<HTMLElement>;
+
+  function animate(type: AnimationType) {
+    if (currentTween) {
+      currentTween.kill();
+      gsap.set(currentTargets, { yPercent: 0 });
+    }
+    const { duration, stagger } = config[type];
+    const selector = classMap[type];
+    if (!text) return;
+    currentTargets = text.querySelectorAll(selector);
+    currentTween = gsap.fromTo(
+      currentTargets,
+      { yPercent: 100 },
+      { yPercent: 0, duration, stagger, ease: "osmo-ease" }
+    );
+  }
+  const buttons = document.querySelectorAll(
+    '[data-split="button"]'
+  ) as NodeListOf<HTMLElement>;
+  buttons.forEach((btn) =>
+    btn.addEventListener("click", () => {
+      animate(btn.dataset.splitType as AnimationType);
+    })
+  );
+</script>

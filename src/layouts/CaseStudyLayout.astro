@@ -1,0 +1,375 @@
+---
+import "/src/global.css";
+import Cursor from "../components/ui/Cursor.astro";
+import ThemeToggle from "../components/ui/ThemeToggle.astro";
+
+interface Props {
+  title: string;
+  description: string;
+  tags: string[];
+  accentColor: string;
+  role: string;
+  duration: string;
+  href?: string;
+  outcome: {
+    metrics: { label: string; value: string }[];
+    summary: string;
+  };
+}
+
+const { title, description, tags, accentColor, role, duration, href, outcome } =
+  Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="shortcut icon" href="/img/icon.png" type="image/x-icon" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <title>{title} — Vikas Lodh</title>
+    <script is:inline>
+      (function () {
+        var theme = localStorage.getItem("theme");
+        if (
+          theme === "dark" ||
+          (!theme &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches)
+        ) {
+          document.documentElement.style.setProperty(
+            "--initial-bg",
+            "#0a0a0a"
+          );
+        } else {
+          document.documentElement.style.setProperty(
+            "--initial-bg",
+            "#f5f5f0"
+          );
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <Cursor />
+    <ThemeToggle />
+
+    <main class="case-study">
+      <nav class="case-study__nav" aria-label="Case study navigation">
+        <a href="/#work" class="case-study__back" data-magnetic>
+          ← Back to Work
+        </a>
+        {href && (
+          <a
+            href={href}
+            target="_blank"
+            rel="noopener"
+            class="case-study__external"
+            data-magnetic
+          >
+            Visit {title} ↗
+          </a>
+        )}
+      </nav>
+
+      <header class="case-study__hero">
+        <div class="case-study__hero-accent" style={`background: ${accentColor}`} />
+        <h1 class="case-study__title">{title}</h1>
+        <p class="case-study__description">{description}</p>
+
+        <div class="case-study__meta">
+          <div class="case-study__meta-item">
+            <span class="case-study__meta-label">Role</span>
+            <span class="case-study__meta-value">{role}</span>
+          </div>
+          <div class="case-study__meta-item">
+            <span class="case-study__meta-label">Duration</span>
+            <span class="case-study__meta-value">{duration}</span>
+          </div>
+          <div class="case-study__meta-item">
+            <span class="case-study__meta-label">Stack</span>
+            <div class="case-study__tags">
+              {tags.map((tag) => (
+                <span class="case-study__tag">{tag}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <article class="case-study__content">
+        <slot />
+      </article>
+
+      <section class="case-study__outcome" aria-label="Project outcome">
+        <h2 class="case-study__outcome-heading">Outcome</h2>
+        <div class="case-study__metrics">
+          {outcome.metrics.map((metric) => (
+            <div class="case-study__metric">
+              <span class="case-study__metric-value">{metric.value}</span>
+              <span class="case-study__metric-label">{metric.label}</span>
+            </div>
+          ))}
+        </div>
+        <p class="case-study__outcome-summary">{outcome.summary}</p>
+      </section>
+
+      <footer class="case-study__footer">
+        <a href="/#work" class="case-study__back" data-magnetic>
+          ← Back to Work
+        </a>
+      </footer>
+    </main>
+  </body>
+</html>
+
+<style>
+  .case-study {
+    padding-inline: var(--gutter);
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .case-study__nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-block: 2rem;
+    border-bottom: 1px solid var(--clr-border);
+  }
+
+  .case-study__back {
+    font-size: 0.85rem;
+    color: var(--clr-text-muted);
+    transition: color 0.2s;
+  }
+
+  .case-study__back:hover {
+    color: var(--clr-accent);
+  }
+
+  .case-study__external {
+    font-size: 0.85rem;
+    color: var(--clr-accent);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+  }
+
+  .case-study__external:hover {
+    border-color: var(--clr-accent);
+  }
+
+  .case-study__hero {
+    padding-block: 6rem 4rem;
+    position: relative;
+  }
+
+  .case-study__hero-accent {
+    position: absolute;
+    top: 0;
+    left: -var(--gutter);
+    right: -var(--gutter);
+    height: 4px;
+    opacity: 0.6;
+  }
+
+  .case-study__title {
+    font-size: var(--text-h2);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: var(--clr-text);
+    margin-bottom: 1.5rem;
+  }
+
+  .case-study__description {
+    font-size: 1.15rem;
+    color: var(--clr-text-muted);
+    line-height: 1.6;
+    max-width: 60ch;
+    margin-bottom: 3rem;
+  }
+
+  .case-study__meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    padding-block: 2rem;
+    border-top: 1px solid var(--clr-border);
+  }
+
+  .case-study__meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .case-study__meta-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--clr-text-muted);
+  }
+
+  .case-study__meta-value {
+    font-size: 0.95rem;
+    color: var(--clr-text);
+    font-weight: 500;
+  }
+
+  .case-study__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .case-study__tag {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0.25rem 0.6rem;
+    border: 1px solid var(--clr-border);
+    border-radius: var(--radius-full);
+    color: var(--clr-text-muted);
+  }
+
+  .case-study__content {
+    padding-block: 4rem;
+  }
+
+  .case-study__content :global(h2) {
+    font-size: var(--text-h4);
+    font-weight: 700;
+    color: var(--clr-text);
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  .case-study__content :global(h2:first-child) {
+    margin-top: 0;
+  }
+
+  .case-study__content :global(p) {
+    font-size: 1rem;
+    color: var(--clr-text-muted);
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+    max-width: 65ch;
+  }
+
+  .case-study__content :global(strong) {
+    color: var(--clr-text);
+    font-weight: 500;
+  }
+
+  .case-study__outcome {
+    padding-block: 4rem;
+    border-top: 1px solid var(--clr-border);
+  }
+
+  .case-study__outcome-heading {
+    font-size: var(--text-h3);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: var(--clr-text);
+    margin-bottom: 2rem;
+  }
+
+  .case-study__metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .case-study__metric {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .case-study__metric-value {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 900;
+    color: var(--clr-accent-text);
+    line-height: 1;
+  }
+
+  .case-study__metric-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--clr-text-muted);
+  }
+
+  .case-study__outcome-summary {
+    font-size: 1rem;
+    color: var(--clr-text-muted);
+    line-height: 1.6;
+    max-width: 60ch;
+  }
+
+  .case-study__footer {
+    padding-block: 3rem;
+    border-top: 1px solid var(--clr-border);
+  }
+
+  @media (max-width: 768px) {
+    .case-study__hero {
+      padding-block: 4rem 2rem;
+    }
+
+    .case-study__meta {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  import Lenis from "@studio-freight/lenis";
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+  gsap.registerPlugin(ScrollTrigger);
+
+  (function applyTheme() {
+    const saved = localStorage.getItem("theme");
+    if (
+      saved === "dark" ||
+      (!saved && window.matchMedia("(prefers-color-scheme: dark)").matches)
+    ) {
+      document.body.classList.add("theme-dark");
+    } else {
+      document.body.classList.remove("theme-dark");
+    }
+  })();
+
+  const lenis = new Lenis({
+    duration: 1.2,
+    easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+  });
+
+  gsap.ticker.add((time: number) => lenis.raf(time * 1000));
+  gsap.ticker.lagSmoothing(0);
+  lenis.on("scroll", ScrollTrigger.update);
+
+  document.querySelectorAll("[data-magnetic]").forEach((el) => {
+    const btn = el as HTMLElement;
+    btn.addEventListener("mousemove", (e: MouseEvent) => {
+      const r = btn.getBoundingClientRect();
+      gsap.to(btn, {
+        x: (e.clientX - r.left - r.width / 2) * 0.4,
+        y: (e.clientY - r.top - r.height / 2) * 0.4,
+        duration: 0.3,
+        ease: "power2.out",
+      });
+    });
+    btn.addEventListener("mouseleave", () => {
+      gsap.to(btn, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.4)" });
+    });
+  });
+</script>

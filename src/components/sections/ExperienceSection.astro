@@ -1,0 +1,196 @@
+---
+import { getCollection } from "astro:content";
+
+const experiences = (await getCollection("experience")).sort(
+  (a, b) => a.data.index - b.data.index
+);
+
+const roles = experiences.map((exp) => ({
+  date: `${exp.data.startDate} — ${exp.data.endDate}`,
+  title: exp.data.title,
+  company: exp.data.company,
+  description: exp.data.description,
+}));
+---
+
+<section id="experience" class="exp">
+  <div class="exp__header">
+    <span class="exp__index">(03)</span>
+    <h2 class="exp__heading">Experience</h2>
+  </div>
+
+  <div class="exp__list">
+    {roles.map((r) => (
+      <article class="exp__row" data-exp-row>
+        <span class="exp__date">{r.date}</span>
+        <div class="exp__accent"></div>
+        <div class="exp__content">
+          <h3 class="exp__title">{r.title}</h3>
+          <p class="exp__company">{r.company}</p>
+          <p class="exp__desc">{r.description}</p>
+        </div>
+      </article>
+    ))}
+  </div>
+</section>
+
+<style>
+  .exp {
+    padding-block: var(--section-pad);
+    padding-inline: var(--gutter);
+    background: var(--clr-bg);
+  }
+
+  .exp__header {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 4rem;
+  }
+
+  .exp__index {
+    font-size: 0.8rem;
+    color: var(--clr-text-muted);
+    letter-spacing: 0.1em;
+  }
+
+  .exp__heading {
+    font-size: var(--text-h2);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: var(--clr-text);
+  }
+
+  .exp__list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .exp__row {
+    display: grid;
+    grid-template-columns: 1fr 2px 2fr;
+    gap: 2rem;
+    padding-block: 3rem;
+    border-top: 1px solid var(--clr-border);
+    position: relative;
+    transition: background 0.3s ease;
+  }
+
+  .exp__row:last-child {
+    border-bottom: 1px solid var(--clr-border);
+  }
+
+  .exp__row:hover {
+    background: var(--clr-border);
+  }
+
+  .exp__date {
+    font-size: 0.8rem;
+    color: var(--clr-text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding-top: 0.35rem;
+  }
+
+  .exp__accent {
+    width: 2px;
+    align-self: stretch;
+    background: var(--clr-accent);
+    border-radius: 1px;
+    transition: width 0.3s ease;
+  }
+
+  .exp__row:hover .exp__accent {
+    width: 4px;
+  }
+
+  .exp__content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .exp__title {
+    font-size: clamp(1.4rem, 2.5vw, 2rem);
+    font-weight: 700;
+    color: var(--clr-text);
+    line-height: 1.1;
+  }
+
+  .exp__company {
+    font-size: 0.85rem;
+    color: var(--clr-accent-text);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .exp__desc {
+    font-size: 0.95rem;
+    color: var(--clr-text-muted);
+    line-height: 1.6;
+    max-width: 55ch;
+    margin-top: 0.25rem;
+  }
+
+  @media (max-width: 768px) {
+    .exp__row {
+      grid-template-columns: 1fr;
+      gap: 0;
+      padding-block: 2.5rem;
+    }
+
+    .exp__accent {
+      width: 40px;
+      height: 2px;
+      align-self: auto;
+      margin-block: 1rem;
+    }
+
+    .exp__row:hover .exp__accent {
+      width: 60px;
+      height: 2px;
+    }
+
+    .exp__date {
+      padding-top: 0;
+    }
+  }
+</style>
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const rows = document.querySelectorAll("[data-exp-row]");
+
+  rows.forEach((row, i) => {
+    gsap.set(row, { opacity: 0, y: 40 });
+
+    gsap.to(row, {
+      opacity: 1,
+      y: 0,
+      duration: 0.6,
+      ease: "power2.out",
+      delay: i * 0.15,
+      scrollTrigger: {
+        trigger: row,
+        start: "top 80%",
+        toggleActions: "play none none none",
+      },
+    });
+
+    const accent = row.querySelector(".exp__accent") as HTMLElement;
+    if (accent) {
+      row.addEventListener("mouseenter", () => {
+        gsap.to(accent, { width: 4, duration: 0.3, ease: "power2.out" });
+      });
+      row.addEventListener("mouseleave", () => {
+        gsap.to(accent, { width: 2, duration: 0.3, ease: "power2.out" });
+      });
+    }
+  });
+</script>

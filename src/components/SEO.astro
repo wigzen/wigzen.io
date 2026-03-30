@@ -1,0 +1,62 @@
+---
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  url?: string;
+  type?: "website" | "article";
+}
+
+const {
+  title = "Vikas Lodh | Full Stack Engineer & Systems Architect",
+  description = "I design systems, not just features. Full Stack Engineer specialising in secure AI pipelines, high-performance frontends, and scalable infrastructure.",
+  image = "/img/icon.png",
+  url = Astro.url.href,
+  type = "website",
+} = Astro.props;
+
+const siteName = "Vikas Lodh — wigzen.dev";
+---
+
+<!-- Primary Meta Tags -->
+<meta name="title" content={title} />
+<meta name="description" content={description} />
+<meta name="author" content="Vikas Lodh" />
+
+<!-- Open Graph -->
+<meta property="og:type" content={type} />
+<meta property="og:url" content={url} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={new URL(image, Astro.site).href} />
+<meta property="og:site_name" content={siteName} />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:url" content={url} />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={new URL(image, Astro.site).href} />
+
+<!-- Canonical -->
+<link rel="canonical" href={url} />
+
+<!-- JSON-LD Structured Data -->
+<script type="application/ld+json" set:html={JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Vikas Lodh",
+  url: "https://wigzen.dev",
+  jobTitle: "Full Stack Engineer / Systems Architect",
+  description: description,
+  sameAs: [
+    "https://github.com/wigzen",
+    "https://linkedin.com/in/vikas-lodh",
+  ],
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Mumbai",
+    addressCountry: "IN",
+  },
+  email: "vikaslodh2@gmail.com",
+})} />

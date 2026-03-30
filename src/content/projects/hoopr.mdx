@@ -1,0 +1,71 @@
+---
+title: "Hoopr.ai"
+index: 1
+description: "Music licensing platform powering real-time discovery and optimised audio delivery for 40,000+ creators."
+tags:
+  - "React"
+  - "Next.js"
+  - "Node.js"
+  - "PostgreSQL"
+  - "Redis"
+href: "https://hoopr.ai"
+accentColor: "#1a1a2e"
+featured: true
+problem: "Hoopr needed a performant music licensing platform capable of real-time search across thousands of tracks, fast page loads, and intuitive discovery — all while scaling to serve a rapidly growing creator base."
+constraints:
+  - "High volume of audio assets requiring CDN-optimised delivery"
+  - "Real-time search with sub-second response expectations"
+  - "Cross-platform responsive experience across desktop and mobile"
+  - "SEO requirements for discoverability of music catalog"
+architectureDecisions:
+  - "Implemented CDN-optimised audio delivery with lazy loading and progressive streaming"
+  - "Built API-driven search with Redis caching layer for sub-second responses"
+  - "Component architecture for reusability across catalog, search, and licensing pages"
+  - "Server-side rendering for SEO with client-side hydration for interactive elements"
+tradeoffs:
+  - "Chose SSR for SEO at the cost of initial infrastructure complexity"
+  - "Implemented aggressive caching strategy, accepting eventual consistency for catalog updates"
+  - "Prioritised search speed over real-time index freshness"
+outcome:
+  metrics:
+    - { label: "User Engagement", value: "+35%" }
+    - { label: "Page Load Time", value: "-25%" }
+    - { label: "Platform Scale", value: "+30%" }
+    - { label: "User Retention", value: "+20%" }
+  summary: "Delivered a music licensing platform serving 40,000+ creators with measurably improved performance, engagement, and retention."
+stack:
+  - "React"
+  - "Next.js"
+  - "Node.js"
+  - "PostgreSQL"
+  - "Redis"
+role: "Full Stack Developer"
+duration: "2023 — 2024"
+---
+
+## The Challenge
+
+Hoopr.ai is a music licensing platform connecting creators with licensable music. The core challenge was building a system that could handle real-time music discovery across a massive catalog while maintaining fast page loads and an intuitive search experience.
+
+The platform needed to serve 40,000+ creators with instantaneous search, seamless audio previewing, and a licensing workflow that didn't break flow. Every millisecond of latency in search or page load directly impacted creator conversion.
+
+## Architecture
+
+The system was designed as a layered architecture:
+
+**Frontend Layer** — React with Next.js for server-rendered pages (SEO-critical catalog pages) and client-side interactive elements (search, audio player, licensing flow). Component architecture allowed reuse across catalog, search, and artist pages.
+
+**API Layer** — Node.js backend with RESTful endpoints for search, catalog management, and licensing. Redis caching layer reduced database load and brought search responses under 200ms at p95.
+
+**Data Layer** — PostgreSQL as the primary datastore for catalog metadata, licensing records, and user data. Structured for efficient full-text search with optimised indexes.
+
+**Delivery Layer** — CDN-optimised audio delivery with lazy loading. Audio files served through edge nodes with progressive streaming for instant previews.
+
+## Systems Lens
+
+This project demanded thinking across the full stack — from database query optimisation to CDN cache invalidation to frontend rendering strategies. The key insight was that music discovery is latency-sensitive: users expect instant results. This drove every architectural decision toward aggressive caching, edge delivery, and progressive loading.
+
+## Outcome
+
+The platform shipped with measurable improvements: 35% increase in user engagement, 25% faster page loads, 30% improvement in platform scalability, and 20% boost in user retention. The architecture scaled to serve the growing creator base without degradation.
+

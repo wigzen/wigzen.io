@@ -1,0 +1,302 @@
+---
+const skills = [
+  "React", "Next.js", "Node.js", "PostgreSQL", "Redis",
+  "Python", "GoLang", "FastAPI", "Three.js", "WebGL",
+  "AWS", "Docker", "Git", "Linux", "Firebase",
+];
+const doubled = [...skills, ...skills];
+
+const capabilities = [
+  "Secure RAG Systems",
+  "Frontend Architecture",
+  "Performance Optimisation",
+  "Data Pipelines",
+  "AI/ML Integration",
+];
+
+const stats = [
+  { value: 4, suffix: "+", label: "Years Building" },
+  { value: 4, label: "Companies" },
+  { value: 35, suffix: "%", label: "Engagement Lift" },
+];
+---
+
+<section id="about" class="about">
+  <div class="about__header">
+    <span class="about__index">(01)</span>
+    <h2 class="about__heading" data-about-heading>About</h2>
+  </div>
+
+  <p class="about__statement" data-about-text>
+    I think from first principles. From
+    <span class="about__highlight">secure AI pipelines</span> to
+    <span class="about__highlight">high-performance frontends</span>, I work
+    across every layer of the stack — understanding how
+    <span class="about__highlight">systems connect</span>, where they break,
+    and how to build them so they don't.
+  </p>
+
+  <div class="about__grid">
+    <div class="about__capabilities">
+      <h3 class="about__sub-heading">What I Build</h3>
+      <ul class="about__cap-list">
+        {capabilities.map((cap) => (
+          <li class="about__cap-item" data-cap-item>
+            <span class="about__cap-dot"></span>
+            {cap}
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="about__stats">
+      {stats.map((s) => (
+        <div class="about__stat">
+          <span class="about__stat-accent"></span>
+          <span class="about__stat-value" data-stat-target={s.value} data-stat-suffix={s.suffix || ""}>0</span>
+          <span class="about__stat-label">{s.label}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div class="about__ticker-wrapper" aria-hidden="true">
+    <div class="about__ticker" id="skillsTicker">
+      {doubled.map((s) => (
+        <span class="about__ticker-item">{s}<span class="about__ticker-dot">&middot;</span></span>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .about {
+    padding-block: var(--section-pad);
+    padding-inline: var(--gutter);
+    background: var(--clr-bg);
+  }
+
+  .about__header {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+
+  .about__index {
+    font-size: 0.8rem;
+    color: var(--clr-text-muted);
+    letter-spacing: 0.1em;
+  }
+
+  .about__heading {
+    font-size: var(--text-h2);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: var(--clr-text);
+  }
+
+  /* Statement */
+  .about__statement {
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    line-height: 1.4;
+    color: var(--clr-text-muted);
+    max-width: 65ch;
+    margin-bottom: 5rem;
+  }
+
+  .about__highlight {
+    color: var(--clr-accent-text);
+  }
+
+  /* Grid: capabilities + stats */
+  .about__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    margin-bottom: 5rem;
+  }
+
+  .about__sub-heading {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--clr-text-muted);
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--clr-border);
+    padding-bottom: 1rem;
+  }
+
+  /* Capabilities */
+  .about__cap-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .about__cap-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.1rem;
+    color: var(--clr-text);
+  }
+
+  .about__cap-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--clr-accent);
+    flex-shrink: 0;
+  }
+
+  /* Stats */
+  .about__stats {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .about__stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .about__stat-accent {
+    width: 40px;
+    height: 2px;
+    background: var(--clr-accent);
+  }
+
+  .about__stat-value {
+    font-size: clamp(3rem, 6vw, 5rem);
+    font-weight: 900;
+    line-height: 1;
+    color: var(--clr-accent-muted);
+  }
+
+  .about__stat-label {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--clr-text-muted);
+  }
+
+  /* Ticker */
+  .about__ticker-wrapper {
+    overflow: hidden;
+    border-block: 1px solid var(--clr-border);
+    padding-block: 1.25rem;
+  }
+
+  .about__ticker {
+    display: flex;
+    gap: 0;
+    width: max-content;
+    white-space: nowrap;
+  }
+
+  .about__ticker-item {
+    font-size: 1rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--clr-text);
+    padding-inline: 1.5rem;
+  }
+
+  .about__ticker-dot {
+    color: var(--clr-accent);
+    margin-left: 1.5rem;
+  }
+
+  @media (max-width: 640px) {
+    .about__grid {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+
+    .about__statement {
+      font-size: clamp(1.2rem, 5vw, 1.5rem);
+    }
+  }
+</style>
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+  import { SplitText } from "gsap/SplitText";
+
+  gsap.registerPlugin(ScrollTrigger, SplitText);
+
+  // Skills ticker
+  const ticker = document.getElementById("skillsTicker");
+  if (ticker) {
+    gsap.to(ticker, {
+      xPercent: -50,
+      repeat: -1,
+      ease: "none",
+      duration: 20,
+    });
+  }
+
+  // Statement word reveal
+  const statement = document.querySelector("[data-about-text]");
+  if (statement) {
+    const split = SplitText.create(statement, { type: "words" });
+    gsap.from(split.words, {
+      opacity: 0,
+      y: 20,
+      stagger: 0.04,
+      duration: 0.6,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: statement,
+        start: "top 75%",
+        toggleActions: "play none none none",
+      },
+    });
+  }
+
+  // Capability items staggered reveal
+  document.querySelectorAll("[data-cap-item]").forEach((item, i) => {
+    gsap.from(item, {
+      opacity: 0,
+      y: 20,
+      duration: 0.6,
+      delay: i * 0.1,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: item,
+        start: "top 85%",
+        toggleActions: "play none none none",
+      },
+    });
+  });
+
+  // Stat count-up
+  document.querySelectorAll("[data-stat-target]").forEach((el) => {
+    const target = parseFloat((el as HTMLElement).dataset.statTarget || "0");
+    const suffix = (el as HTMLElement).dataset.statSuffix || "";
+    const isDecimal = target % 1 !== 0;
+    const obj = { val: 0 };
+    gsap.to(obj, {
+      val: target,
+      duration: 1.5,
+      ease: "power2.out",
+      snap: isDecimal ? {} : { val: 1 },
+      onUpdate: () => {
+        const display = isDecimal ? obj.val.toFixed(1) : Math.round(obj.val).toString();
+        (el as HTMLElement).textContent = display + suffix;
+      },
+      scrollTrigger: {
+        trigger: el,
+        start: "top 80%",
+        toggleActions: "play none none none",
+      },
+    });
+  });
+</script>

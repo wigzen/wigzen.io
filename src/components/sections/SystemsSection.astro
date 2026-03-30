@@ -1,0 +1,268 @@
+---
+const layers = [
+  {
+    name: "UI / Frontend",
+    tech: ["React", "Next.js", "Three.js", "WebGL", "TailwindCSS"],
+    color: "#a8ff51",
+    description: "Responsive interfaces, interactive visualisations, and performance-optimised client applications.",
+  },
+  {
+    name: "API / Backend",
+    tech: ["Node.js", "FastAPI", "NestJS", "GoLang"],
+    color: "#7ddb3a",
+    description: "RESTful services, real-time APIs, and ML model serving pipelines.",
+  },
+  {
+    name: "Data Layer",
+    tech: ["PostgreSQL", "Redis", "Vector DBs", "Firebase"],
+    color: "#5cb827",
+    description: "Persistent storage, caching, tokenisation pipelines, and vector search.",
+  },
+  {
+    name: "Infrastructure",
+    tech: ["AWS", "Docker", "Git", "Linux", "CI/CD"],
+    color: "#3d9414",
+    description: "Cloud infrastructure, containerisation, deployment pipelines, and monitoring.",
+  },
+  {
+    name: "Security / Compliance",
+    tech: ["Presidio", "NeMo Guardrails", "GDPR", "HIPAA"],
+    color: "#287000",
+    description: "PII/PHI detection, LLM security guardrails, and regulatory compliance.",
+  },
+];
+---
+
+<section id="systems" class="systems">
+  <div class="systems__header">
+    <span class="systems__index">(04)</span>
+    <h2 class="systems__heading">Systems<br />Thinking</h2>
+  </div>
+
+  <p class="systems__intro" data-systems-intro>
+    I don't just work at one layer — I understand how each layer affects the others.
+    From pixels to packets, every decision ripples through the stack.
+  </p>
+
+  <div class="systems__layers">
+    {layers.map((layer, i) => (
+      <article
+        class="systems__layer"
+        data-systems-layer
+        style={`--layer-color: ${layer.color}; --layer-delay: ${i * 0.1}s`}
+      >
+        <div class="systems__layer-bar" />
+        <div class="systems__layer-content">
+          <div class="systems__layer-header">
+            <h3 class="systems__layer-name">{layer.name}</h3>
+            <div class="systems__layer-tech">
+              {layer.tech.map((t) => (
+                <span class="systems__layer-tag">{t}</span>
+              ))}
+            </div>
+          </div>
+          <p class="systems__layer-desc">{layer.description}</p>
+        </div>
+      </article>
+    ))}
+  </div>
+
+  <!-- Fallback static diagram for no-JS -->
+  <noscript>
+    <div class="systems__fallback">
+      <p>Frontend → Backend → Data → Infrastructure → Security</p>
+    </div>
+  </noscript>
+
+</section>
+
+<style>
+  .systems {
+    padding-block: var(--section-pad);
+    padding-inline: var(--gutter);
+    background: var(--clr-bg);
+  }
+
+  .systems__header {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+
+  .systems__index {
+    font-size: 0.8rem;
+    color: var(--clr-text-muted);
+    letter-spacing: 0.1em;
+  }
+
+  .systems__heading {
+    font-size: var(--text-h2);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    line-height: 0.95;
+    color: var(--clr-text);
+  }
+
+  .systems__intro {
+    font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+    line-height: 1.5;
+    color: var(--clr-text-muted);
+    max-width: 55ch;
+    margin-bottom: 4rem;
+  }
+
+  .systems__layers {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .systems__layer {
+    display: grid;
+    grid-template-columns: 4px 1fr;
+    gap: 1.5rem;
+    padding-block: 2rem;
+    border-top: 1px solid var(--clr-border);
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: background 0.3s ease;
+  }
+
+  .systems__layer:last-child {
+    border-bottom: 1px solid var(--clr-border);
+  }
+
+  .systems__layer:hover {
+    background: var(--clr-border);
+  }
+
+  .systems__layer-bar {
+    width: 4px;
+    align-self: stretch;
+    background: var(--layer-color);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+  }
+
+  .systems__layer:hover .systems__layer-bar {
+    width: 6px;
+  }
+
+  .systems__layer-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .systems__layer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .systems__layer-name {
+    font-size: clamp(1.2rem, 2vw, 1.6rem);
+    font-weight: 700;
+    color: var(--clr-text);
+    line-height: 1.2;
+  }
+
+  .systems__layer-tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .systems__layer-tag {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0.2rem 0.6rem;
+    border: 1px solid var(--layer-color);
+    border-radius: var(--radius-full);
+    color: var(--layer-color);
+    opacity: 0.8;
+  }
+
+  .systems__layer-desc {
+    font-size: 0.9rem;
+    color: var(--clr-text-muted);
+    line-height: 1.6;
+    max-width: 55ch;
+  }
+
+  .systems__fallback {
+    padding: 2rem;
+    text-align: center;
+    color: var(--clr-text-muted);
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 768px) {
+    .systems__layer {
+      grid-template-columns: 3px 1fr;
+      gap: 1rem;
+      padding-block: 1.5rem;
+    }
+
+    .systems__layer-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Intro text reveal
+  const intro = document.querySelector("[data-systems-intro]");
+  if (intro) {
+    gsap.from(intro, {
+      opacity: 0,
+      y: 30,
+      duration: 0.8,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: intro,
+        start: "top 80%",
+        toggleActions: "play none none none",
+      },
+    });
+  }
+
+  // Staggered layer reveal
+  const layers = document.querySelectorAll("[data-systems-layer]");
+  layers.forEach((layer, i) => {
+    gsap.to(layer, {
+      opacity: 1,
+      x: 0,
+      duration: 0.7,
+      delay: i * 0.12,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: layer,
+        start: "top 85%",
+        toggleActions: "play none none none",
+      },
+    });
+
+    // Bar pulse on hover
+    const bar = layer.querySelector(".systems__layer-bar") as HTMLElement;
+    if (bar) {
+      layer.addEventListener("mouseenter", () => {
+        gsap.to(bar, { width: 6, duration: 0.3, ease: "power2.out" });
+      });
+      layer.addEventListener("mouseleave", () => {
+        gsap.to(bar, { width: 4, duration: 0.3, ease: "power2.out" });
+      });
+    }
+  });
+</script>

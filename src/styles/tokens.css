@@ -1,0 +1,102 @@
+/* ─── Design Tokens ─── */
+
+:root {
+  /* ─── Colors: Light Theme (default) ─── */
+  --clr-bg:           #f5f5f0;
+  --clr-surface:      #ffffff;
+  --clr-text:         #1a1a1a;
+  --clr-text-muted:   #6b6b6b;
+  --clr-accent:       #a8ff51;
+  --clr-accent-text:  #2d7a00;
+  --clr-accent-muted: #2d7a00;
+  --clr-border:       rgba(0,0,0,0.08);
+
+  /* Legacy compat */
+  --clr-blue: #0967d2;
+  --clr-black: #1a1a1a;
+  --clr-white: #fff;
+  --clr-gray: #d5d5d5;
+  --clr-blackground: #f8f8f8;
+
+  /* ─── Typography ─── */
+  --text-hero:    clamp(100px, 14vw, 200px);
+  --text-h1:      clamp(64px, 8vw, 128px);
+  --text-h2:      clamp(48px, 6vw, 96px);
+  --text-h3:      clamp(32px, 4vw, 56px);
+  --text-h4:      clamp(24px, 3vw, 36px);
+  --text-body:    1rem;
+  --text-sm:      0.875rem;
+  --text-xs:      0.75rem;
+
+  --font-900: 900;
+  --font-700: 700;
+  --font-500: 500;
+  --font-300: 300;
+
+  /* ─── Spacing ─── */
+  --section-pad: clamp(80px, 10vw, 160px);
+  --gutter:      4rem;
+
+  /* ─── Motion ─── */
+  --ease-smooth:     cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-bounce:     cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out-expo:   cubic-bezier(0.19, 1, 0.22, 1);
+  --duration-fast:   0.2s;
+  --duration-normal: 0.4s;
+  --duration-slow:   0.8s;
+
+  /* ─── Z-Index Scale ─── */
+  --z-background: -1;
+  --z-content:    1;
+  --z-overlay:    10;
+  --z-nav:        100;
+  --z-cursor:     500;
+  --z-loader:     1000;
+  --z-modal:      2000;
+
+  /* ─── Radius ─── */
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   16px;
+  --radius-full: 9999px;
+
+  /* ─── Navigation ─── */
+  --nav-bg-color:          rgba(0,0,0,0.06);
+  --nav-active-color:      #a8ff51;
+  --nav-text-color:        rgba(0,0,0,0.5);
+  --nav-active-text-color: #0a0a0a;
+}
+
+/* ─── Dark Theme ─── */
+html.theme-dark,
+body.theme-dark {
+  --clr-bg:           #0a0a0a;
+  --clr-surface:      #111111;
+  --clr-text:         #e8e8e2;
+  --clr-text-muted:   #6b6b6b;
+  --clr-accent:       #a8ff51;
+  --clr-accent-text:  #a8ff51;
+  --clr-accent-muted: #a8ff51;
+  --clr-border:       rgba(255,255,255,0.08);
+  --clr-black:        #e8e8e2;
+
+  /* Nav overrides */
+  --nav-bg-color:          rgba(255,255,255,0.06);
+  --nav-text-color:        rgba(255,255,255,0.5);
+  --nav-active-text-color: #0a0a0a;
+}
+
+/* ─── Responsive Overrides ─── */
+@media (max-width: 768px) {
+  :root {
+    --gutter: 2rem;
+    --text-hero: clamp(72px, 14vw, 200px);
+    --text-h2: clamp(36px, 6vw, 96px);
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --gutter: 1.25rem;
+  }
+}
