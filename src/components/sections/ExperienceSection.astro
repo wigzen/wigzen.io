@@ -236,6 +236,14 @@ const roles = experiences.map((exp) => ({
       background: transparent;
     }
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    .exp__heading-inner { opacity: 1; }
+    .exp__heading-clip { display: none; }
+    .exp__index { opacity: 1; }
+    .exp__row { transition: none; }
+    .exp__timeline-track { display: none; }
+  }
 </style>
 
 <script>
