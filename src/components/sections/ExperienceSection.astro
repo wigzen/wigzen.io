@@ -247,6 +247,38 @@ const roles = experiences.map((exp) => ({
     headingTl.to(headingClip, { scaleX: 0, duration: 0.7, ease: "power3.inOut" }, "-=0.5");
   }
 
+  const list = document.querySelector(".exp__list") as HTMLElement;
+  const track = document.querySelector(".exp__timeline-track") as HTMLElement;
+  const fill = document.querySelector(".exp__timeline-fill") as HTMLElement;
+  const dot = document.querySelector(".exp__timeline-dot") as HTMLElement;
+  const firstAccent = document.querySelector(".exp__accent") as HTMLElement;
+
+  function positionTrack() {
+    if (!track || !list || !firstAccent) return;
+    const listRect = list.getBoundingClientRect();
+    const accentRect = firstAccent.getBoundingClientRect();
+    track.style.left = `${accentRect.left - listRect.left}px`;
+  }
+
+  positionTrack();
+  window.addEventListener("resize", positionTrack);
+
+  if (list && fill && dot) {
+    gsap.to(fill, {
+      height: "100%",
+      ease: "none",
+      scrollTrigger: {
+        trigger: list,
+        start: "top 60%",
+        end: "bottom 40%",
+        scrub: 1,
+        onUpdate: (self) => {
+          dot.style.top = `${self.progress * 100}%`;
+        },
+      },
+    });
+  }
+
   const rows = document.querySelectorAll("[data-exp-row]");
 
   rows.forEach((row, i) => {
