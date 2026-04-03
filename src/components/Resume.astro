@@ -94,7 +94,7 @@
     align-items: center;
     padding: 0.75rem 1.75rem;
     border: 1px solid var(--clr-border);
-    border-radius: 2rem;
+    border-radius: var(--radius-full);
     font-size: 0.9rem;
     color: var(--clr-text);
     transition: background 0.3s, color 0.3s, border-color 0.3s;
@@ -138,7 +138,7 @@
   }
 
   .resume__row:hover {
-    background: var(--clr-border);
+    background: var(--clr-surface);
   }
 
   .resume__row-date {
@@ -168,7 +168,7 @@
   }
 
   .resume__row-title {
-    font-size: clamp(1.4rem, 2.5vw, 2rem);
+    font-size: var(--text-h4);
     font-weight: 700;
     color: var(--clr-text);
     line-height: 1.1;
@@ -546,10 +546,18 @@
     const accent = (row as HTMLElement).querySelector(".resume__accent") as HTMLElement;
     if (accent) {
       row.addEventListener("mouseenter", () => {
-        gsap.to(accent, { width: 4, duration: 0.3, ease: "power2.out" });
+        if (window.innerWidth > 768) {
+          gsap.to(accent, { width: 4, duration: 0.3, ease: "power2.out" });
+        } else {
+          gsap.to(accent, { width: 60, duration: 0.3, ease: "power2.out" });
+        }
       });
       row.addEventListener("mouseleave", () => {
-        gsap.to(accent, { width: 2, duration: 0.3, ease: "power2.out" });
+        if (window.innerWidth > 768) {
+          gsap.to(accent, { width: 2, duration: 0.3, ease: "power2.out" });
+        } else {
+          gsap.to(accent, { width: 40, duration: 0.3, ease: "power2.out" });
+        }
       });
     }
   });
