@@ -1,743 +1,583 @@
 <style>
-  :root {
-    --primary: #1e293b;
-    --secondary: #475569;
-    --accent: #0ea5e9;
-    --accent-light: #7dd3fc;
-    --light: #f8fafc;
-    --dark: #0f172a;
-    --border: #e2e8f0;
-    --spacing-xs: 0.5rem;
-    --spacing-sm: 0.5rem;
-    --spacing-md: 1rem;
-    --spacing-lg: 1.5rem;
+  /* ── Page wrapper ── */
+  .resume {
+    padding-block: var(--section-pad);
+    padding-inline: var(--gutter);
+    background: var(--clr-bg);
   }
 
-  .container {
-    max-width: 850px;
-    margin: 0 auto;
-    background-color: white;
-    box-shadow:
-      0 10px 25px rgba(0, 0, 0, 0.05),
-      0 5px 10px rgba(0, 0, 0, 0.02);
-    border-radius: 16px;
-    overflow: hidden;
-  }
-
-  .header {
-    padding: var(--spacing-lg) var(--spacing-lg) calc(var(--spacing-lg) * 1.2);
-    background: var(--dark);
-    color: white;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .header::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background: radial-gradient(
-      circle at top right,
-      rgba(14, 165, 233, 0.15),
-      transparent 50%
-    );
-    z-index: 0;
-  }
-
-  .header::after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, var(--accent), var(--accent-light));
-  }
-
-  .header-content {
+  /* ── Shared section header (index + heading) ── */
+  .resume__section-header {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    position: relative;
-    z-index: 1;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 4rem;
   }
 
-  .header-left {
-    flex: 1;
+  .resume__section-index {
+    font-size: 0.8rem;
+    color: var(--clr-text-muted);
+    letter-spacing: 0.1em;
   }
 
-  .header-right {
-    display: flex;
-    gap: var(--spacing-sm);
+  .resume__section-heading {
+    font-size: var(--text-h2);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: var(--clr-text);
   }
 
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 0.625rem 1.25rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    text-decoration: none;
-    border: none;
+  /* ── Header ── */
+  .resume__header {
+    padding-bottom: var(--section-pad);
+    border-bottom: 1px solid var(--clr-border);
+    margin-bottom: var(--section-pad);
   }
 
-  .btn-primary {
-    background-color: var(--accent);
-    color: white;
+  .resume__header-index {
+    font-size: 0.8rem;
+    color: var(--clr-text-muted);
+    letter-spacing: 0.1em;
+    margin-bottom: 1.5rem;
   }
 
-  .btn-outline {
-    background-color: transparent;
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+  .resume__name {
+    font-size: var(--text-h1);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    line-height: 0.9;
+    color: var(--clr-text);
   }
 
-  .btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  .resume__role {
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--clr-text-muted);
+    margin-top: 1.5rem;
   }
 
-  .btn-primary:hover {
-    background-color: #0284c7;
-  }
-
-  .btn-outline:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.5);
-  }
-
-  .name {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: var(--spacing-xs);
-    letter-spacing: -0.025em;
-    background: linear-gradient(135deg, #fff, #cbd5e1);
-    -webkit-background-clip: text;
-    color: transparent;
-  }
-
-  .title {
-    font-size: 1.25rem;
-    font-weight: 500;
-    color: #94a3b8;
-    margin-bottom: var(--spacing-md);
-  }
-
-  .contact {
+  .resume__contact {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--spacing-sm) var(--spacing-md);
-    font-size: 0.95rem;
+    gap: 1.5rem;
+    margin-top: 2rem;
   }
 
-  .contact-item > * {
-    color: #94a3b8;
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
-  }
-
-  .contact-item a {
-    color: #94a3b8;
-    text-decoration: none;
+  .resume__contact-item {
+    font-size: 0.85rem;
+    color: var(--clr-text-muted);
     transition: color 0.2s;
   }
 
-  .contact-item a:hover {
-    color: var(--accent-light);
-    text-decoration: none;
+  .resume__contact-item a {
+    color: var(--clr-text-muted);
+    transition: color 0.2s;
   }
 
-  .main {
-    padding: var(--spacing-lg);
+  .resume__contact-item a:hover,
+  .resume__contact-item:hover {
+    color: var(--clr-accent);
   }
 
-  .section {
-    margin-bottom: var(--spacing-lg);
-    animation: fadeIn 0.6s ease-out;
+  .resume__actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2.5rem;
   }
 
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  .resume__btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 1.75rem;
+    border: 1px solid var(--clr-border);
+    border-radius: 2rem;
+    font-size: 0.9rem;
+    color: var(--clr-text);
+    transition: background 0.3s, color 0.3s, border-color 0.3s;
   }
 
-  .section:last-child {
-    margin-bottom: 0;
+  .resume__btn:hover {
+    background: var(--clr-accent);
+    color: var(--clr-bg);
+    border-color: var(--clr-accent);
   }
 
-  .section-title {
-    font-size: 1.125rem;
-    font-weight: 600;
-    color: var(--dark);
-    margin-bottom: var(--spacing-md);
-    padding-bottom: var(--spacing-xs);
-    border-bottom: 2px solid var(--border);
+  .resume__btn--primary {
+    background: var(--clr-accent);
+    color: var(--clr-bg);
+    border-color: var(--clr-accent);
+  }
+
+  .resume__btn--primary:hover {
+    background: transparent;
+    color: var(--clr-text);
+    border-color: var(--clr-border);
+  }
+
+  /* ── Shared row layout (Experience, Projects, Education) ── */
+  .resume__list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .resume__row {
+    display: grid;
+    grid-template-columns: 14ch 2px 1fr;
+    gap: 2rem;
+    padding-block: 3rem;
+    border-top: 1px solid var(--clr-border);
+    transition: background 0.3s ease;
+  }
+
+  .resume__row:last-child {
+    border-bottom: 1px solid var(--clr-border);
+  }
+
+  .resume__row:hover {
+    background: var(--clr-border);
+  }
+
+  .resume__row-date {
+    font-size: 0.8rem;
+    color: var(--clr-text-muted);
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    display: flex;
-    align-items: center;
+    padding-top: 0.35rem;
   }
 
-  .section-title::before {
-    content: "";
-    display: inline-block;
-    width: 12px;
-    height: 12px;
-    margin-right: 10px;
-    background-color: var(--accent);
-    border-radius: 50%;
-  }
-
-  .skills-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--spacing-xs);
-    margin-bottom: var(--spacing-sm);
-    padding-left: var(--spacing-md);
-  }
-
-  .skill-category {
-    font-weight: 600;
-    color: var(--dark);
-    margin-right: var(--spacing-xs);
-  }
-
-  /* Timeline styles */
-  .timeline {
-    position: relative;
-    margin-left: 30px;
-  }
-
-  .timeline::before {
-    content: "";
-    position: absolute;
-    top: 10px;
-    bottom: 0;
-    left: 0;
+  .resume__accent {
     width: 2px;
-    background: var(--border);
-  }
-
-  /* Common timeline item styles */
-  .timeline-item {
-    position: relative;
-    margin-bottom: var(--spacing-md);
-    padding-left: var(--spacing-md);
-    transition: all 0.3s ease;
-  }
-
-  .timeline-item::before {
-    content: "";
-    position: absolute;
-    left: -8px;
-    top: 6px;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background-color: white;
-    border: 2px solid var(--accent);
-    z-index: 1;
-    transition: all 0.3s ease;
-  }
-
-  .timeline-item:hover::before {
-    background-color: var(--accent);
-  }
-
-  .timeline-item:last-child {
-    margin-bottom: 0;
-  }
-
-  /* Common header styles */
-  .item-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: var(--spacing-xs);
-    align-items: center;
-  }
-
-  .item-title {
-    font-weight: 600;
-    color: var(--primary);
-    font-size: 1.05rem;
-  }
-
-  .item-date {
-    color: var(--accent);
-    font-size: 0.9rem;
-    font-weight: 500;
-  }
-
-  /* Common description styles */
-  .item-description {
-    font-size: 0.95rem;
-    color: var(--secondary);
-    line-height: 1.6;
-  }
-
-  /* Common achievement styles */
-  .achievement-text {
-    padding: 0;
-    margin-top: var(--spacing-xs);
-    color: var(--secondary);
-    font-size: 0.95rem;
-  }
-
-  .achievement-paragraph {
-    margin-bottom: 0.75rem;
-    transition: transform 0.2s ease;
-  }
-
-  .achievement-paragraph:hover {
-    transform: translateX(2px);
-  }
-
-  .achievement-paragraph:last-child {
-    margin-bottom: 0;
-  }
-
-  /* Common link styles */
-  .item-link {
-    text-decoration: none;
-    padding: 0.25rem 0.75rem;
-    background-color: rgba(14, 165, 233, 0.1);
-    border-radius: 4px;
-    transition: all 0.2s ease;
-    color: var(--accent);
-    font-size: 0.9rem;
-    font-weight: 500;
-  }
-
-  .item-link:hover {
-    background-color: rgba(14, 165, 233, 0.2);
-    text-decoration: none;
-  }
-
-  /* Common summary styles */
-  .item-summary {
-    font-weight: 500;
-    margin-bottom: 0.75rem;
-    color: var(--primary);
-    position: relative;
-    display: inline-block;
-  }
-
-  .item-summary::after {
-    content: "";
-    position: absolute;
-    bottom: -4px;
-    left: 0;
-    width: 2rem;
-    height: 2px;
-    background-color: var(--accent);
+    align-self: stretch;
+    background: var(--clr-accent);
+    border-radius: 1px;
     transition: width 0.3s ease;
   }
 
-  .timeline-item:hover .item-summary::after {
-    width: 100%;
+  .resume__row:hover .resume__accent {
+    width: 4px;
   }
 
-  .experience-company,
-  .education-school {
-    font-weight: 500;
-    color: var(--secondary);
-    margin-bottom: var(--spacing-xs);
+  .resume__row-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
   }
 
-  .education-degree,
-  .certification-name {
-    font-weight: 600;
-    color: var(--primary);
-    margin-bottom: var(--spacing-xs);
+  .resume__row-title {
+    font-size: clamp(1.4rem, 2.5vw, 2rem);
+    font-weight: 700;
+    color: var(--clr-text);
+    line-height: 1.1;
   }
 
-  .education-date,
-  .certification-date {
-    color: var(--secondary);
+  .resume__row-subtitle {
+    font-size: 0.85rem;
+    color: var(--clr-accent-text);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .resume__row-desc {
     font-size: 0.95rem;
+    color: var(--clr-text-muted);
+    line-height: 1.6;
+    max-width: 55ch;
+    margin-top: 0.25rem;
   }
 
-  @media print {
-    body {
-      padding: 0;
-      background-color: white;
-    }
-
-    .container {
-      box-shadow: none;
-      max-width: 100%;
-    }
-
-    .header-right {
-      display: none;
-    }
+  .resume__row-desc p {
+    margin-bottom: 0.5rem;
   }
 
+  .resume__row-desc p:last-child {
+    margin-bottom: 0;
+  }
+
+  .resume__row-link {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.2rem 0.6rem;
+    border: 1px solid var(--clr-border);
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    color: var(--clr-text-muted);
+    margin-top: 0.5rem;
+    align-self: flex-start;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .resume__row-link:hover {
+    border-color: var(--clr-accent);
+    color: var(--clr-accent);
+  }
+
+  /* ── Skills grid ── */
+  .resume__skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 3rem;
+  }
+
+  .resume__skill-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 2rem;
+    border: 1px solid var(--clr-border);
+    border-radius: var(--radius-md);
+    background: var(--clr-surface);
+    transition: border-color 0.3s ease;
+  }
+
+  .resume__skill-card:hover {
+    border-color: var(--clr-accent);
+  }
+
+  .resume__skill-category {
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--clr-text);
+  }
+
+  .resume__skill-items {
+    font-size: 0.85rem;
+    color: var(--clr-text-muted);
+    line-height: 1.8;
+  }
+
+  /* ── Section spacing ── */
+  .resume__block {
+    margin-bottom: var(--section-pad);
+  }
+
+  .resume__block:last-child {
+    margin-bottom: 0;
+  }
+
+  /* ── Mobile ── */
   @media (max-width: 768px) {
-    body {
-      padding: var(--spacing-sm);
+    .resume__row {
+      grid-template-columns: 1fr;
+      gap: 0;
+      padding-block: 2.5rem;
     }
 
-    .header {
-      padding: var(--spacing-md);
+    .resume__accent {
+      width: 40px;
+      height: 2px;
+      align-self: auto;
+      margin-block: 1rem;
     }
 
-    .header-content {
+    .resume__row:hover .resume__accent {
+      width: 60px;
+      height: 2px;
+    }
+
+    .resume__row-date {
+      padding-top: 0;
+    }
+
+    .resume__actions {
       flex-direction: column;
     }
 
-    .header-right {
-      margin-top: var(--spacing-md);
-      width: 100%;
-      justify-content: space-between;
+    .resume__btn {
+      justify-content: center;
     }
+  }
 
-    .main {
-      padding: var(--spacing-md);
-    }
-
-    .contact {
-      flex-direction: column;
-      gap: var(--spacing-xs);
-    }
-
-    .name {
-      font-size: 2rem;
+  @media (max-width: 640px) {
+    .resume__skills-grid {
+      grid-template-columns: 1fr;
     }
   }
 </style>
-<!-- https://chriscarruthers.co.uk/chriscarruthers-resume.pdf -->
-<div class="container">
-  <header class="header">
-    <div class="header-content">
-      <div class="header-left">
-        <h1 class="name">Vikas Lodh</h1>
-        <h2 class="title">Software Engineer | Full Stack Developer</h2>
-        <div class="contact">
-          <div class="contact-item">
-            <span>Mumbai, India</span>
-          </div>
-          <div class="contact-item">
-            <span>+91 9820681798</span>
-          </div>
-          <div class="contact-item">
-            <span>vikaslodh2@gmail.com</span>
-          </div>
-          <div class="contact-item">
-            <a href="https://www.linkedin.com/in/vikas-lodh/" target="_blank"
-              >linkedin.com/in/vikas-lodh</a
-            >
-          </div>
-          <div class="contact-item">
-            <a href="https://github.com/wigzen/" target="_blank"
-              >github.com/wigzen</a
-            >
-          </div>
-          <div class="contact-item">
-            <a href="https://wigzen.dev" target="_blank">wigzen.dev</a>
-          </div>
-        </div>
-      </div>
-      <div class="header-right">
-        <button id="download-resume" class="btn btn-primary">
-          <a
-            href="https://docs.google.com/document/d/1_p6a2dElPgM7w2Lk0VInGyPcyOC-1MALOJYGLX1nT58"
-            download="true"
-          >
-            Download Resume
-          </a>
-        </button>
-        <button id="send-email" class="btn btn-outline">Contact Me</button>
-      </div>
+
+<div class="resume">
+
+  <!-- ── HEADER ── -->
+  <header class="resume__header" data-resume-header>
+    <p class="resume__header-index">(00)</p>
+    <h1 class="resume__name">Vikas Lodh</h1>
+    <p class="resume__role">Full Stack Engineer &nbsp;/&nbsp; Systems Architect</p>
+    <div class="resume__contact">
+      <span class="resume__contact-item">Mumbai, India</span>
+      <span class="resume__contact-item">+91 9820681798</span>
+      <span class="resume__contact-item"><a href="mailto:vikaslodh2@gmail.com">vikaslodh2@gmail.com</a></span>
+      <span class="resume__contact-item"><a href="https://www.linkedin.com/in/vikas-lodh/" target="_blank" rel="noopener">linkedin.com/in/vikas-lodh</a></span>
+      <span class="resume__contact-item"><a href="https://github.com/wigzen/" target="_blank" rel="noopener">github.com/wigzen</a></span>
+      <span class="resume__contact-item"><a href="https://wigzen.dev" target="_blank" rel="noopener">wigzen.dev</a></span>
+    </div>
+    <div class="resume__actions">
+      <a href="https://docs.google.com/document/d/1_p6a2dElPgM7w2Lk0VInGyPcyOC-1MALOJYGLX1nT58" class="resume__btn resume__btn--primary" download>Download Resume</a>
+      <button class="resume__btn" id="resume-contact-btn">Contact Me</button>
     </div>
   </header>
 
-  <main class="main">
-    <section class="section">
-      <h3 class="section-title">Technical Skills</h3>
-      <div class="skills-list">
-        <span class="skill-category">Languages:</span>
-        <span>HTML, CSS, JavaScript, Python, Rust</span>
+  <!-- ── EXPERIENCE ── -->
+  <div class="resume__block">
+    <div class="resume__section-header">
+      <span class="resume__section-index">(01)</span>
+      <h2 class="resume__section-heading">Experience</h2>
+    </div>
+    <div class="resume__list">
+
+      <article class="resume__row" data-resume-row>
+        <span class="resume__row-date">Nov 2024 — Present</span>
+        <div class="resume__accent"></div>
+        <div class="resume__row-content">
+          <h3 class="resume__row-title">AI FullStack Developer</h3>
+          <p class="resume__row-subtitle">Cybic Tech</p>
+          <div class="resume__row-desc">
+            <p>Architected and implemented secure RAG systems using Presidio and NeMo Guardrails, establishing robust PII/PHI protection protocols.</p>
+            <p>Developed tokenization system with PostgreSQL and Redis for enhanced data security compliance (GDPR, HIPAA).</p>
+            <p>Built scalable AI applications using FastAPI backend and Next.js frontend with vector databases for advanced search capabilities.</p>
+            <p>Implemented comprehensive security measures to prevent LLM attacks and ensure data integrity across all applications.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="resume__row" data-resume-row>
+        <span class="resume__row-date">Jun 2023 — Nov 2024</span>
+        <div class="resume__accent"></div>
+        <div class="resume__row-content">
+          <h3 class="resume__row-title">Frontend Developer</h3>
+          <p class="resume__row-subtitle">Blackcurrant Labs</p>
+          <div class="resume__row-desc">
+            <p>Led end-to-end development of React and Three.js applications across e-commerce, service, and medical domains.</p>
+            <p>Reduced project turnaround time by 40% through implementation of optimised component architecture and efficient state management.</p>
+            <p>Increased client satisfaction by 25% by delivering intuitive user interfaces and seamless user experiences.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="resume__row" data-resume-row>
+        <span class="resume__row-date">Jul 2022 — Dec 2022</span>
+        <div class="resume__accent"></div>
+        <div class="resume__row-content">
+          <h3 class="resume__row-title">Frontend Intern</h3>
+          <p class="resume__row-subtitle">Zotech</p>
+          <div class="resume__row-desc">
+            <p>Engineered an AI-powered sentence phraser utilising Google's NLP technology, enhancing language understanding by 40%.</p>
+            <p>Improved communication efficiency across platforms, reducing manual editing time by 50 hours monthly.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="resume__row" data-resume-row>
+        <span class="resume__row-date">Oct 2021 — Dec 2021</span>
+        <div class="resume__accent"></div>
+        <div class="resume__row-content">
+          <h3 class="resume__row-title">Frontend Intern</h3>
+          <p class="resume__row-subtitle">Sahu Technologies</p>
+          <div class="resume__row-desc">
+            <p>Directed the creation and launch of a comprehensive platform for a leading housing firm.</p>
+            <p>Achieved 40% improvement in site speed through code optimisation and modern web practices.</p>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+
+  <!-- ── PROJECTS ── -->
+  <div class="resume__block">
+    <div class="resume__section-header">
+      <span class="resume__section-index">(02)</span>
+      <h2 class="resume__section-heading">Projects</h2>
+    </div>
+    <div class="resume__list">
+
+      <article class="resume__row" data-resume-row>
+        <span class="resume__row-date">2023</span>
+        <div class="resume__accent"></div>
+        <div class="resume__row-content">
+          <h3 class="resume__row-title">Hoopr.ai</h3>
+          <p class="resume__row-subtitle">Music Licensing Platform</p>
+          <div class="resume__row-desc">
+            <p>Improved user engagement by 35% through implementation of refined UI/UX and intuitive search mechanisms.</p>
+            <p>Reduced page load times by 25% through frontend performance optimisation and efficient rendering techniques.</p>
+            <p>Developed RESTful APIs for real-time music discovery and content delivery with robust error handling.</p>
+          </div>
+          <a href="https://hoopr.ai" target="_blank" rel="noopener" class="resume__row-link">View Project ↗</a>
+        </div>
+      </article>
+
+      <article class="resume__row" data-resume-row>
+        <span class="resume__row-date">2023</span>
+        <div class="resume__accent"></div>
+        <div class="resume__row-content">
+          <h3 class="resume__row-title">Hedged</h3>
+          <p class="resume__row-subtitle">Financial Analytics Platform</p>
+          <div class="resume__row-desc">
+            <p>Led end-to-end development using React and Three.js for dynamic financial data visualisation.</p>
+            <p>Achieved 40% reduction in project turnaround time through implementation of reusable component architecture.</p>
+          </div>
+          <a href="http://www.hedged.in" target="_blank" rel="noopener" class="resume__row-link">View Project ↗</a>
+        </div>
+      </article>
+
+      <article class="resume__row" data-resume-row>
+        <span class="resume__row-date">2022</span>
+        <div class="resume__accent"></div>
+        <div class="resume__row-content">
+          <h3 class="resume__row-title">Syntropy</h3>
+          <p class="resume__row-subtitle">Network Optimisation Platform</p>
+          <div class="resume__row-desc">
+            <p>Increased user engagement by 40% through development of intuitive UI/UX and interactive dashboards.</p>
+            <p>Reduced load times by 30% through implementation of lazy loading and code-splitting techniques.</p>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+
+  <!-- ── SKILLS ── -->
+  <div class="resume__block">
+    <div class="resume__section-header">
+      <span class="resume__section-index">(03)</span>
+      <h2 class="resume__section-heading">Skills</h2>
+    </div>
+    <div class="resume__skills-grid">
+      <div class="resume__skill-card" data-resume-card>
+        <p class="resume__skill-category">Languages</p>
+        <p class="resume__skill-items">HTML &nbsp;·&nbsp; CSS &nbsp;·&nbsp; JavaScript &nbsp;·&nbsp; Python &nbsp;·&nbsp; Rust</p>
       </div>
-      <div class="skills-list">
-        <span class="skill-category">Technologies:</span>
-        <span>React, Three.js, Node.js, PostgreSQL, Sockets, Redis</span>
+      <div class="resume__skill-card" data-resume-card>
+        <p class="resume__skill-category">Technologies</p>
+        <p class="resume__skill-items">React &nbsp;·&nbsp; Three.js &nbsp;·&nbsp; Node.js &nbsp;·&nbsp; PostgreSQL &nbsp;·&nbsp; Redis &nbsp;·&nbsp; Sockets</p>
       </div>
-      <div class="skills-list">
-        <span class="skill-category">Other:</span>
-        <span>Git, Firebase, TailwindCSS, Astro, Bootstrap, Linux</span>
+      <div class="resume__skill-card" data-resume-card>
+        <p class="resume__skill-category">Tools & Platforms</p>
+        <p class="resume__skill-items">Git &nbsp;·&nbsp; Firebase &nbsp;·&nbsp; TailwindCSS &nbsp;·&nbsp; Astro &nbsp;·&nbsp; Bootstrap &nbsp;·&nbsp; Linux</p>
       </div>
-    </section>
+    </div>
+  </div>
 
-    <section class="section">
-      <h3 class="section-title">Professional Experience</h3>
-      <div class="timeline">
-        <div class="timeline-item">
-          <div class="item-header">
-            <span class="item-title">AI FullStack Developer</span>
-            <span class="item-date">Nov 2024 - Present</span>
-          </div>
-          <div class="experience-company">Cybic Tech</div>
-          <div class="item-description">
-            <div class="achievement-text">
-              <p class="achievement-paragraph">
-                Architected and implemented secure RAG systems using Presidio
-                and NeMo Guardrails, establishing robust PII/PHI protection
-                protocols.
-              </p>
-              <p class="achievement-paragraph">
-                Developed tokenization system with PostgreSQL and Redis for
-                enhanced data security compliance (GDPR, HIPAA).
-              </p>
-              <p class="achievement-paragraph">
-                Built scalable AI applications using FastAPI backend and Next.js
-                frontend with vector databases for advanced search capabilities.
-              </p>
-              <p class="achievement-paragraph">
-                Implemented comprehensive security measures to prevent LLM
-                attacks and ensure data integrity across all applications.
-              </p>
-            </div>
-          </div>
-        </div>
+  <!-- ── EDUCATION ── -->
+  <div class="resume__block">
+    <div class="resume__section-header">
+      <span class="resume__section-index">(04)</span>
+      <h2 class="resume__section-heading">Education</h2>
+    </div>
+    <div class="resume__list">
 
-        <div class="timeline-item">
-          <div class="item-header">
-            <span class="item-title">Frontend Developer</span>
-            <span class="item-date">June 2023 - Nov 2024</span>
-          </div>
-          <div class="experience-company">Blackcurrant Labs</div>
-          <div class="item-description">
-            <div class="achievement-text">
-              <p class="achievement-paragraph">
-                Led end-to-end development of React and Three.js applications
-                across e-commerce, service, and medical domains.
-              </p>
-              <p class="achievement-paragraph">
-                Reduced project turnaround time by 40% through implementation of
-                optimized component architecture and efficient state management.
-              </p>
-              <p class="achievement-paragraph">
-                Increased client satisfaction by 25% by delivering intuitive
-                user interfaces and seamless user experiences.
-              </p>
-              <p class="achievement-paragraph">
-                Collaborated with cross-functional teams to align technical
-                implementation with business requirements and design
-                specifications.
-              </p>
-            </div>
-          </div>
+      <article class="resume__row" data-resume-row>
+        <span class="resume__row-date">2019 — 2023</span>
+        <div class="resume__accent"></div>
+        <div class="resume__row-content">
+          <h3 class="resume__row-title">B.E. Electronics &amp; Telecommunication</h3>
+          <p class="resume__row-subtitle">Thakur College of Engineering, Mumbai</p>
         </div>
+      </article>
 
-        <div class="timeline-item">
-          <div class="item-header">
-            <span class="item-title">Frontend Intern</span>
-            <span class="item-date">July 2022 - Dec 2022</span>
-          </div>
-          <div class="experience-company">Zotech</div>
-          <div class="item-description">
-            <div class="achievement-text">
-              <p class="achievement-paragraph">
-                Engineered an AI-powered sentence phraser utilizing Google's NLP
-                technology, enhancing language understanding by 40%.
-              </p>
-              <p class="achievement-paragraph">
-                Improved communication efficiency across platforms, reducing
-                manual editing time by 50 hours monthly.
-              </p>
-              <p class="achievement-paragraph">
-                Implemented responsive designs that ensured consistent user
-                experience across all device types.
-              </p>
-            </div>
-          </div>
+      <article class="resume__row" data-resume-row>
+        <span class="resume__row-date">2017 — 2019</span>
+        <div class="resume__accent"></div>
+        <div class="resume__row-content">
+          <h3 class="resume__row-title">Higher Secondary Certificate</h3>
+          <p class="resume__row-subtitle">Maharshi Dayanand College</p>
         </div>
+      </article>
 
-        <div class="timeline-item">
-          <div class="item-header">
-            <span class="item-title">Frontend Intern</span>
-            <span class="item-date">Oct 2021 - Dec 2021</span>
-          </div>
-          <div class="experience-company">Sahu Technologies</div>
-          <div class="item-description">
-            <div class="achievement-text">
-              <p class="achievement-paragraph">
-                Directed the creation and launch of a comprehensive platform for
-                a leading housing firm.
-              </p>
-              <p class="achievement-paragraph">
-                Achieved 40% improvement in site speed through code optimization
-                and modern web practices.
-              </p>
-              <p class="achievement-paragraph">
-                Enhanced user retention by 25% through implementation of
-                intuitive navigation and search functionality.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+    </div>
+  </div>
 
-    <section class="section">
-      <h3 class="section-title">Projects</h3>
-      <div class="timeline">
-        <div class="timeline-item">
-          <div class="item-header">
-            <span class="item-title">Hoopr.ai</span>
-            <a href="https://hoopr.ai" target="_blank" class="item-link"
-              >View Project</a
-            >
-          </div>
-          <div class="item-description">
-            <p class="item-summary">
-              Music licensing platform with advanced search and discovery
-              features.
-            </p>
-            <div class="achievement-text">
-              <p class="achievement-paragraph">
-                Improved user engagement by 35% through implementation of
-                refined UI/UX and intuitive search mechanisms.
-              </p>
-              <p class="achievement-paragraph">
-                Reduced page load times by 25% through frontend performance
-                optimization and efficient rendering techniques.
-              </p>
-              <p class="achievement-paragraph">
-                Developed RESTful APIs for real-time music discovery and content
-                delivery with robust error handling.
-              </p>
-              <p class="achievement-paragraph">
-                Increased platform scalability by 30% with streamlined data
-                processing approach, resulting in 20% boost in user retention.
-              </p>
-            </div>
-          </div>
-        </div>
+  <!-- ── CERTIFICATIONS ── -->
+  <div class="resume__block">
+    <div class="resume__section-header">
+      <span class="resume__section-index">(05)</span>
+      <h2 class="resume__section-heading">Certifications</h2>
+    </div>
+    <div class="resume__list">
 
-        <div class="timeline-item">
-          <div class="item-header">
-            <span class="item-title">Hedged</span>
-            <a href="http://www.hedged.in" target="_blank" class="item-link"
-              >View Project</a
-            >
-          </div>
-          <div class="item-description">
-            <p class="item-summary">
-              Financial analytics and investment tracking platform.
-            </p>
-            <div class="achievement-text">
-              <p class="achievement-paragraph">
-                Led end-to-end development using React and Three.js for dynamic
-                financial data visualization.
-              </p>
-              <p class="achievement-paragraph">
-                Achieved 40% reduction in project turnaround time through
-                implementation of reusable component architecture.
-              </p>
-              <p class="achievement-paragraph">
-                Increased client satisfaction by 25% with intuitive dashboards
-                and real-time data updates.
-              </p>
-              <p class="achievement-paragraph">
-                Implemented responsive design ensuring consistent performance
-                across desktop and mobile devices.
-              </p>
-            </div>
-          </div>
+      <article class="resume__row" data-resume-row>
+        <span class="resume__row-date">May — Jun 2021</span>
+        <div class="resume__accent"></div>
+        <div class="resume__row-content">
+          <h3 class="resume__row-title">Python for Everyone</h3>
+          <p class="resume__row-subtitle">Google</p>
         </div>
+      </article>
 
-        <div class="timeline-item">
-          <div class="item-header">
-            <span class="item-title">Syntropy</span>
-          </div>
-          <div class="item-description">
-            <p class="item-summary">
-              Network optimization platform with advanced data visualization
-              tools.
-            </p>
-            <div class="achievement-text">
-              <p class="achievement-paragraph">
-                Increased user engagement by 40% through development of
-                intuitive UI/UX and interactive dashboards.
-              </p>
-              <p class="achievement-paragraph">
-                Reduced load times by 30% through implementation of lazy loading
-                and code-splitting techniques.
-              </p>
-              <p class="achievement-paragraph">
-                Integrated cutting-edge data visualization tools to optimize
-                real-time network analytics and performance monitoring.
-              </p>
-              <p class="achievement-paragraph">
-                Improved platform scalability by 35% through collaboration with
-                backend teams, resulting in 25% increase in user retention.
-              </p>
-            </div>
-          </div>
+      <article class="resume__row" data-resume-row>
+        <span class="resume__row-date">Dec 2021 — Jan 2022</span>
+        <div class="resume__accent"></div>
+        <div class="resume__row-content">
+          <h3 class="resume__row-title">Cyber Security Fundamentals</h3>
+          <p class="resume__row-subtitle">Coursera</p>
         </div>
-      </div>
-    </section>
+      </article>
 
-    <section class="section">
-      <h3 class="section-title">Education</h3>
-      <div class="timeline">
-        <div class="timeline-item">
-          <div class="item-header">
-            <span class="item-title"
-              >B.E. Electronics and Telecommunication</span
-            >
-            <span class="item-date">2019-2023</span>
-          </div>
-          <div class="experience-company">
-            Thakur College of Engineering (Mumbai)
-          </div>
-        </div>
+    </div>
+  </div>
 
-        <div class="timeline-item">
-          <div class="item-header">
-            <span class="item-title">Higher Secondary Certificate</span>
-            <span class="item-date">2017-2019</span>
-          </div>
-          <div class="experience-company">Maharshi Dayanand College</div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <h3 class="section-title">Certifications</h3>
-      <div class="timeline">
-        <div class="timeline-item">
-          <div class="item-header">
-            <span class="item-title">Python for Everyone, Google</span>
-            <span class="item-date">May 2021 - June 2021</span>
-          </div>
-        </div>
-
-        <div class="timeline-item">
-          <div class="item-header">
-            <span class="item-title">Cyber Security Fundamentals, Coursera</span
-            >
-            <span class="item-date">Dec 2021 - Jan 2022</span>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
 </div>
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Animate rows on scroll
+  document.querySelectorAll("[data-resume-row]").forEach((row) => {
+    gsap.set(row, { opacity: 0, y: 40 });
+    gsap.to(row, {
+      opacity: 1,
+      y: 0,
+      duration: 0.6,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: row,
+        start: "top 85%",
+        toggleActions: "play none none none",
+      },
+    });
+
+    const accent = (row as HTMLElement).querySelector(".resume__accent") as HTMLElement;
+    if (accent) {
+      row.addEventListener("mouseenter", () => {
+        gsap.to(accent, { width: 4, duration: 0.3, ease: "power2.out" });
+      });
+      row.addEventListener("mouseleave", () => {
+        gsap.to(accent, { width: 2, duration: 0.3, ease: "power2.out" });
+      });
+    }
+  });
+
+  // Animate skill cards on scroll
+  document.querySelectorAll("[data-resume-card]").forEach((card) => {
+    gsap.set(card, { opacity: 0, y: 30 });
+    gsap.to(card, {
+      opacity: 1,
+      y: 0,
+      duration: 0.5,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: card,
+        start: "top 85%",
+        toggleActions: "play none none none",
+      },
+    });
+  });
+
+  // Header fade in
+  const header = document.querySelector("[data-resume-header]");
+  if (header) {
+    gsap.from(header, { opacity: 0, y: 20, duration: 0.8, ease: "power2.out", delay: 0.2 });
+  }
+
+  // Contact Me button
+  document.getElementById("resume-contact-btn")?.addEventListener("click", () => {
+    window.location.href = "mailto:vikaslodh2@gmail.com";
+  });
+</script>
