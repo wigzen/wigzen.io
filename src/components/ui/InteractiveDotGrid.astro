@@ -474,6 +474,7 @@ const {
      * Clean up event listeners
      */
     function cleanup(): void {
+      clearTimeout(resizeTimer);
       window.removeEventListener("resize", debouncedBuildGrid);
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("click", handleClick);

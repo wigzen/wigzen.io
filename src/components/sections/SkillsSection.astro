@@ -264,9 +264,10 @@ function getLevelWidth(level: string): string {
 
   gsap.registerPlugin(ScrollTrigger);
 
-  // Staggered system card reveal
+  const localTriggers: globalThis.ScrollTrigger[] = [];
+
   document.querySelectorAll("[data-skills-system]").forEach((system, i) => {
-    gsap.from(system, {
+    const tween = gsap.from(system, {
       opacity: 0,
       y: 30,
       duration: 0.6,
@@ -278,22 +279,24 @@ function getLevelWidth(level: string): string {
         toggleActions: "play none none none",
       },
     });
+    if (tween.scrollTrigger) localTriggers.push(tween.scrollTrigger);
 
-    // Animate skill bars on scroll
     const bars = system.querySelectorAll("[data-skills-bar]");
     bars.forEach((bar) => {
       const targetWidth = (bar as HTMLElement).style.getPropertyValue("--bar-width");
-      ScrollTrigger.create({
+      const st = ScrollTrigger.create({
         trigger: bar,
         start: "top 90%",
         onEnter: () => {
           (bar as HTMLElement).style.width = targetWidth;
         },
       });
+      localTriggers.push(st);
     });
   });
 
   document.addEventListener("astro:before-swap", () => {
-    ScrollTrigger.getAll().forEach((t) => t.kill());
-  }, { once: true });
+    localTriggers.forEach((t) => t.kill());
+    localTriggers.length = 0;
+  });
 </script>

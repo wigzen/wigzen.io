@@ -261,6 +261,9 @@ const roles = experiences.map((exp) => ({
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   function initExperienceAnimations() {
+    const localTriggers: globalThis.ScrollTrigger[] = [];
+    const hoverListeners: { el: Element; enter: () => void; leave: () => void }[] = [];
+
     const expSection = document.querySelector(".exp") as HTMLElement;
     const headingInner = document.querySelector(".exp__heading-inner") as HTMLElement;
     const headingClip = document.querySelector(".exp__heading-clip") as HTMLElement;
@@ -274,14 +277,10 @@ const roles = experiences.map((exp) => ({
           toggleActions: "play none none none",
         },
       });
+      if (headingTl.scrollTrigger) localTriggers.push(headingTl.scrollTrigger);
 
-      // 1. Fade in the index label
       headingTl.to(expIndex, { opacity: 1, duration: 0.4, ease: "power2.out" });
-
-      // 2. Reveal text (opacity 0→1) slightly before the wipe completes
       headingTl.to(headingInner, { opacity: 1, duration: 0.1, ease: "none" }, "-=0.5");
-
-      // 3. Wipe the clip overlay away left→right
       headingTl.to(headingClip, { scaleX: 0, duration: 0.7, ease: "power3.inOut" }, "-=0.5");
     }
 
@@ -309,8 +308,10 @@ const roles = experiences.map((exp) => ({
           end: "bottom 40%",
           scrub: 1,
         };
-        gsap.to(fill, { height: "100%", ease: "none", scrollTrigger: st });
-        gsap.to(dot, { top: "100%", ease: "none", scrollTrigger: st });
+        const fillTween = gsap.to(fill, { height: "100%", ease: "none", scrollTrigger: st });
+        const dotTween = gsap.to(dot, { top: "100%", ease: "none", scrollTrigger: st });
+        if (fillTween.scrollTrigger) localTriggers.push(fillTween.scrollTrigger);
+        if (dotTween.scrollTrigger) localTriggers.push(dotTween.scrollTrigger);
       }
     }
 
@@ -321,7 +322,6 @@ const roles = experiences.map((exp) => ({
       activeRow.classList.add("is-active");
     }
 
-    // Default: first row active on load
     if (rows.length > 0) {
       rows[0].classList.add("is-active");
     }
@@ -330,7 +330,7 @@ const roles = experiences.map((exp) => ({
       if (!reducedMotion) {
         gsap.set(row, { opacity: 0, y: 40 });
 
-        gsap.to(row, {
+        const rowTween = gsap.to(row, {
           opacity: 1,
           y: 0,
           duration: 0.6,
@@ -343,33 +343,39 @@ const roles = experiences.map((exp) => ({
             toggleActions: "play none none none",
           },
         });
+        if (rowTween.scrollTrigger) localTriggers.push(rowTween.scrollTrigger);
       }
 
       const accent = row.querySelector(".exp__accent") as HTMLElement;
       if (accent) {
-        row.addEventListener("mouseenter", () => {
-          gsap.to(accent, { width: 4, duration: 0.3, ease: "power2.out" });
-        });
-        row.addEventListener("mouseleave", () => {
-          gsap.to(accent, { width: 2, duration: 0.3, ease: "power2.out" });
-        });
+        const enter = () => gsap.to(accent, { width: 4, duration: 0.3, ease: "power2.out" });
+        const leave = () => gsap.to(accent, { width: 2, duration: 0.3, ease: "power2.out" });
+        row.addEventListener("mouseenter", enter);
+        row.addEventListener("mouseleave", leave);
+        hoverListeners.push({ el: row, enter, leave });
       }
     });
 
     rows.forEach((row) => {
-      ScrollTrigger.create({
+      const st = ScrollTrigger.create({
         trigger: row,
         start: "top center",
         end: "bottom center",
         onEnter: () => setActive(row),
         onEnterBack: () => setActive(row),
       });
+      localTriggers.push(st);
     });
 
-    // Clean up before View Transitions page swap
     document.addEventListener("astro:before-swap", () => {
       window.removeEventListener("resize", positionTrack);
-      ScrollTrigger.getAll().forEach((t) => t.kill());
+      localTriggers.forEach((t) => t.kill());
+      localTriggers.length = 0;
+      hoverListeners.forEach(({ el, enter, leave }) => {
+        el.removeEventListener("mouseenter", enter);
+        el.removeEventListener("mouseleave", leave);
+      });
+      hoverListeners.length = 0;
     });
   }
 

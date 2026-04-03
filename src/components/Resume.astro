@@ -532,6 +532,9 @@
   gsap.registerPlugin(ScrollTrigger);
 
   // Animate rows on scroll
+  // Store handlers for cleanup
+  const accentHandlers = new Map<Element, { enter: () => void; leave: () => void }>();
+
   document.querySelectorAll("[data-resume-row]").forEach((row) => {
     gsap.set(row, { opacity: 0, y: 40 });
     gsap.to(row, {
@@ -548,22 +551,34 @@
 
     const accent = (row as HTMLElement).querySelector(".resume__accent") as HTMLElement;
     if (accent) {
-      row.addEventListener("mouseenter", () => {
+      const enter = () => {
         if (window.innerWidth > 768) {
           gsap.to(accent, { width: 4, duration: 0.3, ease: "power2.out" });
         } else {
           gsap.to(accent, { width: 60, duration: 0.3, ease: "power2.out" });
         }
-      });
-      row.addEventListener("mouseleave", () => {
+      };
+      const leave = () => {
         if (window.innerWidth > 768) {
           gsap.to(accent, { width: 2, duration: 0.3, ease: "power2.out" });
         } else {
           gsap.to(accent, { width: 40, duration: 0.3, ease: "power2.out" });
         }
-      });
+      };
+      row.addEventListener("mouseenter", enter);
+      row.addEventListener("mouseleave", leave);
+      accentHandlers.set(row, { enter, leave });
     }
   });
+
+  document.addEventListener("astro:before-swap", () => {
+    ScrollTrigger.getAll().forEach((t) => t.kill());
+    accentHandlers.forEach(({ enter, leave }, row) => {
+      row.removeEventListener("mouseenter", enter);
+      row.removeEventListener("mouseleave", leave);
+    });
+    accentHandlers.clear();
+  }, { once: true });
 
   // Animate skill cards on scroll
   document.querySelectorAll("[data-resume-card]").forEach((card) => {
