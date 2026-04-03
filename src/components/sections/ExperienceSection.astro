@@ -23,6 +23,10 @@ const roles = experiences.map((exp) => ({
   </div>
 
   <div class="exp__list">
+    <div class="exp__timeline-track" aria-hidden="true">
+      <div class="exp__timeline-fill"></div>
+      <div class="exp__timeline-dot"></div>
+    </div>
     {roles.map((r) => (
       <article class="exp__row" data-exp-row>
         <span class="exp__date">{r.date}</span>
@@ -86,6 +90,36 @@ const roles = experiences.map((exp) => ({
   .exp__list {
     display: flex;
     flex-direction: column;
+    position: relative;
+  }
+
+  .exp__timeline-track {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    /* left is set at runtime via JS */
+    pointer-events: none;
+  }
+
+  .exp__timeline-fill {
+    width: 2px;
+    height: 0%;
+    background: var(--clr-accent);
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  .exp__timeline-dot {
+    position: absolute;
+    left: -4px;
+    top: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--clr-accent);
+    box-shadow: 0 0 12px var(--clr-accent), 0 0 24px rgba(168, 255, 81, 0.4);
   }
 
   .exp__row {
@@ -155,6 +189,10 @@ const roles = experiences.map((exp) => ({
   }
 
   @media (max-width: 768px) {
+    .exp__timeline-track {
+      display: none;
+    }
+
     .exp__row {
       grid-template-columns: 1fr;
       gap: 0;
