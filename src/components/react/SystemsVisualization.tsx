@@ -62,7 +62,7 @@ function LayerPlane({
         color={isHovered ? "#ffffff" : color}
         anchorX="center"
         anchorY="middle"
-        font="/fonts/apercu/Apercu-Bold.woff"
+        font={undefined}
       >
         {name}
       </Text>

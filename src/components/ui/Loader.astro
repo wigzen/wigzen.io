@@ -1,28 +1,83 @@
----
-import Counter from "../solid/Counter";
----
-
 <div id="loader-wrapper" style="position:fixed;inset:0;z-index:9999;background:var(--clr-bg)">
-  <Counter
-    client:only="solid"
-    onComplete="window.__onLoaderComplete && window.__onLoaderComplete()"
-  />
+  <div class="counter-container">
+    <p class="counter" id="loader-count">0</p>
+    <div class="progress-bar" id="loader-progress"></div>
+  </div>
 </div>
 
-<script>
-import { gsap } from "gsap";
+<style>
+  .counter {
+    font-size: clamp(80px, 15vw, 160px);
+    font-weight: 900;
+    color: var(--clr-accent);
+    line-height: 1;
+    font-family: inherit;
+    will-change: contents;
+  }
+  .counter-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+    padding: 3rem 4rem;
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: var(--clr-bg);
+    z-index: 1000;
+    will-change: transform;
+  }
+  .progress-bar {
+    height: 2px;
+    background-color: var(--clr-accent);
+    width: 0%;
+    margin-top: 1rem;
+    max-width: 100%;
+    will-change: width;
+  }
+</style>
 
-  (window as any).__onLoaderComplete = () => {
-    gsap.to("#loader-wrapper", {
-      yPercent: -100,
-      duration: 1,
-      ease: "power4.inOut",
-      onComplete: () => {
-        document.getElementById("loader-wrapper")?.remove();
-        document.getElementById("loader-placeholder")?.remove();
-        (window as any).__introComplete = true;
-        document.dispatchEvent(new CustomEvent("intro:complete"));
-      },
-    });
-  };
+<script>
+  import { gsap } from "gsap";
+
+  const countEl = document.getElementById("loader-count");
+  const progressEl = document.getElementById("loader-progress");
+
+  if (countEl && progressEl) {
+    const startTime = performance.now();
+    const duration = 1500;
+
+    const tick = (now: number) => {
+      const progress = Math.min((now - startTime) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const value = Math.floor(eased * 100);
+
+      countEl.textContent = String(value);
+      progressEl.style.width = `${value}%`;
+
+      if (progress < 1) {
+        requestAnimationFrame(tick);
+      } else {
+        countEl.textContent = "100";
+        progressEl.style.width = "100%";
+        setTimeout(() => {
+          gsap.to("#loader-wrapper", {
+            yPercent: -100,
+            duration: 1,
+            ease: "power4.inOut",
+            onComplete: () => {
+              document.getElementById("loader-wrapper")?.remove();
+              document.getElementById("loader-placeholder")?.remove();
+              (window as any).__introComplete = true;
+              document.dispatchEvent(new CustomEvent("intro:complete"));
+            },
+          });
+        }, 200);
+      }
+    };
+
+    requestAnimationFrame(tick);
+  }
 </script>
