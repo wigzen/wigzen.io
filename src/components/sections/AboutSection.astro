@@ -232,16 +232,25 @@ const stats = [
 
   gsap.registerPlugin(ScrollTrigger, SplitText);
 
-  // Skills ticker
+  // Skills ticker — store tween reference so it can be killed on cleanup
   const ticker = document.getElementById("skillsTicker");
+  let tickerTween: gsap.core.Tween | null = null;
   if (ticker) {
-    gsap.to(ticker, {
+    tickerTween = gsap.to(ticker, {
       xPercent: -50,
       repeat: -1,
       ease: "none",
       duration: 20,
     });
   }
+
+  // Cleanup before each page swap to prevent accumulating infinite tweens
+  document.addEventListener("astro:before-swap", () => {
+    if (tickerTween) {
+      tickerTween.kill();
+      tickerTween = null;
+    }
+  });
 
   // Statement word reveal
   const statement = document.querySelector("[data-about-text]");

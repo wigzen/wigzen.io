@@ -370,7 +370,7 @@ const roles = experiences.map((exp) => ({
     document.addEventListener("astro:before-swap", () => {
       window.removeEventListener("resize", positionTrack);
       ScrollTrigger.getAll().forEach((t) => t.kill());
-    }, { once: true });
+    });
   }
 
   initExperienceAnimations();

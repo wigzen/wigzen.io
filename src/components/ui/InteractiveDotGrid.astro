@@ -269,6 +269,13 @@ const {
       lastY: 0,
     };
 
+    // Debounce timer — prevents full DOM rebuild on every resize pixel
+    let resizeTimer: ReturnType<typeof setTimeout>;
+    function debouncedBuildGrid(): void {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(buildGrid, 150);
+    }
+
     /**
      * Build the dot grid based on container dimensions
      */
@@ -467,7 +474,7 @@ const {
      * Clean up event listeners
      */
     function cleanup(): void {
-      window.removeEventListener("resize", buildGrid);
+      window.removeEventListener("resize", debouncedBuildGrid);
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("click", handleClick);
       document.removeEventListener("theme:change", handleThemeChange);
@@ -487,12 +494,14 @@ const {
     buildGrid();
 
     // Set up event listeners
-    window.addEventListener("resize", buildGrid);
+    window.addEventListener("resize", debouncedBuildGrid);
     window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("click", handleClick);
     document.addEventListener("theme:change", handleThemeChange);
 
-    // Return cleanup function for potential future use
+    // Tear down all listeners before Astro swaps the DOM on navigation
+    document.addEventListener("astro:before-swap", cleanup, { once: true });
+
     return cleanup;
   }
 

@@ -96,14 +96,18 @@ const {
     easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
   });
 
-  gsap.ticker.add((time: number) => lenis.raf(time * 1000));
+  const lenisRafCb = (time: number) => lenis.raf(time * 1000);
+  gsap.ticker.add(lenisRafCb);
   gsap.ticker.lagSmoothing(0);
   lenis.on("scroll", ScrollTrigger.update);
 
-  // Magnetic buttons
+  // Magnetic buttons — store handlers so they can be removed on cleanup
+  type MagneticHandlers = { move: (e: MouseEvent) => void; leave: () => void };
+  const magneticMap = new Map<HTMLElement, MagneticHandlers>();
+
   document.querySelectorAll("[data-magnetic]").forEach((el) => {
     const btn = el as HTMLElement;
-    btn.addEventListener("mousemove", (e: MouseEvent) => {
+    const move = (e: MouseEvent) => {
       const r = btn.getBoundingClientRect();
       gsap.to(btn, {
         x: (e.clientX - r.left - r.width / 2) * 0.4,
@@ -111,9 +115,25 @@ const {
         duration: 0.3,
         ease: "power2.out",
       });
-    });
-    btn.addEventListener("mouseleave", () => {
+    };
+    const leave = () => {
       gsap.to(btn, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.4)" });
+    };
+    btn.addEventListener("mousemove", move);
+    btn.addEventListener("mouseleave", leave);
+    magneticMap.set(btn, { move, leave });
+  });
+
+  // Cleanup before each page swap to prevent listener/instance accumulation
+  document.addEventListener("astro:before-swap", () => {
+    lenis.off("scroll", ScrollTrigger.update);
+    gsap.ticker.remove(lenisRafCb);
+    lenis.destroy();
+
+    magneticMap.forEach(({ move, leave }, btn) => {
+      btn.removeEventListener("mousemove", move);
+      btn.removeEventListener("mouseleave", leave);
     });
+    magneticMap.clear();
   });
 </script>

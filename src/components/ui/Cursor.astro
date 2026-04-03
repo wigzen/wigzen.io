@@ -50,6 +50,8 @@
 <script>
   import { gsap } from "gsap";
 
+  let cursorObserver: MutationObserver | null = null;
+
   function initCursor() {
     // No custom cursor on touch devices or small screens
     const hasHover = window.matchMedia("(hover: hover)").matches;
@@ -84,8 +86,8 @@
     document.addEventListener("theme:change", updateCursorVisibility);
 
     // Also watch for class changes on body (catches theme applied after script runs)
-    const observer = new MutationObserver(() => updateCursorVisibility());
-    observer.observe(document.body, {
+    cursorObserver = new MutationObserver(() => updateCursorVisibility());
+    cursorObserver.observe(document.body, {
       attributes: true,
       attributeFilter: ["class"],
     });
@@ -125,4 +127,7 @@
 
   // Re-init after ViewTransitions navigation
   document.addEventListener("astro:after-swap", initCursor);
+
+  // Disconnect observer before each swap — initCursor creates a fresh one after
+  document.addEventListener("astro:before-swap", () => cursorObserver?.disconnect());
 </script>
