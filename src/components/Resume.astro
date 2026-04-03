@@ -317,7 +317,7 @@
     </div>
     <div class="resume__actions">
       <a href="https://docs.google.com/document/d/1_p6a2dElPgM7w2Lk0VInGyPcyOC-1MALOJYGLX1nT58" class="resume__btn resume__btn--primary" download>Download Resume</a>
-      <button class="resume__btn" id="resume-contact-btn">Contact Me</button>
+      <a href="mailto:vikaslodh2@gmail.com" class="resume__btn">Contact Me</a>
     </div>
   </header>
 
@@ -587,8 +587,4 @@
     gsap.from(header, { opacity: 0, y: 20, duration: 0.8, ease: "power2.out", delay: 0.2 });
   }
 
-  // Contact Me button
-  document.getElementById("resume-contact-btn")?.addEventListener("click", () => {
-    window.location.href = "mailto:vikaslodh2@gmail.com";
-  });
 </script>
