@@ -68,11 +68,8 @@
   const toggle = document.getElementById("themeToggle");
 
   function applyTheme(isDark: boolean) {
-    if (isDark) {
-      document.body.classList.add("theme-dark");
-    } else {
-      document.body.classList.remove("theme-dark");
-    }
+    document.documentElement.classList.toggle("theme-dark", isDark);
+    document.body.classList.toggle("theme-dark", isDark);
     localStorage.setItem("theme", isDark ? "dark" : "light");
 
     // Dispatch event for other components (Cursor, etc.)
@@ -84,13 +81,13 @@
     applyTheme(isDark);
   });
 
-  // Reveal after intro:complete
+  // Reveal after intro:complete, or immediately if there's no loader on this page
   function revealToggle() {
     if (!toggle) return;
     gsap.to(toggle, { opacity: 1, duration: 0.5, ease: "power2.out" });
   }
 
-  if ((window as any).__introComplete) {
+  if ((window as any).__introComplete || !document.getElementById("loader-placeholder")) {
     revealToggle();
   } else {
     document.addEventListener("intro:complete", revealToggle, { once: true });

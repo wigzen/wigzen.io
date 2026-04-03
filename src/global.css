@@ -120,11 +120,11 @@ a {
 
 /* ─── Selection ─── */
 ::selection {
-  background: var(--clr-accent);
+  background: var(--clr-accent-fill);
   color: var(--clr-bg);
 }
 body.theme-dark ::selection {
-  background: var(--clr-accent);
+  background: var(--clr-accent-fill);
   color: #0a0a0a;
 }
 
@@ -138,7 +138,7 @@ body.theme-dark ::selection {
   left: 50%;
   transform: translateX(-50%);
   padding: 0.75rem 1.5rem;
-  background: var(--clr-accent);
+  background: var(--clr-accent-fill);
   color: var(--clr-bg);
   font-size: 0.85rem;
   font-weight: 600;

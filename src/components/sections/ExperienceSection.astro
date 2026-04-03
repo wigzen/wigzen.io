@@ -82,7 +82,7 @@ const roles = experiences.map((exp) => ({
   .exp__heading-clip {
     position: absolute;
     inset: 0;
-    background: var(--clr-accent);
+    background: var(--clr-bg);
     transform-origin: left;
     /* starts covering the text — GSAP wipes it away */
   }
@@ -119,8 +119,12 @@ const roles = experiences.map((exp) => ({
     height: 10px;
     border-radius: 50%;
     background: var(--clr-accent);
-    box-shadow: 0 0 12px var(--clr-accent), 0 0 24px color-mix(in srgb, var(--clr-accent) 40%, transparent);
+    box-shadow: none;
     transform: translateY(-50%);
+  }
+
+  :global(html.theme-dark) .exp__timeline-dot {
+    box-shadow: 0 0 12px var(--clr-accent-fill), 0 0 24px color-mix(in srgb, var(--clr-accent-fill) 40%, transparent);
   }
 
   .exp__row {
@@ -138,7 +142,7 @@ const roles = experiences.map((exp) => ({
   }
 
   .exp__row:hover {
-    opacity: 1 !important;
+    /* opacity: 1 !important; */
     background: var(--clr-border);
   }
 
@@ -150,8 +154,8 @@ const roles = experiences.map((exp) => ({
   /* Active row */
   .exp__row.is-active {
     opacity: 1 !important;
-    background: color-mix(in srgb, var(--clr-accent) 4%, transparent);
-    border-left: 2px solid var(--clr-accent);
+    background: color-mix(in srgb, var(--clr-accent-fill) 4%, transparent);
+    /* border-left: 2px solid var(--clr-accent); */
   }
 
   .exp__date {
@@ -165,13 +169,14 @@ const roles = experiences.map((exp) => ({
   .exp__accent {
     width: 2px;
     align-self: stretch;
-    background: var(--clr-accent);
+    background: var(--clr-accent-fill);
     border-radius: 1px;
-    transition: width 0.3s ease;
+    transition: width 0.3s ease; 
+    opacity: 0;
   }
 
   .exp__row:hover .exp__accent {
-    width: 4px;
+    width: 2px;
   }
 
   .exp__content {
@@ -221,7 +226,7 @@ const roles = experiences.map((exp) => ({
     }
 
     .exp__row:hover .exp__accent {
-      width: 60px;
+      /* width: 60px; */
       height: 2px;
     }
 
@@ -298,19 +303,14 @@ const roles = experiences.map((exp) => ({
       window.addEventListener("resize", positionTrack);
 
       if (list && fill && dot) {
-        gsap.to(fill, {
-          height: "100%",
-          ease: "none",
-          scrollTrigger: {
-            trigger: list,
-            start: "top 60%",
-            end: "bottom 40%",
-            scrub: 1,
-            onUpdate: (self) => {
-              dot.style.top = `${self.progress * 100}%`;
-            },
-          },
-        });
+        const st = {
+          trigger: list,
+          start: "top 60%",
+          end: "bottom 40%",
+          scrub: 1,
+        };
+        gsap.to(fill, { height: "100%", ease: "none", scrollTrigger: st });
+        gsap.to(dot, { top: "100%", ease: "none", scrollTrigger: st });
       }
     }
 

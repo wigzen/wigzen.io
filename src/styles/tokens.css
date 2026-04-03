@@ -6,9 +6,10 @@
   --clr-surface:      #f7f5f1;
   --clr-text:         #1c1917;
   --clr-text-muted:   #78716c;
-  --clr-accent:       #a8ff51;
-  --clr-accent-text:  #1a5c00;
-  --clr-accent-muted: #1a5c00;
+  --clr-accent:       #2d6a00;
+  --clr-accent-fill:  #a8ff51;
+  --clr-accent-text:  #2d6a00;
+  --clr-accent-muted: #4a8c1c;
   --clr-border:       rgba(28,25,23,0.1);
 
   /* Legacy compat */
@@ -64,7 +65,7 @@
   --nav-bg-color:          rgba(28,25,23,0.07);
   --nav-active-color:      #a8ff51;
   --nav-text-color:        rgba(28,25,23,0.65);
-  --nav-active-text-color: #0d3300;
+  --nav-active-text-color: #1a3d00;
 }
 
 /* ─── Dark Theme ─── */
@@ -75,6 +76,7 @@ body.theme-dark {
   --clr-text:         #e8e8e2;
   --clr-text-muted:   #6b6b6b;
   --clr-accent:       #a8ff51;
+  --clr-accent-fill:  #a8ff51;
   --clr-accent-text:  #a8ff51;
   --clr-accent-muted: #a8ff51;
   --clr-border:       rgba(255,255,255,0.08);

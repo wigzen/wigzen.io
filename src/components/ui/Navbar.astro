@@ -53,6 +53,7 @@ const navItems = [
     background-color: var(--nav-bg-color);
     border-radius: 1.4rem;
     padding-block: 0.2rem;
+    padding-inline: 0.2rem;
     position: relative;
     backdrop-filter: blur(12px);
     border: 1px solid var(--clr-border);
@@ -108,9 +109,6 @@ const navItems = [
 
 <script>
   import gsap from "gsap";
-  import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-  gsap.registerPlugin(ScrollTrigger);
 
   const nav = document.querySelector(".nav") as HTMLElement | null;
   const navLinks = nav?.querySelectorAll(
@@ -164,6 +162,7 @@ const navItems = [
     link.addEventListener("click", (e) => {
       e.preventDefault();
       const id = link.dataset.id || "";
+      currentActiveId = id;
       setActive(id);
       // Smooth scroll to section
       const target = document.getElementById(id === "home" ? "home" : id);
@@ -186,19 +185,35 @@ const navItems = [
     document.addEventListener("intro:complete", revealNav, { once: true });
   }
 
-  // ScrollTrigger-based active state — only sections that have nav items
+  // IntersectionObserver: thin band at the 50% viewport line
+  // rootMargin clips the root to a 1px band at 50vh — a section is "active"
+  // when it crosses that line. Immune to GSAP reflows entirely.
   const sectionIds = ["home", "about", "work", "systems", "skills", "lab", "contact"];
-  sectionIds.forEach((id) => {
-    const section = document.getElementById(id);
-    if (!section) return;
-    ScrollTrigger.create({
-      trigger: section,
-      start: "top 50%",
-      end: "bottom 50%",
-      onEnter: () => setActive(id),
-      onEnterBack: () => setActive(id),
-    });
-  });
+  const sectionEls = sectionIds
+    .map((id) => document.getElementById(id))
+    .filter(Boolean) as HTMLElement[];
+
+  let currentActiveId = "home";
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const id = (entry.target as HTMLElement).id;
+          if (id !== currentActiveId) {
+            currentActiveId = id;
+            setActive(id);
+          }
+        }
+      });
+    },
+    {
+      rootMargin: "-50% 0px -50% 0px",
+      threshold: 0,
+    }
+  );
+
+  sectionEls.forEach((el) => observer.observe(el));
 
   document.addEventListener("DOMContentLoaded", initializeIndicator);
 </script>
