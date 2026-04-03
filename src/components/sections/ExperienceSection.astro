@@ -120,6 +120,7 @@ const roles = experiences.map((exp) => ({
     border-radius: 50%;
     background: var(--clr-accent);
     box-shadow: 0 0 12px var(--clr-accent), 0 0 24px color-mix(in srgb, var(--clr-accent) 40%, transparent);
+    transform: translateY(-50%);
   }
 
   .exp__row {
@@ -262,6 +263,11 @@ const roles = experiences.map((exp) => ({
 
   positionTrack();
   window.addEventListener("resize", positionTrack);
+
+  document.addEventListener("astro:before-swap", () => {
+    window.removeEventListener("resize", positionTrack);
+    ScrollTrigger.getAll().forEach((t) => t.kill());
+  }, { once: true });
 
   if (list && fill && dot) {
     gsap.to(fill, {
