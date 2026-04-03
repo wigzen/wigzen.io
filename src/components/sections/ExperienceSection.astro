@@ -16,7 +16,10 @@ const roles = experiences.map((exp) => ({
 <section id="experience" class="exp">
   <div class="exp__header">
     <span class="exp__index">(03)</span>
-    <h2 class="exp__heading">Experience</h2>
+    <h2 class="exp__heading">
+      <span class="exp__heading-inner">Experience</span>
+      <span class="exp__heading-clip" aria-hidden="true"></span>
+    </h2>
   </div>
 
   <div class="exp__list">
@@ -52,15 +55,32 @@ const roles = experiences.map((exp) => ({
     font-size: 0.8rem;
     color: var(--clr-text-muted);
     letter-spacing: 0.1em;
+    opacity: 0;
   }
 
   .exp__heading {
+    position: relative;
+    overflow: hidden;
     font-size: var(--text-h2);
     font-weight: 900;
     text-transform: uppercase;
     letter-spacing: -0.02em;
     line-height: 1;
     color: var(--clr-text);
+  }
+
+  .exp__heading-inner {
+    display: block;
+    /* starts hidden — GSAP reveals it */
+    opacity: 0;
+  }
+
+  .exp__heading-clip {
+    position: absolute;
+    inset: 0;
+    background: var(--clr-accent);
+    transform-origin: left;
+    /* starts covering the text — GSAP wipes it away */
   }
 
   .exp__list {
