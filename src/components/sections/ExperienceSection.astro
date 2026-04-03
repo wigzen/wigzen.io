@@ -185,6 +185,30 @@ const roles = experiences.map((exp) => ({
 
   gsap.registerPlugin(ScrollTrigger);
 
+  const expSection = document.querySelector(".exp") as HTMLElement;
+  const headingInner = document.querySelector(".exp__heading-inner") as HTMLElement;
+  const headingClip = document.querySelector(".exp__heading-clip") as HTMLElement;
+  const expIndex = document.querySelector(".exp__index") as HTMLElement;
+
+  if (expSection && headingInner && headingClip && expIndex) {
+    const headingTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: expSection,
+        start: "top 75%",
+        toggleActions: "play none none none",
+      },
+    });
+
+    // 1. Fade in the index label
+    headingTl.to(expIndex, { opacity: 1, duration: 0.4, ease: "power2.out" });
+
+    // 2. Reveal text (opacity 0→1) slightly before the wipe completes
+    headingTl.to(headingInner, { opacity: 1, duration: 0.1, ease: "none" }, "-=0.5");
+
+    // 3. Wipe the clip overlay away left→right
+    headingTl.to(headingClip, { scaleX: 0, duration: 0.7, ease: "power3.inOut" }, "-=0.5");
+  }
+
   const rows = document.querySelectorAll("[data-exp-row]");
 
   rows.forEach((row, i) => {
