@@ -150,7 +150,8 @@ const roles = experiences.map((exp) => ({
   /* Active row */
   .exp__row.is-active {
     opacity: 1 !important;
-    background: rgba(168, 255, 81, 0.04);
+    background: color-mix(in srgb, var(--clr-accent) 4%, transparent);
+    border-left: 2px solid var(--clr-accent);
   }
 
   .exp__date {
@@ -252,114 +253,128 @@ const roles = experiences.map((exp) => ({
 
   gsap.registerPlugin(ScrollTrigger);
 
-  const expSection = document.querySelector(".exp") as HTMLElement;
-  const headingInner = document.querySelector(".exp__heading-inner") as HTMLElement;
-  const headingClip = document.querySelector(".exp__heading-clip") as HTMLElement;
-  const expIndex = document.querySelector(".exp__index") as HTMLElement;
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  if (expSection && headingInner && headingClip && expIndex) {
-    const headingTl = gsap.timeline({
-      scrollTrigger: {
-        trigger: expSection,
-        start: "top 75%",
-        toggleActions: "play none none none",
-      },
-    });
+  function initExperienceAnimations() {
+    const expSection = document.querySelector(".exp") as HTMLElement;
+    const headingInner = document.querySelector(".exp__heading-inner") as HTMLElement;
+    const headingClip = document.querySelector(".exp__heading-clip") as HTMLElement;
+    const expIndex = document.querySelector(".exp__index") as HTMLElement;
 
-    // 1. Fade in the index label
-    headingTl.to(expIndex, { opacity: 1, duration: 0.4, ease: "power2.out" });
-
-    // 2. Reveal text (opacity 0→1) slightly before the wipe completes
-    headingTl.to(headingInner, { opacity: 1, duration: 0.1, ease: "none" }, "-=0.5");
-
-    // 3. Wipe the clip overlay away left→right
-    headingTl.to(headingClip, { scaleX: 0, duration: 0.7, ease: "power3.inOut" }, "-=0.5");
-  }
-
-  const list = document.querySelector(".exp__list") as HTMLElement;
-  const track = document.querySelector(".exp__timeline-track") as HTMLElement;
-  const fill = document.querySelector(".exp__timeline-fill") as HTMLElement;
-  const dot = document.querySelector(".exp__timeline-dot") as HTMLElement;
-  const firstAccent = document.querySelector(".exp__accent") as HTMLElement;
-
-  function positionTrack() {
-    if (!track || !list || !firstAccent) return;
-    const listRect = list.getBoundingClientRect();
-    const accentRect = firstAccent.getBoundingClientRect();
-    track.style.left = `${accentRect.left - listRect.left}px`;
-  }
-
-  positionTrack();
-  window.addEventListener("resize", positionTrack);
-
-  document.addEventListener("astro:before-swap", () => {
-    window.removeEventListener("resize", positionTrack);
-    ScrollTrigger.getAll().forEach((t) => t.kill());
-  }, { once: true });
-
-  if (list && fill && dot) {
-    gsap.to(fill, {
-      height: "100%",
-      ease: "none",
-      scrollTrigger: {
-        trigger: list,
-        start: "top 60%",
-        end: "bottom 40%",
-        scrub: 1,
-        onUpdate: (self) => {
-          dot.style.top = `${self.progress * 100}%`;
+    if (!reducedMotion && expSection && headingInner && headingClip && expIndex) {
+      const headingTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: expSection,
+          start: "top 75%",
+          toggleActions: "play none none none",
         },
-      },
-    });
-  }
-
-  const rows = document.querySelectorAll("[data-exp-row]");
-
-  function setActive(activeRow: Element) {
-    rows.forEach((r) => r.classList.remove("is-active"));
-    activeRow.classList.add("is-active");
-  }
-
-  // Default: first row active on load
-  if (rows.length > 0) {
-    rows[0].classList.add("is-active");
-  }
-
-  rows.forEach((row, i) => {
-    gsap.set(row, { opacity: 0, y: 40 });
-
-    gsap.to(row, {
-      opacity: 1,
-      y: 0,
-      duration: 0.6,
-      ease: "power2.out",
-      delay: i * 0.15,
-      clearProps: "opacity,transform",
-      scrollTrigger: {
-        trigger: row,
-        start: "top 80%",
-        toggleActions: "play none none none",
-      },
-    });
-
-    const accent = row.querySelector(".exp__accent") as HTMLElement;
-    if (accent) {
-      row.addEventListener("mouseenter", () => {
-        gsap.to(accent, { width: 4, duration: 0.3, ease: "power2.out" });
       });
-      row.addEventListener("mouseleave", () => {
-        gsap.to(accent, { width: 2, duration: 0.3, ease: "power2.out" });
-      });
+
+      // 1. Fade in the index label
+      headingTl.to(expIndex, { opacity: 1, duration: 0.4, ease: "power2.out" });
+
+      // 2. Reveal text (opacity 0→1) slightly before the wipe completes
+      headingTl.to(headingInner, { opacity: 1, duration: 0.1, ease: "none" }, "-=0.5");
+
+      // 3. Wipe the clip overlay away left→right
+      headingTl.to(headingClip, { scaleX: 0, duration: 0.7, ease: "power3.inOut" }, "-=0.5");
     }
-  });
 
-  rows.forEach((row) => {
-    ScrollTrigger.create({
-      trigger: row,
-      start: "top center",
-      end: "bottom center",
-      onEnter: () => setActive(row),
-      onEnterBack: () => setActive(row),
+    const list = document.querySelector(".exp__list") as HTMLElement;
+    const track = document.querySelector(".exp__timeline-track") as HTMLElement;
+    const fill = document.querySelector(".exp__timeline-fill") as HTMLElement;
+    const dot = document.querySelector(".exp__timeline-dot") as HTMLElement;
+    const firstAccent = document.querySelector(".exp__accent") as HTMLElement;
+
+    function positionTrack() {
+      if (!track || !list || !firstAccent) return;
+      const listRect = list.getBoundingClientRect();
+      const accentRect = firstAccent.getBoundingClientRect();
+      track.style.left = `${accentRect.left - listRect.left}px`;
+    }
+
+    if (!reducedMotion) {
+      positionTrack();
+      window.addEventListener("resize", positionTrack);
+
+      if (list && fill && dot) {
+        gsap.to(fill, {
+          height: "100%",
+          ease: "none",
+          scrollTrigger: {
+            trigger: list,
+            start: "top 60%",
+            end: "bottom 40%",
+            scrub: 1,
+            onUpdate: (self) => {
+              dot.style.top = `${self.progress * 100}%`;
+            },
+          },
+        });
+      }
+    }
+
+    const rows = document.querySelectorAll("[data-exp-row]");
+
+    function setActive(activeRow: Element) {
+      rows.forEach((r) => r.classList.remove("is-active"));
+      activeRow.classList.add("is-active");
+    }
+
+    // Default: first row active on load
+    if (rows.length > 0) {
+      rows[0].classList.add("is-active");
+    }
+
+    rows.forEach((row, i) => {
+      if (!reducedMotion) {
+        gsap.set(row, { opacity: 0, y: 40 });
+
+        gsap.to(row, {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          ease: "power2.out",
+          delay: i * 0.15,
+          clearProps: "opacity,transform",
+          scrollTrigger: {
+            trigger: row,
+            start: "top 80%",
+            toggleActions: "play none none none",
+          },
+        });
+      }
+
+      const accent = row.querySelector(".exp__accent") as HTMLElement;
+      if (accent) {
+        row.addEventListener("mouseenter", () => {
+          gsap.to(accent, { width: 4, duration: 0.3, ease: "power2.out" });
+        });
+        row.addEventListener("mouseleave", () => {
+          gsap.to(accent, { width: 2, duration: 0.3, ease: "power2.out" });
+        });
+      }
     });
-  });
+
+    rows.forEach((row) => {
+      ScrollTrigger.create({
+        trigger: row,
+        start: "top center",
+        end: "bottom center",
+        onEnter: () => setActive(row),
+        onEnterBack: () => setActive(row),
+      });
+    });
+
+    // Clean up before View Transitions page swap
+    document.addEventListener("astro:before-swap", () => {
+      window.removeEventListener("resize", positionTrack);
+      ScrollTrigger.getAll().forEach((t) => t.kill());
+    }, { once: true });
+  }
+
+  initExperienceAnimations();
+
+  // Re-initialize after View Transitions navigation
+  document.addEventListener("astro:after-swap", initExperienceAnimations);
 </script>
