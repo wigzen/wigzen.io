@@ -292,9 +292,11 @@ const roles = experiences.map((exp) => ({
 
     function positionTrack() {
       if (!track || !list || !firstAccent) return;
-      const listRect = list.getBoundingClientRect();
-      const accentRect = firstAccent.getBoundingClientRect();
-      track.style.left = `${accentRect.left - listRect.left}px`;
+      requestAnimationFrame(() => {
+        const listRect = list.getBoundingClientRect();
+        const accentRect = firstAccent.getBoundingClientRect();
+        track.style.left = `${accentRect.left - listRect.left}px`;
+      });
     }
 
     if (!reducedMotion) {

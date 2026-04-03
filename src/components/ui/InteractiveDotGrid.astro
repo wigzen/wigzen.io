@@ -66,7 +66,7 @@ const {
 
   <!-- Optional slot for center content (logo, text, etc.) -->
   <div class="center-content">
-    <a href="#" class="osmo-icon__link w-inline-block">
+    <a href="#" class="osmo-icon__link w-inline-block" aria-label="Home">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="100%"
@@ -280,35 +280,30 @@ const {
      * Build the dot grid based on container dimensions
      */
     function buildGrid(): void {
-      // Clear existing dots
-      container.innerHTML = "";
-      dots = [];
-      dotCenters = [];
-
-      // Calculate grid dimensions
       const style = getComputedStyle(container);
       const dotPx = parseFloat(style.fontSize) * finalConfig.dotSize;
       const gapPx = parseFloat(style.fontSize) * finalConfig.dotGap;
       const contW = container.clientWidth;
       const contH = container.clientHeight;
 
-      // Calculate number of columns and rows
+      container.innerHTML = "";
+      dots = [];
+      dotCenters = [];
+
       const cols = Math.floor((contW + gapPx) / (dotPx + gapPx));
       const rows = Math.floor((contH + gapPx) / (dotPx + gapPx));
       const total = cols * rows;
 
-      // Calculate center hole dimensions if enabled
       const holeCols = finalConfig.centerHole ? (cols % 2 === 0 ? 4 : 5) : 0;
       const holeRows = finalConfig.centerHole ? (rows % 2 === 0 ? 4 : 5) : 0;
       const startCol = (cols - holeCols) / 2;
       const startRow = (rows - holeRows) / 2;
 
-      // Create dots
+      const fragment = document.createDocumentFragment();
       for (let i = 0; i < total; i++) {
         const row = Math.floor(i / cols);
         const col = i % cols;
 
-        // Check if this position should be a hole
         const isHole =
           finalConfig.centerHole &&
           row >= startRow &&
@@ -316,16 +311,13 @@ const {
           col >= startCol &&
           col < startCol + holeCols;
 
-        // Create dot element
         const dot = document.createElement("div") as ExtendedHTMLDivElement;
         dot.classList.add("dot");
 
         if (isHole) {
-          // Hide dots in the center hole
           dot.style.visibility = "hidden";
           dot._isHole = true;
         } else {
-          // Initialize visible dots
           gsap.set(dot, {
             x: 0,
             y: 0,
@@ -336,20 +328,25 @@ const {
           dot._inertiaApplied = false;
         }
 
-        container.appendChild(dot);
+        fragment.appendChild(dot);
         dots.push(dot);
       }
+      container.appendChild(fragment);
 
-      // Calculate dot centers after DOM update
       requestAnimationFrame(() => {
+        const containerRect = container.getBoundingClientRect();
+        const ox = containerRect.left + window.scrollX;
+        const oy = containerRect.top + window.scrollY;
         dotCenters = dots
           .filter((d) => !d._isHole)
           .map((d) => {
-            const rect = d.getBoundingClientRect();
+            const idx = dots.indexOf(d);
+            const col = idx % cols;
+            const row = Math.floor(idx / cols);
             return {
               el: d,
-              x: rect.left + window.scrollX + rect.width / 2,
-              y: rect.top + window.scrollY + rect.height / 2,
+              x: ox + col * (dotPx + gapPx) + dotPx / 2,
+              y: oy + row * (dotPx + gapPx) + dotPx / 2,
             };
           });
       });

@@ -11,22 +11,24 @@ const navItems = [
 ---
 
 <nav class="nav" id="mainNav" style="opacity:0" aria-label="Main navigation">
-  <ul class="nav__menu">
-    {
-      navItems.map((item) => (
-        <li class="nav__item">
-          <a
-            href={item.href}
-            class={`nav__link ${item.id === "home" ? "active" : ""}`}
-            data-id={item.id}
-          >
-            {item.label}
-          </a>
-        </li>
-      ))
-    }
+  <div class="nav__menu">
+    <ul class="nav__list">
+      {
+        navItems.map((item) => (
+          <li class="nav__item">
+            <a
+              href={item.href}
+              class={`nav__link ${item.id === "home" ? "active" : ""}`}
+              data-id={item.id}
+            >
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
     <span class="nav__menu-indicator"></span>
-  </ul>
+  </div>
 </nav>
 
 <style>
@@ -57,6 +59,13 @@ const navItems = [
     position: relative;
     backdrop-filter: blur(12px);
     border: 1px solid var(--clr-border);
+  }
+
+  .nav__list {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
   }
 
   .nav__item {
