@@ -130,7 +130,7 @@ const roles = experiences.map((exp) => ({
     padding-block: 3rem;
     border-top: 1px solid var(--clr-border);
     position: relative;
-    transition: background 0.3s ease;
+    transition: opacity 0.4s ease, background 0.4s ease;
   }
 
   .exp__row:last-child {
@@ -138,7 +138,19 @@ const roles = experiences.map((exp) => ({
   }
 
   .exp__row:hover {
+    opacity: 1 !important;
     background: var(--clr-border);
+  }
+
+  /* Spotlight: when any row has is-active sibling, dim non-active rows */
+  .exp__list:has(.is-active) .exp__row:not(.is-active) {
+    opacity: 0.3;
+  }
+
+  /* Active row */
+  .exp__row.is-active {
+    opacity: 1 !important;
+    background: rgba(168, 255, 81, 0.04);
   }
 
   .exp__date {
@@ -215,6 +227,14 @@ const roles = experiences.map((exp) => ({
     .exp__date {
       padding-top: 0;
     }
+
+    /* Disable spotlight on mobile */
+    .exp__list:has(.is-active) .exp__row:not(.is-active) {
+      opacity: 1;
+    }
+    .exp__row.is-active {
+      background: transparent;
+    }
   }
 </style>
 
@@ -287,6 +307,16 @@ const roles = experiences.map((exp) => ({
 
   const rows = document.querySelectorAll("[data-exp-row]");
 
+  function setActive(activeRow: Element) {
+    rows.forEach((r) => r.classList.remove("is-active"));
+    activeRow.classList.add("is-active");
+  }
+
+  // Default: first row active on load
+  if (rows.length > 0) {
+    rows[0].classList.add("is-active");
+  }
+
   rows.forEach((row, i) => {
     gsap.set(row, { opacity: 0, y: 40 });
 
@@ -312,5 +342,15 @@ const roles = experiences.map((exp) => ({
         gsap.to(accent, { width: 2, duration: 0.3, ease: "power2.out" });
       });
     }
+  });
+
+  rows.forEach((row) => {
+    ScrollTrigger.create({
+      trigger: row,
+      start: "top center",
+      end: "bottom center",
+      onEnter: () => setActive(row),
+      onEnterBack: () => setActive(row),
+    });
   });
 </script>
