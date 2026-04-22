@@ -1,6 +1,6 @@
 ---
 company: "Bryt Schools"
-title: "Software Engineer"
+title: "Senior Software Engineer"
 startDate: "Nov 2025"
 endDate: "Present"
 current: true
