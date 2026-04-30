@@ -1,4 +1,5 @@
 ---
+
 ---
 
 <div id="cursor">
@@ -16,15 +17,17 @@
   }
 
   .cursor__dot {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
     background: #a8ff51;
     border-radius: 50%;
     position: fixed;
     top: 0;
     left: 0;
-    translate: -50% -50%;
+    /* translate: -50% -50% handled by JS via style.transform so it centers
+       without GSAP touching this element at all */
     pointer-events: none;
+    will-change: transform;
   }
 
   .cursor__ring {
@@ -37,6 +40,7 @@
     left: 0;
     translate: -50% -50%;
     pointer-events: none;
+    will-change: transform;
   }
 
   /* Hide on touch devices / tablets / mobile */
@@ -50,10 +54,37 @@
 <script>
   import { gsap } from "gsap";
 
+  // Module-level refs — only one set of listeners ever lives on window/document
   let cursorObserver: MutationObserver | null = null;
+  let _onMouseMove: ((e: MouseEvent) => void) | null = null;
+  let _onMouseOver: ((e: MouseEvent) => void) | null = null;
+  let _onMouseOut: ((e: MouseEvent) => void) | null = null;
+  let _onThemeChange: (() => void) | null = null;
+
+  function cleanupCursor() {
+    cursorObserver?.disconnect();
+    cursorObserver = null;
+    if (_onMouseMove) {
+      window.removeEventListener("mousemove", _onMouseMove);
+      _onMouseMove = null;
+    }
+    if (_onMouseOver) {
+      document.removeEventListener("mouseover", _onMouseOver);
+      _onMouseOver = null;
+    }
+    if (_onMouseOut) {
+      document.removeEventListener("mouseout", _onMouseOut);
+      _onMouseOut = null;
+    }
+    if (_onThemeChange) {
+      document.removeEventListener("theme:change", _onThemeChange);
+      _onThemeChange = null;
+    }
+  }
 
   function initCursor() {
-    // No custom cursor on touch devices or small screens
+    cleanupCursor(); // wipe any previous listeners before re-attaching
+
     const hasHover = window.matchMedia("(hover: hover)").matches;
     const isDesktop = window.innerWidth > 1024;
     if (!hasHover || !isDesktop) return;
@@ -61,7 +92,6 @@
     const cursor = document.getElementById("cursor");
     const dot = document.querySelector(".cursor__dot") as HTMLElement;
     const ring = document.querySelector(".cursor__ring") as HTMLElement;
-
     if (!dot || !ring || !cursor) return;
 
     function isDarkMode(): boolean {
@@ -79,26 +109,21 @@
       });
     }
 
-    // Set initial visibility
     gsap.set(cursor, { opacity: isDarkMode() ? 1 : 0 });
 
-    // Listen for theme changes
-    document.addEventListener("theme:change", updateCursorVisibility);
+    _onThemeChange = updateCursorVisibility;
+    document.addEventListener("theme:change", _onThemeChange);
 
-    // Also watch for class changes on body (catches theme applied after script runs)
-    cursorObserver = new MutationObserver(() => updateCursorVisibility());
+    cursorObserver = new MutationObserver(updateCursorVisibility);
     cursorObserver.observe(document.body, {
       attributes: true,
       attributeFilter: ["class"],
     });
 
-    window.addEventListener("mousemove", (e: MouseEvent) => {
-      gsap.to(dot, {
-        x: e.clientX,
-        y: e.clientY,
-        duration: 0.05,
-        overwrite: true,
-      });
+    _onMouseMove = (e: MouseEvent) => {
+      // Dot: direct CSS transform — no GSAP, no frame budget, GPU-composited
+      dot.style.transform = `translate(calc(${e.clientX}px - 50%), calc(${e.clientY}px - 50%))`;
+      // Ring: GSAP-only for the intentional lag/ease
       gsap.to(ring, {
         x: e.clientX,
         y: e.clientY,
@@ -106,28 +131,24 @@
         ease: "power2.out",
         overwrite: true,
       });
-    });
+    };
 
     const hoverTargets = "a, button, [data-magnetic]";
-
-    document.addEventListener("mouseover", (e: MouseEvent) => {
-      if ((e.target as HTMLElement).closest(hoverTargets)) {
+    _onMouseOver = (e: MouseEvent) => {
+      if ((e.target as HTMLElement).closest(hoverTargets))
         gsap.to(ring, { scale: 2.5, duration: 0.3, ease: "power2.out" });
-      }
-    });
-
-    document.addEventListener("mouseout", (e: MouseEvent) => {
-      if ((e.target as HTMLElement).closest(hoverTargets)) {
+    };
+    _onMouseOut = (e: MouseEvent) => {
+      if ((e.target as HTMLElement).closest(hoverTargets))
         gsap.to(ring, { scale: 1, duration: 0.3, ease: "power2.out" });
-      }
-    });
+    };
+
+    window.addEventListener("mousemove", _onMouseMove);
+    document.addEventListener("mouseover", _onMouseOver);
+    document.addEventListener("mouseout", _onMouseOut);
   }
 
   initCursor();
-
-  // Re-init after ViewTransitions navigation
+  document.addEventListener("astro:before-swap", cleanupCursor);
   document.addEventListener("astro:after-swap", initCursor);
-
-  // Disconnect observer before each swap — initCursor creates a fresh one after
-  document.addEventListener("astro:before-swap", () => cursorObserver?.disconnect());
 </script>

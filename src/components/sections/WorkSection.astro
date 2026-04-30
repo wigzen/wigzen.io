@@ -1,11 +1,11 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection, type CollectionEntry } from "astro:content";
 
 const allProjects = (await getCollection("projects"))
-  .filter((p) => p.data.featured)
-  .sort((a, b) => a.data.index - b.data.index);
+  .filter((p: CollectionEntry<"projects">) => p.data.featured)
+  .sort((a: CollectionEntry<"projects">, b: CollectionEntry<"projects">) => a.data.index - b.data.index);
 
-const projects = allProjects.map((p) => ({
+const projects = allProjects.map((p: CollectionEntry<"projects">) => ({
   id: p.id,
   index: String(p.data.index).padStart(2, "0"),
   title: p.data.title,
@@ -207,42 +207,37 @@ const projects = allProjects.map((p) => ({
 
   gsap.registerPlugin(ScrollTrigger);
 
-  // Clip-path reveal on scroll
+  const localTriggers: globalThis.ScrollTrigger[] = [];
+  type CardHandlers = { enter: () => void; leave: () => void };
+  const cardHandlers = new Map<Element, CardHandlers>();
+
   document.querySelectorAll("[data-work-card]").forEach((card) => {
-    gsap.to(card, {
+    const tw = gsap.to(card, {
       clipPath: "inset(0 0% 0 0)",
       duration: 1.2,
       ease: "expo.inOut",
-      scrollTrigger: {
-        trigger: card,
-        start: "top 80%",
-        toggleActions: "play none none none",
-      },
+      scrollTrigger: { trigger: card, start: "top 80%", toggleActions: "play none none none" },
     });
+    if (tw.scrollTrigger) localTriggers.push(tw.scrollTrigger);
 
-    // Hover preview panel scaleY
-    const preview = (card as HTMLElement).querySelector(
-      ".work__card-preview"
-    ) as HTMLElement;
+    const preview = (card as HTMLElement).querySelector(".work__card-preview") as HTMLElement;
     if (preview) {
-      card.addEventListener("mouseenter", () => {
-        gsap.to(preview, {
-          scaleY: 1,
-          opacity: 0.12,
-          duration: 0.5,
-          ease: "expo.out",
-          transformOrigin: "top",
-        });
-      });
-      card.addEventListener("mouseleave", () => {
-        gsap.to(preview, {
-          scaleY: 0,
-          opacity: 0.06,
-          duration: 0.4,
-          ease: "expo.in",
-          transformOrigin: "top",
-        });
-      });
+      const enter = () => gsap.to(preview, { scaleY: 1, opacity: 0.12, duration: 0.5, ease: "expo.out",  transformOrigin: "top" });
+      const leave = () => gsap.to(preview, { scaleY: 0, opacity: 0.06, duration: 0.4, ease: "expo.in",   transformOrigin: "top" });
+      card.addEventListener("mouseenter", enter);
+      card.addEventListener("mouseleave", leave);
+      cardHandlers.set(card, { enter, leave });
     }
   });
+
+  // { once: true } prevents handler accumulation on re-navigation
+  document.addEventListener("astro:before-swap", () => {
+    localTriggers.forEach((t) => t.kill());
+    localTriggers.length = 0;
+    cardHandlers.forEach(({ enter, leave }, card) => {
+      card.removeEventListener("mouseenter", enter);
+      card.removeEventListener("mouseleave", leave);
+    });
+    cardHandlers.clear();
+  }, { once: true });
 </script>

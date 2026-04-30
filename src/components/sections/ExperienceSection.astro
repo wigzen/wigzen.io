@@ -1,11 +1,11 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection, type CollectionEntry } from "astro:content";
 
 const experiences = (await getCollection("experience")).sort(
-  (a, b) => a.data.index - b.data.index
+  (a: CollectionEntry<"experience">, b: CollectionEntry<"experience">) => a.data.index - b.data.index
 );
 
-const roles = experiences.map((exp) => ({
+const roles = experiences.map((exp: CollectionEntry<"experience">) => ({
   date: `${exp.data.startDate} — ${exp.data.endDate}`,
   title: exp.data.title,
   company: exp.data.company,
@@ -369,6 +369,7 @@ const roles = experiences.map((exp) => ({
       localTriggers.push(st);
     });
 
+    // { once: true } prevents a new cleanup handler from stacking on every re-init call
     document.addEventListener("astro:before-swap", () => {
       window.removeEventListener("resize", positionTrack);
       localTriggers.forEach((t) => t.kill());
@@ -378,7 +379,7 @@ const roles = experiences.map((exp) => ({
         el.removeEventListener("mouseleave", leave);
       });
       hoverListeners.length = 0;
-    });
+    }, { once: true });
   }
 
   initExperienceAnimations();

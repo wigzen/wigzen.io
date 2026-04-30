@@ -138,5 +138,9 @@ const {
       btn.removeEventListener("mouseleave", leave);
     });
     magneticMap.clear();
+
+    // Safety net: kill any ScrollTrigger instances that child components
+    // didn't clean up themselves — prevents detached DOM nodes piling up
+    ScrollTrigger.getAll().forEach((t) => t.kill());
   });
 </script>

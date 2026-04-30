@@ -327,26 +327,34 @@ import InteractiveDotGrid from "../ui/InteractiveDotGrid.astro";
 
   gsap.registerPlugin(SplitText, ScrollTrigger);
 
+  let heroSplit: ReturnType<typeof SplitText.create> | null = null;
+  let heroParallaxST: globalThis.ScrollTrigger | null = null;
+
+  function cleanupHero() {
+    heroSplit?.revert();
+    heroSplit = null;
+    heroParallaxST?.kill();
+    heroParallaxST = null;
+  }
+
   function animateHero() {
+    cleanupHero(); // revert any previous SplitText wrappers before re-splitting
+
     const nameLines = document.querySelectorAll("[data-name-line]");
     if (!nameLines.length) return;
 
     const isMobile = window.matchMedia("(max-width: 768px)").matches;
 
-    const split = SplitText.create("[data-name-line]", {
-      type: "chars",
-      mask: "chars",
-    });
+    heroSplit = SplitText.create("[data-name-line]", { type: "chars", mask: "chars" });
 
     const tl = gsap.timeline();
 
     if (isMobile) {
-      // Mobile entry sequence
       tl.fromTo(".hero__orb",
         { opacity: 0, scale: 0.6 },
         { opacity: 1, scale: 1, duration: 1.2, ease: "expo.out" }
       );
-      tl.from(split.chars, {
+      tl.from(heroSplit.chars, {
         yPercent: 120,
         stagger: { amount: 0.4, from: "start" },
         duration: 0.9,
@@ -358,53 +366,42 @@ import InteractiveDotGrid from "../ui/InteractiveDotGrid.astro";
         "-=0.3"
       );
       tl.from("[data-intro]", {
-        opacity: 0,
-        y: 20,
-        stagger: 0.08,
-        duration: 0.5,
-        ease: "power2.out",
+        opacity: 0, y: 20, stagger: 0.08, duration: 0.5, ease: "power2.out",
       }, "-=0.2");
     } else {
-      // Desktop entry (unchanged)
-      tl.from(split.chars, {
+      tl.from(heroSplit.chars, {
         yPercent: 110,
         stagger: { amount: 0.5 },
         duration: 1.0,
         ease: "expo.out",
-      }).from(
-        "[data-intro]",
-        {
-          opacity: 0,
-          y: 16,
-          stagger: 0.1,
-          duration: 0.5,
-          ease: "power2.out",
-        },
-        "-=0.3"
-      );
+      }).from("[data-intro]", {
+        opacity: 0, y: 16, stagger: 0.1, duration: 0.5, ease: "power2.out",
+      }, "-=0.3");
     }
 
-    // Parallax on scroll (desktop only)
     if (!isMobile && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       const parallaxTarget = document.querySelector("[data-hero-parallax]");
       if (parallaxTarget) {
-        gsap.to(parallaxTarget, {
+        const tw = gsap.to(parallaxTarget, {
           yPercent: -15,
           ease: "none",
-          scrollTrigger: {
-            trigger: "#home",
-            start: "top top",
-            end: "bottom top",
-            scrub: true,
-          },
+          scrollTrigger: { trigger: "#home", start: "top top", end: "bottom top", scrub: true },
         });
+        heroParallaxST = tw.scrollTrigger ?? null;
       }
     }
   }
 
-  if ((window as any).__introComplete) {
-    animateHero();
-  } else {
-    document.addEventListener("intro:complete", animateHero, { once: true });
+  function scheduleHero() {
+    if ((window as any).__introComplete) {
+      animateHero();
+    } else {
+      document.addEventListener("intro:complete", animateHero, { once: true });
+    }
   }
+
+  document.addEventListener("astro:before-swap", cleanupHero);
+  document.addEventListener("astro:after-swap", scheduleHero);
+
+  scheduleHero();
 </script>

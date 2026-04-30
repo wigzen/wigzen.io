@@ -126,7 +126,6 @@ const layers = [
     padding-block: 2rem;
     border-top: 1px solid var(--clr-border);
     opacity: 0;
-    transform: translateX(-20px);
     transition: background 0.3s ease;
   }
 
@@ -143,11 +142,7 @@ const layers = [
     align-self: stretch;
     background: var(--layer-color);
     border-radius: 2px;
-    transition: width 0.3s ease;
-  }
-
-  .systems__layer:hover .systems__layer-bar {
-    width: 6px;
+    /* width transition removed — GSAP owns this on hover to prevent racing */
   }
 
   .systems__layer-content {
@@ -222,47 +217,66 @@ const layers = [
 
   gsap.registerPlugin(ScrollTrigger);
 
+  const localTriggers: globalThis.ScrollTrigger[] = [];
+  type LayerHandlers = { enter: () => void; leave: () => void };
+  const layerHandlers = new Map<Element, LayerHandlers>();
+
   // Intro text reveal
   const intro = document.querySelector("[data-systems-intro]");
   if (intro) {
-    gsap.from(intro, {
+    const tw = gsap.from(intro, {
       opacity: 0,
       y: 30,
       duration: 0.8,
       ease: "power3.out",
-      scrollTrigger: {
-        trigger: intro,
-        start: "top 80%",
-        toggleActions: "play none none none",
-      },
+      scrollTrigger: { trigger: intro, start: "top 80%", toggleActions: "play none none none" },
     });
+    if (tw.scrollTrigger) localTriggers.push(tw.scrollTrigger);
   }
 
-  // Staggered layer reveal
+  // Single container trigger + stagger instead of N triggers with delays.
+  // Avoids the dead-zone where layers sit at opacity:0 after individual triggers fire.
+  const layerContainer = document.querySelector(".systems__layers");
   const layers = document.querySelectorAll("[data-systems-layer]");
-  layers.forEach((layer, i) => {
-    gsap.to(layer, {
-      opacity: 1,
-      x: 0,
-      duration: 0.7,
-      delay: i * 0.12,
-      ease: "power3.out",
-      scrollTrigger: {
-        trigger: layer,
-        start: "top 85%",
-        toggleActions: "play none none none",
-      },
-    });
 
-    // Bar pulse on hover
-    const bar = layer.querySelector(".systems__layer-bar") as HTMLElement;
-    if (bar) {
-      layer.addEventListener("mouseenter", () => {
-        gsap.to(bar, { width: 6, duration: 0.3, ease: "power2.out" });
-      });
-      layer.addEventListener("mouseleave", () => {
-        gsap.to(bar, { width: 4, duration: 0.3, ease: "power2.out" });
-      });
-    }
+  if (layerContainer && layers.length) {
+    const tw = gsap.fromTo(
+      layers,
+      { opacity: 0, x: -20 },
+      {
+        opacity: 1,
+        x: 0,
+        duration: 0.65,
+        ease: "power3.out",
+        stagger: 0.1,
+        scrollTrigger: {
+          trigger: layerContainer,
+          start: "top 78%",
+          toggleActions: "play none none none",
+        },
+      }
+    );
+    if (tw.scrollTrigger) localTriggers.push(tw.scrollTrigger);
+  }
+
+  // Bar width on hover — GSAP owns it exclusively (CSS transition removed)
+  layers.forEach((layer) => {
+    const bar = layer.querySelector(".systems__layer-bar") as HTMLElement | null;
+    if (!bar) return;
+    const enter = () => gsap.to(bar, { width: 6, duration: 0.25, ease: "power2.out" });
+    const leave = () => gsap.to(bar, { width: 4, duration: 0.25, ease: "power2.out" });
+    layer.addEventListener("mouseenter", enter);
+    layer.addEventListener("mouseleave", leave);
+    layerHandlers.set(layer, { enter, leave });
   });
+
+  document.addEventListener("astro:before-swap", () => {
+    localTriggers.forEach((t) => t.kill());
+    localTriggers.length = 0;
+    layerHandlers.forEach(({ enter, leave }, layer) => {
+      layer.removeEventListener("mouseenter", enter);
+      layer.removeEventListener("mouseleave", leave);
+    });
+    layerHandlers.clear();
+  }, { once: true });
 </script>
