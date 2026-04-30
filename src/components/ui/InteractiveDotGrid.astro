@@ -142,6 +142,9 @@ const {
     display: flex;
     position: absolute;
     inset: 0em;
+    /* Isolate layout — reflows triggered outside (e.g. Navbar classList changes)
+       won't cascade into the 500-1000 dot elements inside this boundary */
+    contain: layout;
   }
 
   /* Individual dot styling */
@@ -195,6 +198,7 @@ const {
   interface ExtendedHTMLDivElement extends HTMLDivElement {
     _isHole?: boolean;
     _inertiaApplied?: boolean;
+    _gridIndex?: number;
   }
 
   /**
@@ -269,12 +273,15 @@ const {
       lastY: 0,
     };
 
-    // Debounce timer — prevents full DOM rebuild on every resize pixel
     let resizeTimer: ReturnType<typeof setTimeout>;
     function debouncedBuildGrid(): void {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(buildGrid, 150);
     }
+
+    // RAF gate — one pending frame max; drops intermediate mousemove positions
+    let rafPending = false;
+    let pendingEvent: MouseEvent | null = null;
 
     /**
      * Build the dot grid based on container dimensions
@@ -314,6 +321,8 @@ const {
         const dot = document.createElement("div") as ExtendedHTMLDivElement;
         dot.classList.add("dot");
 
+        dot._gridIndex = i; // store once — avoids O(n²) indexOf later
+
         if (isHole) {
           dot.style.visibility = "hidden";
           dot._isHole = true;
@@ -340,9 +349,9 @@ const {
         dotCenters = dots
           .filter((d) => !d._isHole)
           .map((d) => {
-            const idx = dots.indexOf(d);
-            const col = idx % cols;
-            const row = Math.floor(idx / cols);
+            // _gridIndex set during creation — O(1) vs O(n) indexOf
+            const col = d._gridIndex! % cols;
+            const row = Math.floor(d._gridIndex! / cols);
             return {
               el: d,
               x: ox + col * (dotPx + gapPx) + dotPx / 2,
@@ -360,14 +369,12 @@ const {
       const now = performance.now();
       const dt = now - mouseData.lastTime || 16;
 
-      // Calculate mouse velocity
       let dx = e.pageX - mouseData.lastX;
       let dy = e.pageY - mouseData.lastY;
       let vx = (dx / dt) * 1000;
       let vy = (dy / dt) * 1000;
       let speed = Math.hypot(vx, vy);
 
-      // Limit maximum speed to prevent extreme effects
       if (speed > finalConfig.maxSpeed) {
         const scale = finalConfig.maxSpeed / speed;
         vx *= scale;
@@ -375,35 +382,29 @@ const {
         speed = finalConfig.maxSpeed;
       }
 
-      // Update mouse tracking data
       mouseData.lastTime = now;
       mouseData.lastX = e.pageX;
       mouseData.lastY = e.pageY;
 
-      // Update dots based on mouse position and speed
+      // Drop intermediate events — only the last position before the next paint matters
+      pendingEvent = e;
+      if (rafPending) return;
+      rafPending = true;
+
       requestAnimationFrame(() => {
+        rafPending = false;
+        const ev = pendingEvent;
+        pendingEvent = null;
+        if (!ev) return;
+
         dotCenters.forEach(({ el, x, y }) => {
-          const dist = Math.hypot(x - e.pageX, y - e.pageY);
-
-          // Calculate color interpolation based on distance
+          const dist = Math.hypot(x - ev.pageX, y - ev.pageY);
           const t = Math.max(0.1, 1 - dist / finalConfig.threshold);
-          const color = gsap.utils.interpolate(
-            finalConfig.baseColor,
-            finalConfig.activeColor,
-            t
-          );
-          gsap.set(el, { backgroundColor: color });
-          gsap.set(el, {
-            scale: t,
-          });
+          const color = gsap.utils.interpolate(finalConfig.baseColor, finalConfig.activeColor, t);
+          gsap.set(el, { backgroundColor: color, scale: t });
 
-          // Apply push effect if mouse is moving fast enough
-          if (
-            speed > finalConfig.speedThreshold &&
-            dist < finalConfig.threshold &&
-            !el._inertiaApplied
-          ) {
-            applyPushEffect(el, e.pageX, e.pageY, x, y, vx, vy);
+          if (speed > finalConfig.speedThreshold && dist < finalConfig.threshold && !el._inertiaApplied) {
+            applyPushEffect(el, ev.pageX, ev.pageY, x, y, vx, vy);
           }
         });
       });

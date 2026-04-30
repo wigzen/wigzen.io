@@ -137,21 +137,21 @@ const navItems = [
 
   function setActive(id: string) {
     if (!navLinks || !menuIndicator) return;
-    // Guard: only act if there's a matching nav item
     const activeLink = nav?.querySelector(
       `[data-id="${id}"]`
     ) as HTMLElement | null;
     if (!activeLink) return;
-    navLinks.forEach((l) => l.classList.remove("active"));
-    activeLink.classList.add("active");
+
+    // READ before WRITE — avoids forced reflow.
+    // classList changes invalidate style; reading getBoundingClientRect after them
+    // forces a synchronous layout flush of the entire document (expensive with
+    // hundreds of dot divs in the DOM). Reading first costs nothing extra.
     const { width } = activeLink.getBoundingClientRect();
     const position = getPositionOfElement(activeLink);
-    gsap.to(menuIndicator, {
-      x: position,
-      width,
-      duration: 0.4,
-      ease: "power3.out",
-    });
+
+    navLinks.forEach((l) => l.classList.remove("active"));
+    activeLink.classList.add("active");
+    gsap.to(menuIndicator, { x: position, width, duration: 0.4, ease: "power3.out" });
   }
 
   function initializeIndicator(): void {

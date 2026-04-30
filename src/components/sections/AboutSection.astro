@@ -241,14 +241,19 @@ const stats = [
     tickerTween = gsap.to(ticker, { xPercent: -50, repeat: -1, ease: "none", duration: 20 });
   }
 
+  // Wait for fonts before splitting — SplitText measures word widths using
+  // the actual rendered font; calling it before fonts load gives wrong metrics
+  // and triggers a GSAP console warning.
   const statement = document.querySelector("[data-about-text]");
   if (statement) {
-    aboutSplit = SplitText.create(statement, { type: "words" });
-    const tw = gsap.from(aboutSplit.words, {
-      opacity: 0, y: 20, stagger: 0.04, duration: 0.6, ease: "power2.out",
-      scrollTrigger: { trigger: statement, start: "top 75%", toggleActions: "play none none none" },
+    document.fonts.ready.then(() => {
+      aboutSplit = SplitText.create(statement, { type: "words" });
+      const tw = gsap.from(aboutSplit.words, {
+        opacity: 0, y: 20, stagger: 0.04, duration: 0.6, ease: "power2.out",
+        scrollTrigger: { trigger: statement, start: "top 75%", toggleActions: "play none none none" },
+      });
+      if (tw.scrollTrigger) localTriggers.push(tw.scrollTrigger);
     });
-    if (tw.scrollTrigger) localTriggers.push(tw.scrollTrigger);
   }
 
   document.querySelectorAll("[data-cap-item]").forEach((item, i) => {
